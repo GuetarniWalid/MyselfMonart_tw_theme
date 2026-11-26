@@ -621,6 +621,7 @@
         "titre": "{{ titre }} : les tableaux",
         "prix": "Dès {{ prix }}",
         "compte_html": "<b data-vus>{{ vus }}</b> tableaux sur <b>{{ total }}</b>",
+        "plus": "Voir plus de tableaux",
         "fin": {
           "one": "Vous avez vu le tableau.",
           "other": "Vous avez vu les {{ count }} tableaux.",
@@ -629,6 +630,7 @@
         "poster": {
           "titre": "{{ titre }} : les posters",
           "compte_html": "<b data-vus>{{ vus }}</b> posters sur <b>{{ total }}</b>",
+          "plus": "Voir plus de posters",
           "fin": {
             "one": "Vous avez vu le poster.",
             "other": "Vous avez vu les {{ count }} posters.",

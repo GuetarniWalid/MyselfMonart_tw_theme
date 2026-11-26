@@ -2243,41 +2243,33 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 }
 /* ---- Fin du menu du téléphone ---- */
 
-/* ---- Le cœur de papiers (snippets/coeur-papiers.liquid) ----
-   Le cœur des j'aime du nouveau design : trois papiers du thème, déchirés, la fibre blanche au bord, cernés d'encre (choix de
-   Walid du 25/11/2026, « le papier déchiré »). Vide : son contour seul, l'encre à 72 %. Aimé : ses papiers. Sur les cartes
-   de la nouvelle page collection (sa feuille lui donne 22 px) ; 28 px ailleurs. Dans l'en-tête : « Les
-   angelots de l'en-tête », plus bas. */
-.coeur { --blanc: #ffffff; --rose: #ffb6d2; --soleil: #ffdd6e; --corail: #ff5436; display: block; width: 28px; height: 28px; overflow: visible; }
-.coeur > :is(path, g) { transform-box: fill-box; transform-origin: 50% 50%; }
-.coeur .coeur-rose { fill: var(--rose); }
-.coeur .coeur-soleil { fill: var(--soleil); }
-.coeur .coeur-corail { fill: var(--corail); }
-.coeur .coeur-fibre { fill: var(--blanc); }
+/* ---- Le cœur des j'aime (snippets/coeur-papiers.liquid) ----
+   Le cœur des j'aime du nouveau design : cerné d'encre, rempli de rouge corail quand on aime (Walid, 26/11/2026 : « on va
+   passer au rouge, au moins c'est visible »). Vide : son contour seul, l'encre à 72 %. Sur les cartes de la nouvelle page
+   collection (sa feuille lui donne 22 px) ; 28 px ailleurs. Dans l'en-tête : « Les angelots de l'en-tête », plus bas. */
+.coeur { --blanc: #ffffff; --corail: #ff5436; display: block; width: 28px; height: 28px; overflow: visible; }
+.coeur > path { transform-box: fill-box; transform-origin: 50% 50%; }
+.coeur .coeur-fond { fill: var(--corail); }
 .coeur .coeur-trait { fill: none; stroke: currentColor; stroke-width: 1.64; stroke-linejoin: round; }
 .like:not(.is-liked) .coeur-trait { stroke-opacity: 0.72; }
-.like:not(.is-liked) .coeur > :not(.coeur-trait) { opacity: 0; }
+.like:not(.is-liked) .coeur-fond { opacity: 0; }
 @media (hover: hover) {
   .like:hover .coeur-trait { stroke-opacity: 1; }
 }
-/* On aime (assets/my-like-button.js, .vient-d-aimer) : le papier rose se pose, le soleil puis le corail se collent, le cœur
-   appuie (0,5 s). Le fondu ne sert qu'à retirer un j'aime : posé aussi à l'aller, il l'emporterait sur l'animation, et les
-   papiers clignoteraient. */
-@keyframes coeur-rose-se-pose { 0% { opacity: 0; transform: rotate(-16deg) scale(0.35); } 35% { opacity: 1; } }
-@keyframes coeur-soleil-se-colle { 0% { opacity: 0; transform: translate(6px, -4px) rotate(-24deg) scale(1.15); } 35% { opacity: 1; } }
-@keyframes coeur-corail-se-colle { 0% { opacity: 0; transform: translate(-4px, 4px) rotate(22deg) scale(1.15); } 35% { opacity: 1; } }
+/* On aime (assets/my-like-button.js, .vient-d-aimer) : le corail part du milieu et remplit le cœur, qui appuie (0,5 s). Le
+   fondu ne sert qu'à retirer un j'aime : posé aussi à l'aller, il l'emporterait sur l'animation, et le corail
+   clignoterait. */
+@keyframes coeur-se-remplit { 0% { opacity: 0; transform: scale(0.35); } 40% { opacity: 1; } }
 @keyframes coeur-appuie { 0%, 58% { scale: 1; } 76% { scale: 1.17; } 90% { scale: 0.96; } }
 @media (prefers-reduced-motion: no-preference) {
   .like .coeur { transition: scale 0.16s ease; }
-  .like:not(.is-liked) .coeur > :is(path, g) { transition: opacity 0.14s ease; }
+  .like:not(.is-liked) .coeur-fond { transition: opacity 0.14s ease; }
   .like .coeur > .coeur-trait { transition: stroke-opacity 0.14s ease; }
   .like:active .coeur { scale: 0.88; }
   .like.is-liked.vient-d-aimer .coeur { animation: coeur-appuie 0.5s ease; }
-  .like.is-liked.vient-d-aimer .coeur-rose { animation: coeur-rose-se-pose 0.2s cubic-bezier(0.25, 0.7, 0.35, 1.35) backwards; }
-  .like.is-liked.vient-d-aimer .coeur-soleil { animation: coeur-soleil-se-colle 0.24s cubic-bezier(0.3, 0.6, 0.35, 1.12) 0.08s backwards; }
-  .like.is-liked.vient-d-aimer .coeur-corail { animation: coeur-corail-se-colle 0.26s cubic-bezier(0.3, 0.6, 0.35, 1.12) 0.16s backwards; }
+  .like.is-liked.vient-d-aimer .coeur-fond { animation: coeur-se-remplit 0.24s cubic-bezier(0.25, 0.7, 0.35, 1.35) backwards; }
 }
-/* ---- Fin du cœur de papiers ---- */
+/* ---- Fin du cœur des j'aime ---- */
 
 /* ---- Les angelots de l'en-tête (snippets/entete-burger.liquid, snippets/tw-loup-like-button.liquid) ----
    Demande de Walid du 25/11/2026 : jouer avec les vieux tableaux sur le bouton du menu et sur le cœur des j'aime. Les deux
@@ -2293,19 +2285,17 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 /* 48 px sous le doigt. */
 .menu-opener:has(.entete-burger) { margin: -8px; padding: 8px; }
 
-/* Le cœur des j'aime, le même que celui des cartes (« Le cœur de papiers », plus haut) : 56 px sous le doigt, 26 px de
-   dessin, aligné sur la loupe. Vide, il est blanc ; dès un j'aime, ses trois papiers et leur nombre. L'angelot l'entoure de
+/* Le cœur des j'aime, le même que celui des cartes (« Le cœur des j'aime », plus haut) : 56 px sous le doigt, 26 px de
+   dessin, aligné sur la loupe. Vide, il est blanc ; dès un j'aime, corail, leur nombre dedans. L'angelot l'entoure de
    ses bras par-derrière, centré sur lui (Walid, 25/11/2026) : ses coudes tombent de chaque côté des deux lobes, à 4 px du
    trait à gauche comme à droite. Tous deux sur l'axe de 28 px, en pixels entiers : l'arrondi de l'écran les déplace
    ensemble. */
 .entete-coeur { position: relative; display: block; width: 56px; height: 56px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .entete-coeur .entete-coeur-ange { position: absolute; left: 9px; top: 0; width: 38px; height: 28px; max-width: none; pointer-events: none; }
 .entete-coeur .entete-coeur-dessin { position: absolute; left: 15px; top: 16px; width: 26px; height: 26px; }
-.entete-coeur .coeur-rose { fill: var(--blanc); }
-.entete-coeur .coeur-soleil, .entete-coeur .coeur-corail { opacity: 0; }
+.entete-coeur .coeur-fond { fill: var(--blanc); }
 .entete-coeur .coeur-trait { stroke-width: 1.85; }
-li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-rose { fill: var(--rose); }
-li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-soleil, li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-corail { opacity: 1; }
+li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(--corail); }
 .entete-coeur-compte { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 .entete-coeur-compte span:not(.hidden) {
   display: block; translate: 0 0.5px;
@@ -2317,26 +2307,22 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-soleil, li:has(> 
 
 /* Le mouvement, seulement sans « mouvements réduits » : l'angelot du menu monte de derrière la barre (au chargement, et
    chaque fois que le menu se ferme), sans la dépasser : il montait un peu trop haut puis retombait, et un blanc se voyait
-   entre elle et lui (Walid, 25/11/2026) ; la croix tourne en arrivant ; un j'aime de plus : le cœur bat, ses papiers
-   se recollent, l'angelot se soulève sans le lâcher (3 px : ses bras restent derrière le cœur, aucun jour ne s'ouvre). */
+   entre elle et lui (Walid, 25/11/2026) ; la croix tourne en arrivant ; un j'aime de plus : le cœur bat, l'angelot se
+   soulève sans le lâcher (3 px : ses bras restent derrière le cœur, aucun jour ne s'ouvre). */
 @keyframes entete-ange-monte { from { translate: 0 104%; } }
 @keyframes entete-croix { from { rotate: -70deg; scale: 0.6; } }
 @keyframes entete-ange-saute { 30% { translate: 0 -3px; rotate: -4deg; } 58% { translate: 0 1px; rotate: 2.5deg; } }
 @keyframes entete-coeur-bat { 25% { scale: 1.14; } 55% { scale: 0.95; } }
-@keyframes entete-papier-corail { 35% { transform: translate(-2px, 2px) rotate(16deg) scale(1.1); } }
-@keyframes entete-papier-soleil { 35% { transform: translate(3px, -2px) rotate(-14deg) scale(1.1); } }
 @media (prefers-reduced-motion: no-preference) {
   .entete-burger:not(.hidden) .entete-burger-ange img { animation: entete-ange-monte 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s backwards; }
   .menu-opener:has(.entete-burger) .close:not(.hidden) svg { animation: entete-croix 0.28s cubic-bezier(0.2, 0.8, 0.2, 1); }
   .entete-coeur .entete-coeur-ange { transition: translate 0.2s ease; transform-origin: 50% 80%; }
-  .entete-coeur .entete-coeur-dessin > :is(path, g) { transition: opacity 0.16s ease, fill 0.16s ease; }
+  .entete-coeur .entete-coeur-dessin > path { transition: fill 0.16s ease; }
   @media (hover: hover) {
     .entete-coeur:hover .entete-coeur-ange { translate: 0 -1.5px; }
   }
   li:has(> likes-count.plus) > .entete-coeur .entete-coeur-ange { animation: entete-ange-saute 0.6s ease; }
   li:has(> likes-count.plus) > .entete-coeur .entete-coeur-dessin { animation: entete-coeur-bat 0.6s ease; }
-  li:has(> likes-count.plus) > .entete-coeur .coeur-soleil { animation: entete-papier-soleil 0.34s ease 0.04s; }
-  li:has(> likes-count.plus) > .entete-coeur .coeur-corail { animation: entete-papier-corail 0.36s ease 0.12s; }
 }
 /* ---- Fin des angelots de l'en-tête ---- */
 

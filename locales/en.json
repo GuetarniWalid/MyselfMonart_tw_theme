@@ -476,6 +476,7 @@
         "titre": "{{ titre }}: the artworks",
         "prix": "From {{ prix }}",
         "compte_html": "<b data-vus>{{ vus }}</b> of <b>{{ total }}</b> artworks",
+        "plus": "See more artworks",
         "fin": {
           "one": "You have seen the artwork.",
           "other": "You have seen all {{ count }} artworks.",
@@ -484,6 +485,7 @@
         "poster": {
           "titre": "{{ titre }}: the posters",
           "compte_html": "<b data-vus>{{ vus }}</b> of <b>{{ total }}</b> posters",
+          "plus": "See more posters",
           "fin": {
             "one": "You have seen the poster.",
             "other": "You have seen all {{ count }} posters.",

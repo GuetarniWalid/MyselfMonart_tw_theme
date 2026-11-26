@@ -697,7 +697,7 @@ test('le compteur de l’en-tête suit les j’aime (productLikedIds)', async ()
   assert.ok(!page.badge.classList.contains('hidden'))
 })
 
-test('un j’aime donné : le compteur change tout de suite, sans attendre le serveur, l’angelot de l’en-tête saute et les papiers du cœur se collent ; retiré, aucun des deux', async () => {
+test('un j’aime donné : le compteur change tout de suite, sans attendre le serveur, l’angelot de l’en-tête saute et le cœur se remplit ; retiré, aucun des deux', async () => {
   const page = heartPage({ cards: [{ id: '7', handle: 'h', liked: false }], storage: { productLikedIds: '["1"]', productLikedHandles: '["a"]' }, likesPageHere: false })
   // Un serveur qui ne répond pas.
   page.win.fetch = () => new Promise(() => {})

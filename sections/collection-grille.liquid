@@ -4,9 +4,11 @@
   sert toujours toutes les autres pages de collection.
   - Les tableaux, 24 par page (paginate), dans des cartes où l'œuvre est seule, en objet, sur le blanc de la page,
     anciens produits compris (snippets/collection-carte.liquid). Deux colonnes, trois dès 700 px, quatre dès 1100 px.
-  - La suite arrive seule : <infinite-scroll> (assets/collection.js) charge la page suivante (?page=N&section_id=),
-    700 px avant la fin, et l'annonce (évènement mma:collection-lot) ; <collection-suite> (même fichier) tient le compte
-    au bout du dernier lot : « 48 tableaux sur 327 » et une jauge, puis « Vous avez vu les 327 tableaux. ».
+  - La suite arrive seule quand on descend vers la fin des tableaux : <infinite-scroll> (assets/collection.js) charge la
+    page suivante (?page=N&section_id=), 700 px avant la fin, et l'annonce (évènement mma:collection-lot) ;
+    <collection-suite> (même fichier) tient le compte au bout du dernier lot : « 48 tableaux sur 327 » et une jauge, puis
+    « Vous avez vu les 327 tableaux. ». Quand on remonte depuis le bas de la page, rien ne se pose ni ne bouge : le
+    bouton « Voir plus de tableaux » (data-bouton, caché sans JavaScript) attend au bout (Walid, 26/11/2026).
   - Les liens ?page=N (snippets/pagination.liquid) restent dans le HTML pour Google, et mènent sans JavaScript aux
     pages suivantes.
   - La liste ItemList de la page, la même que celle de la grille d'aujourd'hui (snippet commun json-ld-item-list).
@@ -76,6 +78,7 @@
               data-page="{{ paginate.current_page }}"
               data-section-id="{{ section.id }}"
               data-marge="700"
+              data-bouton="suite-plus"
               data-paginate-previous-url="{{ paginate.previous.url }}"
               data-paginate-next-url="{{ paginate.next.url }}">
           {%- endif -%}
@@ -97,6 +100,9 @@
         <collection-suite id="suite" class="refonte-suite" data-vus="{{ vus }}" data-total="{{ total }}" data-statut="statut">
           <p class="refonte-suite-compte"{% if fin %} hidden{% endif %}>{{ cles_grille | append: 'compte_html' | t: vus: vus, total: total }}</p>
           <progress class="refonte-jauge" value="{{ vus }}" max="{{ total }}" aria-hidden="true" data-allow-empty{% if fin %} hidden{% endif %}></progress>
+          {%- unless fin -%}
+            <button type="button" id="suite-plus" class="refonte-suite-plus" hidden>{{ cles_grille | append: 'plus' | t }}</button>
+          {%- endunless -%}
           {%- if filtres_actifs > 0 -%}
             <p class="refonte-suite-fin"{% unless fin %} hidden{% endunless %}>{{ cles_filtres | append: 'fin_choix' | t: count: total }} <a class="filtres-sans" href="{{ collection.url }}" data-tout>{{ cles_filtres | append: 'sans_filtre' | t: count: collection.all_products_count }}</a></p>
           {%- else -%}

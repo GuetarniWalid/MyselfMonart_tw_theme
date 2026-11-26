@@ -167,7 +167,7 @@ test('le bouton du menu : trois barres, l’angelot au-dessus, un décor ; la cr
   assert.match(bouton, /<img src="\/\/www\.myselfmonart\.com\/cdn\/shop\/t\/25\/assets\/entete-angelot-menu\.webp\?v=1" alt="" width="32" height="26" decoding="async">/)
 })
 
-test('le cœur des j’aime : un lien nommé dans les cinq langues, l’angelot derrière, le cœur de papiers des cartes, son nombre dedans', { skip: SKIP }, () => {
+test('le cœur des j’aime : un lien nommé dans les cinq langues, l’angelot derrière, le cœur des cartes, son nombre dedans', { skip: SKIP }, () => {
   const NOMS = { fr: 'Mes j\'aime', en: 'My likes', de: 'Meine Favoriten', es: 'Mis favoritos', nl: 'Mijn favorieten' }
   for (const [lang, nom] of Object.entries(NOMS)) {
     const html = entete({ collection: SALON, lang })
@@ -176,7 +176,7 @@ test('le cœur des j’aime : un lien nommé dans les cinq langues, l’angelot 
     assert.equal(unescape(lien[1]), nom, lang)
     assert.match(lien[3], /<img class="entete-coeur-ange" src="[^"]*entete-angelot-coeur\.webp\?v=1" alt="" width="38" height="28" decoding="async">/)
     const [, dessin] = /<svg class="coeur entete-coeur-dessin" viewBox="0 0 24 24" aria-hidden="true" focusable="false">([\s\S]*?)<\/svg>/.exec(lien[3])
-    assert.deepEqual([...dessin.matchAll(/ class="(coeur-(?!fibre)[^"]+)"/g)].map((m) => m[1]), ['coeur-rose', 'coeur-soleil', 'coeur-corail', 'coeur-trait'])
+    assert.deepEqual([...dessin.matchAll(/ class="(coeur-[^"]+)"/g)].map((m) => m[1]), ['coeur-fond', 'coeur-trait'])
     // Le compteur (<likes-count>, son script dans le même fichier) : caché à zéro, frère du lien dans le même <li>.
     assert.match(html, /<\/span>\s*<likes-count class="entete-coeur-compte"><span class="hidden">0<\/span><\/likes-count>/)
   }
@@ -372,13 +372,12 @@ test('la feuille : les angelots, un bloc à part ; les barres et le cœur ne bou
   }
   // Cachés par la classe hidden de assets/tw-header.js et du compteur : leurs règles ne l'emportent pas sur elle.
   for (const head of ['.entete-burger:not(.hidden)', '.entete-coeur-compte span:not(.hidden)']) assert.ok(regles.some((r) => r.head === head), head)
-  // Vide, le cœur est blanc ; un j'aime ou plus : ses trois papiers.
+  // Vide, le cœur est blanc ; un j'aime ou plus : corail.
   const AIME = 'li:has(> likes-count span:not(.hidden)) > .entete-coeur'
   const corps = (head) => regles.filter((r) => r.head === head && !r.context.length).map((r) => r.body).join(' ')
-  assert.match(corps('.entete-coeur .coeur-rose'), /fill: var\(--blanc\);/)
-  assert.match(corps(`${AIME} .coeur-rose`), /fill: var\(--rose\);/)
-  assert.match(corps('.entete-coeur .coeur-soleil, .entete-coeur .coeur-corail'), /opacity: 0;/)
-  assert.match(corps(`${AIME} .coeur-soleil, ${AIME} .coeur-corail`), /opacity: 1;/)
+  assert.match(corps('.entete-coeur .coeur-fond'), /fill: var\(--blanc\);/)
+  assert.match(corps(`${AIME} .coeur-fond`), /fill: var\(--corail\);/)
+  assert.ok(!regles.some((r) => /papier|soleil/.test(r.head)), 'plus de papiers')
   // L'angelot et le cœur sur le même axe, celui du bouton de 56 px, en pixels entiers.
   const [ange, dessin] = ['.entete-coeur .entete-coeur-ange', '.entete-coeur .entete-coeur-dessin'].map((h) => corps(h))
   const axe = (b) => Number(/left: (\d+)px/.exec(b)[1]) + Number(/width: (\d+)px/.exec(b)[1]) / 2

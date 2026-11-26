@@ -237,6 +237,7 @@
         "titre": "{{ titre }}: de schilderijen",
         "prix": "Vanaf {{ prix }}",
         "compte_html": "<b data-vus>{{ vus }}</b> van <b>{{ total }}</b> schilderijen",
+        "plus": "Meer schilderijen bekijken",
         "fin": {
           "one": "U heeft het schilderij gezien.",
           "other": "U heeft alle {{ count }} schilderijen gezien.",
@@ -245,6 +246,7 @@
         "poster": {
           "titre": "{{ titre }}: de posters",
           "compte_html": "<b data-vus>{{ vus }}</b> van <b>{{ total }}</b> posters",
+          "plus": "Meer posters bekijken",
           "fin": {
             "one": "U heeft de poster gezien.",
             "other": "U heeft alle {{ count }} posters gezien.",

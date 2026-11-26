@@ -111,18 +111,18 @@ test('la carte d’un nouveau produit : l’œuvre en objet, son nom court, « D
   assert.match(html, /<h3 class="refonte-carte-nom">\s*<a class="refonte-carte-lien"/)
   // Le prix : le plus bas, « Dès ».
   assert.match(html, /<p class="refonte-carte-prix">Dès 62,50 €<\/p>/)
-  // Le cœur de toutes les cartes (snippets/my-like-button.liquid), de papiers dans la grille.
+  // Le cœur de toutes les cartes (snippets/my-like-button.liquid), celui du nouveau design dans la grille.
   assert.match(html, new RegExp(`<my-like-button data-product-id="${p.id}" data-product-handle="tableau-superman-envol">`))
   assert.match(html, /<button type="button" aria-label="[^"]+" class="[^"]*\blike\b[^"]*">\s*<svg class="coeur" viewBox="0 0 24 24" aria-hidden="true" focusable="false">/)
 })
 
-test('le cœur de la grille : trois papiers du thème et leur contour, sur chaque carte, repli compris ; les cartes des autres pages gardent le cœur de toujours', { skip: SKIP }, async () => {
+test('le cœur de la grille : son fond corail et son contour, sur chaque carte, repli compris ; les cartes des autres pages gardent le cœur de toujours', { skip: SKIP }, async () => {
   const tapisserie = { ...ancienneToile(), template_suffix: 'tapestry' }
   for (const p of [nouvelleToile(), ancienneToile(), ancienPoster(), sansOeuvre(), tapisserie]) {
     const html = await carte(p)
     const [coeur] = html.match(/<svg class="coeur"[\s\S]*?<\/svg>/) || []
     assert.ok(coeur, p.handle)
-    assert.deepEqual([...coeur.matchAll(/ class="(coeur-(?!fibre)[^"]+)"/g)].map((m) => m[1]), ['coeur-rose', 'coeur-soleil', 'coeur-corail', 'coeur-trait'], p.handle)
+    assert.deepEqual([...coeur.matchAll(/ class="(coeur-[^"]+)"/g)].map((m) => m[1]), ['coeur-fond', 'coeur-trait'], p.handle)
     assert.doesNotMatch(html, /heart-icon|angelot/, p.handle)
   }
   // Le dessin n'arrive que par son paramètre : recommandations, « Mes j'aime » et recherche ne le passent pas.
@@ -135,7 +135,7 @@ test('le cœur de la grille : trois papiers du thème et leur contour, sur chaqu
   const C = ':root[data-refonte-page] .refonte-carte'
   assert.match(regle(bloc, `${C} .coeur`).body, /width: 22px;\s*height: 22px;/)
   assert.match(regle(bloc, `${C} .like`).body, /padding: 9px;\s*border-radius: 50%;/)
-  assert.ok(!bloc.some((r) => /\.coeur-/.test(r.head)), 'les papiers sont dans input.css')
+  assert.ok(!bloc.some((r) => /\.coeur-/.test(r.head)), 'son dessin est dans input.css')
 })
 
 test('la carte d’un ancien produit : son œuvre à plat (2e image), jamais sa photo d’ambiance', { skip: SKIP }, async () => {
@@ -449,21 +449,23 @@ test('la section : ses places dans l’ordre, le titre invisible, la ligne des f
   }
 })
 
-test('la section : les liens ?page=N restent, et la suite arrive seule, 700 px avant la fin', { skip: SKIP }, async () => {
+test('la section : les liens ?page=N restent, et la suite arrive seule, 700 px avant la fin, ou par son bouton', { skip: SKIP }, async () => {
   const html = await grille(collection(80))
   // Les liens des pages, pour Google et sans JavaScript (snippets/pagination.liquid).
   const nav = /<div id="pages" class="refonte-pages">\s*(<nav[\s\S]*?<\/nav>)\s*<\/div>/.exec(html)
   assert.ok(nav, 'les liens des pages')
   const hrefs = [...nav[1].matchAll(/href="([^"]+)"/g)].map((m) => m[1]).filter(Boolean)
   assert.deepEqual(hrefs, ['/collections/tableaux-nature-sauvage?page=2', '/collections/tableaux-nature-sauvage?page=3', '/collections/tableaux-nature-sauvage?page=4', '/collections/tableaux-nature-sauvage?page=2'])
-  // La suite : <infinite-scroll> (assets/collection.js) autour des cartes de la page, avec sa marge de 700 px.
+  // La suite : <infinite-scroll> (assets/collection.js) autour des cartes de la page, avec sa marge de 700 px et l'id
+  // de son bouton, au bout de la suite.
   const suite = /<div id="liste" class="refonte-liste">\s*<infinite-scroll\s([^>]*)>\s*<ul class="refonte-cartes" role="list">/.exec(html)
   assert.ok(suite, 'la liste dans <infinite-scroll>')
   const data = Object.fromEntries([...suite[1].matchAll(/([\w-]+)="([^"]*)"/g)].map((m) => [m[1], m[2]]))
   assert.deepEqual(data, {
     id: 'infinite-scroll-607047844187-1', 'data-pages': '4', 'data-page': '1', 'data-section-id': 'template--1__grille', 'data-marge': '700',
-    'data-paginate-previous-url': '', 'data-paginate-next-url': '/collections/tableaux-nature-sauvage?page=2',
+    'data-bouton': 'suite-plus', 'data-paginate-previous-url': '', 'data-paginate-next-url': '/collections/tableaux-nature-sauvage?page=2',
   })
+  assert.match(html, /<collection-suite id="suite"[\s\S]*<button type="button" id="suite-plus"[\s\S]*<\/collection-suite>/)
   // Une seule page : ni suite ni liens.
   const seule = await grille(collection(10))
   assert.doesNotMatch(seule, /<infinite-scroll|<nav/)
@@ -477,28 +479,34 @@ test('la suite : « 24 tableaux sur 80 » et sa jauge au bout du lot, puis « Vo
   assert.match(debut, /<p class="refonte-suite-compte"><b data-vus>24<\/b> tableaux sur <b>80<\/b><\/p>/)
   assert.match(debut, /<progress class="refonte-jauge" value="24" max="80" aria-hidden="true" data-allow-empty><\/progress>/)
   assert.match(debut, /<p class="refonte-suite-fin" hidden>Vous avez vu les 80 tableaux\.<\/p>/)
+  // « Voir plus de tableaux », sous la jauge : caché sans JavaScript (les liens des pages servent alors), montré par
+  // <infinite-scroll>.
+  assert.match(debut, /<\/progress><button type="button" id="suite-plus" class="refonte-suite-plus" hidden>Voir plus de tableaux<\/button><p class="refonte-suite-fin" hidden>/)
   // Arrivé sur la page 3 : le rang du dernier tableau de la page.
   assert.match(await suite(collection(80), { page: 3 }), /<b data-vus>72<\/b> tableaux sur <b>80<\/b>/)
-  // La dernière page : la fin, sans compte ni jauge.
+  // La dernière page : la fin, sans compte ni jauge ni bouton.
   const fin = await suite(collection(80), { page: 4 })
   assert.match(fin, /<p class="refonte-suite-compte" hidden>/)
   assert.match(fin, /<progress class="refonte-jauge" value="80" max="80" aria-hidden="true" data-allow-empty hidden><\/progress>/)
   assert.match(fin, /<p class="refonte-suite-fin">Vous avez vu les 80 tableaux\.<\/p>/)
+  assert.doesNotMatch(fin, /<button/)
   // Une page, un tableau.
   assert.match(await suite(collection(1)), /<p class="refonte-suite-fin">Vous avez vu le tableau\.<\/p>/)
+  assert.doesNotMatch(await suite(collection(1)), /<button/)
   // Les cinq langues.
   const TEXTES = {
-    fr: ['24 tableaux sur 80', 'Vous avez vu les 80 tableaux.'],
-    en: ['24 of 80 artworks', 'You have seen all 80 artworks.'],
-    de: ['24 von 80 Bildern', 'Sie haben alle 80 Bilder gesehen.'],
-    es: ['24 de 80 cuadros', 'Ha visto los 80 cuadros.'],
-    nl: ['24 van 80 schilderijen', 'U heeft alle 80 schilderijen gezien.'],
+    fr: ['24 tableaux sur 80', 'Vous avez vu les 80 tableaux.', 'Voir plus de tableaux'],
+    en: ['24 of 80 artworks', 'You have seen all 80 artworks.', 'See more artworks'],
+    de: ['24 von 80 Bildern', 'Sie haben alle 80 Bilder gesehen.', 'Weitere Bilder ansehen'],
+    es: ['24 de 80 cuadros', 'Ha visto los 80 cuadros.', 'Ver más cuadros'],
+    nl: ['24 van 80 schilderijen', 'U heeft alle 80 schilderijen gezien.', 'Meer schilderijen bekijken'],
   }
-  for (const [lang, [compte, vu]] of Object.entries(TEXTES)) {
+  for (const [lang, [compte, vu, plus]] of Object.entries(TEXTES)) {
     const html = await suite(collection(80), { lang })
     assert.equal(texte(/<p class="refonte-suite-compte">[\s\S]*?<\/p>/.exec(html)[0]), compte, lang)
     assert.match(/<b data-vus>(\d+)<\/b>/.exec(html)[1], /^24$/, `${lang} : le nombre que le script tient à jour`)
     assert.equal(texte(/<p class="refonte-suite-fin" hidden>[\s\S]*?<\/p>/.exec(html)[0]), vu, lang)
+    assert.equal(texte(/<button type="button" id="suite-plus" class="refonte-suite-plus" hidden>[\s\S]*?<\/button>/.exec(html)[0]), plus, lang)
   }
 })
 
@@ -602,6 +610,7 @@ function pageDuScript({ search = '?view=refonte' } = {}) {
       this.dataset = new Proxy({}, {
         get: (_, k) => this.attrs[`data-${String(k).replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`],
       })
+      this.listeners = {}
       const classes = new Set((attrs.class || '').split(/\s+/).filter(Boolean))
       this.classList = { add: (c) => classes.add(c), remove: (c) => classes.delete(c), contains: (c) => classes.has(c), replace: (a, b) => { if (classes.delete(a)) classes.add(b) } }
       Object.defineProperty(this, 'className', { get: () => [...classes].join(' ') })
@@ -628,11 +637,17 @@ function pageDuScript({ search = '?view=refonte' } = {}) {
       if (selector === 'script[type="module"][src]') return this.tagName === 'SCRIPT' && this.attrs.type === 'module' && 'src' in this.attrs
       const attr = /^\[([\w-]+)\]$/.exec(selector)
       if (attr) return attr[1] in this.attrs
+      const tagAttr = /^(\w+)\[([\w-]+)\]$/.exec(selector)
+      if (tagAttr) return this.tagName === tagAttr[1].toUpperCase() && tagAttr[2] in this.attrs
       return this.tagName === selector.toUpperCase()
     }
     querySelectorAll(selector) { return this.children.flatMap((c) => [...(c.matches(selector) ? [c] : []), ...c.querySelectorAll(selector)]) }
     querySelector(selector) { return this.querySelectorAll(selector)[0] || null }
-    addEventListener() {}
+    addEventListener(type, fn) { (this.listeners[type] = this.listeners[type] || []).push(fn) }
+    removeEventListener(type, fn) { this.listeners[type] = (this.listeners[type] || []).filter((f) => f !== fn) }
+    // Un toucher : ses écouteurs, comme le navigateur les appelle.
+    click() { (this.listeners.click || []).slice().forEach((fn) => fn({ type: 'click', target: this })) }
+    focus(options) { document.activeElement = this; this.focusOptions = options }
     getBoundingClientRect() { return { top: 0, bottom: 0, height: 0 } }
   }
   const registry = new Map()
@@ -642,12 +657,17 @@ function pageDuScript({ search = '?view=refonte' } = {}) {
     disconnect() { this.live = false }
     fire(isIntersecting = true) { if (this.live) return this.callback(this.targets.map((target) => ({ target, isIntersecting }))) }
   }
-  // La page suivante, telle que la renvoie ?page=N&section_id= : un <infinite-scroll> et ses cartes.
+  // La page suivante, telle que la renvoie ?page=N&section_id= : un <infinite-scroll> et ses cartes, chacune son lien.
   let reponse = { page: 2, cartes: 24 }
-  const lot = ({ page, cartes }) => new El('infinite-scroll', { attrs: { 'data-page': String(page) }, children: [new El('ul', { children: Array.from({ length: cartes }, () => new El('li')) })] })
+  const lot = ({ page, cartes }) => new El('infinite-scroll', { attrs: { 'data-page': String(page) }, children: [new El('ul', { children: Array.from({ length: cartes }, (_, i) => new El('li', { children: [new El('a', { attrs: { class: 'refonte-carte-lien', href: `/products/p${page}-${i}` } })] })) })] })
+  // Une réponse qu'on retient (le serveur tarde), ou qui échoue (hors ligne).
+  let attente = null
+  let echecs = 0
   const body = new El('body')
   const document = {
     body,
+    documentElement: new El('html'),
+    activeElement: null,
     createElement: (tag) => new El(tag),
     querySelector: (selector) => body.querySelector(selector),
     getElementById: (id) => body.querySelectorAll('*').find((el) => el.attrs.id === id) || null,
@@ -662,19 +682,28 @@ function pageDuScript({ search = '?view=refonte' } = {}) {
     customElements: { get: (name) => registry.get(name), define: (name, cls) => registry.set(name, cls) },
     requestAnimationFrame: (fn) => fn(),
     scrollY: 0,
+    innerHeight: 800,
     // Un défilement fait par le script : noté avec les évènements, pour leur ordre.
     scrollTo(...args) { events.push({ type: 'scrollTo', args }) },
     location: { pathname: '/collections/tableaux-nature-sauvage', search },
     history: { replaceState() {} },
-    fetch: async (url) => { requests.push(url); return { text: async () => reponse } },
+    fetch: async (url) => {
+      requests.push(url)
+      if (attente) await attente
+      if (echecs) { echecs -= 1; throw new Error('hors ligne') }
+      return { text: async () => reponse }
+    },
     DOMParser: class { parseFromString(r) { return { querySelector: (s) => (s === 'infinite-scroll' ? lot(r) : null) } } },
   }
   context.window = context
   vm.createContext(context)
   vm.runInContext(read('assets/collection.js'), context, { filename: 'assets/collection.js' })
   return {
-    El, body, observers, events, requests, registry,
+    El, body, document, observers, events, requests, registry,
     repondre(r) { reponse = r },
+    // Le serveur tarde : la réponse part quand on la relâche.
+    retenir() { let relacher; attente = new Promise((resolve) => { relacher = resolve }); return () => { attente = null; relacher() } },
+    echouer(n = 1) { echecs = n },
     // Un lot annoncé sur document, comme le fait <infinite-scroll>.
     annoncer: (detail) => document.dispatchEvent({ type: 'mma:collection-lot', detail }),
     // Un élément du script, déjà dans la page, construit puis branché, comme le navigateur le fait.
@@ -758,6 +787,170 @@ test('<infinite-scroll> retiré de la page pendant sa demande (un filtre a rempl
   assert.deepEqual(p.events.filter((e) => e.type === 'mma:collection-lot'), [], 'la suite de la nouvelle grille ne compte pas ce lot')
 })
 
+/* La nouvelle page (data-bouton, demande de Walid du 26/11/2026) : la suite ne vient seule que si l'on descend vers la
+   fin des tableaux. Arrivé au pied de la page, on remonte : la fin se montre par le haut de l'écran, rien ne se pose et
+   rien ne pousse ce qu'on lit ; « Voir plus de tableaux » attend au bout. L'écran fait 800 px ; la fin des tableaux est
+   la sentinelle du lot (.elem-bottom), placée à la main. */
+function grilleRefonte({ pages = '14', page = '1' } = {}) {
+  const p = pageDuScript()
+  const liste = new p.El('div', { attrs: { id: 'liste' } })
+  const bouton = new p.El('button', { attrs: { type: 'button', id: 'suite-plus', class: 'refonte-suite-plus', hidden: '' } })
+  p.body.append(liste)
+  p.body.append(new p.El('collection-suite', { attrs: { id: 'suite' }, children: [bouton] }))
+  const lot = p.monter('infinite-scroll', { 'data-pages': pages, 'data-page': page, 'data-section-id': 'template--1__grille', 'data-marge': '700', 'data-bouton': 'suite-plus' }, [new p.El('ul')], liste)
+  const fin = lot.querySelector('.elem-bottom')
+  const guet = p.observers.find((o) => o.targets[0] === fin)
+  return {
+    ...p, liste, bouton, lot, guet,
+    // La fin des tableaux à `top` px du haut de l'écran.
+    finA(top) { if (fin) fin.getBoundingClientRect = () => ({ top, bottom: top, height: 0 }) },
+    suivant: () => lot.nextElementSibling,
+    lots: () => p.events.filter((e) => e.type === 'mma:collection-lot'),
+  }
+}
+
+test('<infinite-scroll data-bouton> : on descend, la fin arrive par le bas de l’écran (700 px avant) : la page suivante se pose seule', async () => {
+  const g = grilleRefonte()
+  assert.equal(g.guet.options.rootMargin, '0px 0px 700px 0px')
+  // Le bouton : caché dans le HTML (sans JavaScript, les liens des pages servent), montré par le script.
+  assert.equal(g.bouton.hidden, false)
+  g.finA(800 + 640)
+  await g.guet.fire(true)
+  await attendre()
+  assert.deepEqual(g.requests, ['/collections/tableaux-nature-sauvage?view=refonte&page=2&section_id=template--1__grille'])
+  assert.equal(g.suivant().dataset.page, '2')
+  assert.deepEqual({ ...g.lots()[0].detail }, { cards: 24, direction: 'down' })
+  // La fin de ce lot ne se guette plus ; le bouton reste (une page suit encore), et le focus ne bouge pas.
+  assert.equal(g.guet.live, false)
+  assert.equal(g.bouton.hidden, false)
+  assert.equal(g.document.activeElement, null)
+})
+
+test('<infinite-scroll data-bouton> : on remonte du bas de la page, la fin arrive par le haut : rien ne se pose ; le bouton la pose d’un coup', async () => {
+  const g = grilleRefonte()
+  g.finA(30)
+  await g.guet.fire(true)
+  await attendre()
+  // La page suivante est déjà demandée, mais rien ne bouge sous les yeux.
+  assert.equal(g.requests.length, 1)
+  assert.equal(g.suivant(), null)
+  assert.deepEqual(g.lots(), [])
+  assert.equal(g.guet.live, true, 'la fin se guette toujours')
+  // On remonte encore, la fin passe sous le milieu de l'écran, toujours dans la marge : rien de nouveau.
+  g.finA(620)
+  assert.equal(g.suivant(), null)
+  // Le toucher : la page déjà là se pose, sans l'ancrage du défilement de Chrome (rendu juste après).
+  let ancrage
+  const after = g.lot.after
+  g.lot.after = function (node) { ancrage = g.document.documentElement.style.overflowAnchor; return after.call(this, node) }
+  g.bouton.click()
+  await attendre()
+  assert.equal(g.requests.length, 1, 'pas redemandée')
+  assert.equal(g.suivant().dataset.page, '2')
+  assert.equal(ancrage, 'none')
+  assert.equal(g.document.documentElement.style.overflowAnchor, '')
+  assert.equal(g.lots().length, 1)
+  // On repart du premier des nouveaux tableaux, là où était le bouton, sans que la page défile.
+  assert.equal(g.document.activeElement, g.suivant().querySelector('a[href]'))
+  assert.deepEqual({ ...g.document.activeElement.focusOptions }, { preventScroll: true })
+  assert.equal(g.bouton.getAttribute('aria-busy'), null)
+  // Un second toucher ne pose rien de plus : ce lot a fini, le suivant guettera sa propre fin.
+  g.bouton.click()
+  await attendre()
+  assert.equal(g.requests.length, 1)
+  assert.equal(g.lots().length, 1)
+})
+
+test('<infinite-scroll data-bouton> : un lot arrivé quand on a filé sous la fin attend ; remonté dans les tableaux, on redescend : il se pose', async () => {
+  const g = grilleRefonte()
+  const relacher = g.retenir()
+  g.finA(800 + 600)
+  const demande = g.guet.fire(true)
+  // Le serveur tarde ; la fin est passée au-dessus du milieu de l'écran : on lit ce qui suit la grille.
+  g.finA(120)
+  relacher()
+  await demande
+  await attendre()
+  assert.equal(g.suivant(), null, 'rien ne pousse ce qu’on lit')
+  assert.equal(g.guet.live, true)
+  // Remonté dans les tableaux plus loin que la marge : la fin sort par le bas ; on redescend, elle revient par le bas.
+  g.finA(800 + 900)
+  await g.guet.fire(false)
+  g.finA(800 + 690)
+  await g.guet.fire(true)
+  await attendre()
+  assert.equal(g.requests.length, 1, 'la page déjà là')
+  assert.equal(g.suivant().dataset.page, '2')
+  assert.equal(g.document.activeElement, null, 'le focus ne bouge que pour le bouton')
+})
+
+test('<infinite-scroll data-bouton> : touché pendant la demande, le bouton attend la réponse, puis la pose', async () => {
+  const g = grilleRefonte()
+  const relacher = g.retenir()
+  g.finA(40)
+  await g.guet.fire(true)
+  g.bouton.click()
+  await attendre()
+  assert.equal(g.bouton.getAttribute('aria-busy'), 'true')
+  assert.equal(g.suivant(), null)
+  relacher()
+  await attendre()
+  await attendre()
+  assert.equal(g.suivant().dataset.page, '2')
+  assert.equal(g.bouton.getAttribute('aria-busy'), null)
+  assert.equal(g.requests.length, 1)
+})
+
+test('<infinite-scroll data-bouton> : hors ligne, rien ne se pose et le bouton reste ; touché, il redemande', async () => {
+  const g = grilleRefonte()
+  g.echouer()
+  g.finA(800 + 640)
+  await g.guet.fire(true)
+  await attendre()
+  assert.equal(g.suivant(), null)
+  assert.equal(g.bouton.hidden, false)
+  g.bouton.click()
+  await attendre()
+  await attendre()
+  assert.equal(g.requests.length, 2)
+  assert.equal(g.suivant().dataset.page, '2')
+})
+
+test('<infinite-scroll data-bouton> : la dernière page posée, le bouton se cache ; sur la dernière page, il ne se montre pas', async () => {
+  const g = grilleRefonte({ pages: '2' })
+  g.finA(800 + 640)
+  await g.guet.fire(true)
+  await attendre()
+  assert.equal(g.suivant().dataset.page, '2')
+  assert.equal(g.bouton.hidden, true)
+  const derniere = grilleRefonte({ pages: '2', page: '2' })
+  assert.equal(derniere.bouton.hidden, true)
+  assert.equal(derniere.guet, undefined, 'aucune fin à guetter')
+})
+
+test('<infinite-scroll data-bouton> : un filtre remplace la grille ; l’ancien lot ne guette plus sa fin, l’ancien bouton ne le pose plus', async () => {
+  const g = grilleRefonte()
+  g.liste.detach()
+  g.lot.disconnectedCallback()
+  assert.equal(g.guet.live, false)
+  g.bouton.click()
+  await attendre()
+  assert.deepEqual(g.requests, [])
+  assert.equal(g.suivant(), null)
+})
+
+test('<infinite-scroll> sans data-bouton (la grille d’aujourd’hui) : la suite se pose dès que sa fin approche, d’où qu’elle vienne', async () => {
+  const p = pageDuScript()
+  const liste = new p.El('div', { attrs: { id: 'liste' } })
+  p.body.append(liste)
+  const lot = p.monter('infinite-scroll', { 'data-pages': '14', 'data-page': '1', 'data-section-id': 'template--1__grille' }, [new p.El('ul')], liste)
+  const fin = lot.querySelector('.elem-bottom')
+  fin.getBoundingClientRect = () => ({ top: 30, bottom: 30, height: 0 })
+  await p.observers[0].fire(true)
+  await attendre()
+  assert.equal(lot.nextElementSibling.dataset.page, '2')
+})
+
 test('<collection-suite> : le compte et la jauge suivent les lots qui arrivent en bas, puis la fin ; la zone parlée le dit', () => {
   const p = pageDuScript()
   const statut = new p.El('div', { attrs: { id: 'statut', role: 'status' } })
@@ -792,15 +985,16 @@ test('<collection-suite> : le compte et la jauge suivent les lots qui arrivent e
 test('sur une collection de posters (ticket 09) : « 24 posters sur 80 », « Vous avez vu les 80 posters. », le titre caché, dans les cinq langues', { skip: SKIP }, async () => {
   const posters = (n) => collection(n, { handle: 'posters-affiches-nature', title: 'Poster & Affiche Nature', type: 'poster' })
   const TEXTES = {
-    fr: ['24 posters sur 80', 'Vous avez vu les 80 posters.', 'Vous avez vu le poster.', 'Poster & Affiche Nature : les posters'],
-    en: ['24 of 80 posters', 'You have seen all 80 posters.', 'You have seen the poster.', 'Poster & Affiche Nature: the posters'],
-    de: ['24 von 80 Postern', 'Sie haben alle 80 Poster gesehen.', 'Sie haben das Poster gesehen.', 'Poster & Affiche Nature: die Poster'],
-    es: ['24 de 80 pósteres', 'Ha visto los 80 pósteres.', 'Ha visto el póster.', 'Poster & Affiche Nature: los pósteres'],
-    nl: ['24 van 80 posters', 'U heeft alle 80 posters gezien.', 'U heeft de poster gezien.', 'Poster & Affiche Nature: de posters'],
+    fr: ['24 posters sur 80', 'Vous avez vu les 80 posters.', 'Vous avez vu le poster.', 'Poster & Affiche Nature : les posters', 'Voir plus de posters'],
+    en: ['24 of 80 posters', 'You have seen all 80 posters.', 'You have seen the poster.', 'Poster & Affiche Nature: the posters', 'See more posters'],
+    de: ['24 von 80 Postern', 'Sie haben alle 80 Poster gesehen.', 'Sie haben das Poster gesehen.', 'Poster & Affiche Nature: die Poster', 'Weitere Poster ansehen'],
+    es: ['24 de 80 pósteres', 'Ha visto los 80 pósteres.', 'Ha visto el póster.', 'Poster & Affiche Nature: los pósteres', 'Ver más pósteres'],
+    nl: ['24 van 80 posters', 'U heeft alle 80 posters gezien.', 'U heeft de poster gezien.', 'Poster & Affiche Nature: de posters', 'Meer posters bekijken'],
   }
-  for (const [lang, [compte, vu, un, titre]] of Object.entries(TEXTES)) {
+  for (const [lang, [compte, vu, un, titre, plus]] of Object.entries(TEXTES)) {
     const html = await grille(posters(80), { lang })
     assert.equal(texte(/<p class="refonte-suite-compte">[\s\S]*?<\/p>/.exec(html)[0]), compte, lang)
+    assert.equal(texte(/<button type="button" id="suite-plus" class="refonte-suite-plus" hidden>[\s\S]*?<\/button>/.exec(html)[0]), plus, lang)
     assert.match(/<b data-vus>(\d+)<\/b>/.exec(html)[1], /^24$/, `${lang} : le nombre que le script tient à jour`)
     assert.equal(texte(/<p class="refonte-suite-fin" hidden>[\s\S]*?<\/p>/.exec(html)[0]), vu, lang)
     assert.equal(texte(/<p class="refonte-suite-fin">[\s\S]*?<\/p>/.exec(await grille(posters(1), { lang }))[0]), un, `${lang} : un poster`)
@@ -811,7 +1005,7 @@ test('sur une collection de posters (ticket 09) : « 24 posters sur 80 », « Vo
 test('les textes des posters de la grille : les mêmes clés que ceux des tableaux, dans les cinq langues', () => {
   for (const lang of Object.keys(LANGS)) {
     const t = locales[lang].sections.mma.collection_grille
-    assert.deepEqual(Object.keys(t.poster).sort(), ['compte_html', 'fin', 'titre'], lang)
+    assert.deepEqual(Object.keys(t.poster).sort(), ['compte_html', 'fin', 'plus', 'titre'], lang)
     assert.deepEqual(Object.keys(t.poster.fin).sort(), Object.keys(t.fin).sort(), `${lang}.poster.fin : le pluriel des tableaux`)
     // Le titre de la collection tel qu'il s'écrit, puis les œuvres : jamais « Les tableau lion ».
     for (const v of [t.titre, t.poster.titre]) assert.match(v, /^{{ titre }} ?: \S/, `${lang} : ${v}`)

@@ -30,11 +30,113 @@ class InfiniteScroll extends HTMLElement {
 
   connectedCallback() {
     this.outlineEdges();
-    if (!this.isLastPage && !this.nextPageExists)
-      this.createFetcherObserver(this.bottom);
+    if (!this.isLastPage && !this.nextPageExists) {
+      if (this.dataset.bouton) this.watchEnd();
+      else this.createFetcherObserver(this.bottom);
+    }
     if (!this.isFirstPage && !this.previousPageExists)
       this.createFetcherObserver(this.top);
     this.createCurrentPageObserver();
+  }
+
+  // Un filtre a remplacé la grille : la fin d'un lot qui n'est plus là ne se guette plus, son bouton ne le pose plus.
+  disconnectedCallback() {
+    this.stopWatching();
+  }
+
+  /* La nouvelle page collection (sections/collection-grille.liquid ; data-bouton : l'id du bouton « Voir plus de
+     tableaux », au bout des tableaux). Demande de Walid du 26/11/2026 : arrivé au pied de la page, on remonte un peu, la
+     fin des tableaux se montre, la page suivante arrivait et poussait ce qu'on lisait. La suite ne vient donc seule que si
+     l'on descend vers la fin des tableaux :
+     - la fin arrive par le bas de l'écran, à `marge` px près (on descend dans les tableaux) : la page suivante se charge
+       et se pose ;
+     - elle arrive par le haut (on remonte depuis le guide ou les questions) : rien ne se pose, rien ne bouge ; la page
+       suivante est seulement demandée, et le bouton la pose d'un coup ;
+     - un lot arrivé quand la fin est déjà passée au-dessus du milieu de l'écran (on a filé vers le bas) attend de même ;
+     - remonté dans les tableaux plus loin que la marge, on redescend : la suite revient seule.
+     Le bouton se montre tant qu'une page suivante existe, et marche toujours (une demande lente, hors ligne). */
+  watchEnd() {
+    this.plusButton = document.getElementById(this.dataset.bouton);
+    if (this.plusButton) {
+      this.onPlus = () => this.showNext(true);
+      this.plusButton.addEventListener('click', this.onPlus);
+      this.plusButton.hidden = false;
+    }
+    this.endObserver = new IntersectionObserver((entries) => {
+      if (!entries[entries.length - 1].isIntersecting) return;
+      if (this.endAhead()) this.showNext();
+      else this.nextBatch().catch(() => {});
+    }, { rootMargin: `0px 0px ${this.margin}px 0px` });
+    this.endObserver.observe(this.querySelector(`.${this.bottom}`));
+  }
+
+  stopWatching() {
+    this.endObserver?.disconnect();
+    this.endObserver = null;
+    if (this.plusButton) {
+      this.plusButton.removeEventListener('click', this.onPlus);
+      this.plusButton.removeAttribute('aria-busy');
+    }
+  }
+
+  // La fin des tableaux est devant nous : sous le milieu de l'écran, ou plus bas.
+  endAhead() {
+    return this.querySelector(`.${this.bottom}`).getBoundingClientRect().top > window.innerHeight / 2;
+  }
+
+  // La page suivante, demandée une seule fois ; après un échec (hors ligne), le prochain besoin la redemande.
+  nextBatch() {
+    if (!this.nextRequest) {
+      this.nextRequest = this.fetchPage(this.bottom).then((html) => {
+        const node = this.parseNodeFromString(html);
+        if (!node) throw new Error('page suivante sans tableaux');
+        return node;
+      });
+      this.nextRequest.catch(() => {
+        this.nextRequest = null;
+      });
+    }
+    return this.nextRequest;
+  }
+
+  // asked : le bouton touché ; sinon, la fin arrivée par le bas de l'écran.
+  async showNext(asked = false) {
+    if (asked) {
+      this.asked = true;
+      this.plusButton?.setAttribute('aria-busy', 'true');
+    }
+    let node;
+    try {
+      node = await this.nextBatch();
+    } catch (error) {
+      this.plusButton?.removeAttribute('aria-busy');
+      return;
+    }
+    // Déjà posée, ou un filtre a remplacé la grille pendant la demande.
+    if (this.placed || !this.isConnected) return;
+    // On a filé plus bas pendant la demande : le lot attend le bouton, ou qu'on redescende vers la fin.
+    if (!this.asked && !this.endAhead()) return;
+    this.placed = true;
+    const button = this.plusButton;
+    this.stopWatching();
+    // La dernière page : plus rien à voir de plus.
+    if (button && this.page + 1 >= this.pages) button.hidden = true;
+    this.insertNode(node, this.bottom);
+    this.announceBatch(node, this.bottom);
+    // Au clavier comme au lecteur d'écran, on repart du premier des nouveaux tableaux, là où était le bouton.
+    if (this.asked) node.querySelector('a[href]')?.focus({ preventScroll: true });
+  }
+
+  /* La page suivante posée après les tableaux, sans l'ancrage du défilement de Chrome : quand aucun tableau ne se voit
+     plus au-dessus du bouton, il garderait à sa place ce qui suit la grille, et les nouveaux tableaux arriveraient hors
+     de l'écran, au-dessus. */
+  placeAfter(node) {
+    const page = document.documentElement.style;
+    page.overflowAnchor = 'none';
+    this.after(node);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      page.overflowAnchor = '';
+    }));
   }
 
   outlineEdges() {
@@ -90,8 +192,11 @@ class InfiniteScroll extends HTMLElement {
 
   insertNode(node, direction) {
     if (direction === this.bottom) {
-      // Check if footer is visible or near - if so, preserve scroll position
-      if (this.isFooterVisibleOrNear()) {
+      if (this.dataset.bouton) {
+        // La nouvelle page collection : posée seulement quand on regarde les tableaux, plus bas (watchEnd).
+        this.placeAfter(node);
+      } else if (this.isFooterVisibleOrNear()) {
+        // Check if footer is visible or near - if so, preserve scroll position
         this.keepSameScrollPositionBottom(node);
       } else {
         this.after(node);

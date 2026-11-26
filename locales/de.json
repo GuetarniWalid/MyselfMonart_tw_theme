@@ -235,6 +235,7 @@
         "titre": "{{ titre }}: die Bilder",
         "prix": "Ab {{ prix }}",
         "compte_html": "<b data-vus>{{ vus }}</b> von <b>{{ total }}</b> Bildern",
+        "plus": "Weitere Bilder ansehen",
         "fin": {
           "one": "Sie haben das Bild gesehen.",
           "other": "Sie haben alle {{ count }} Bilder gesehen.",
@@ -243,6 +244,7 @@
         "poster": {
           "titre": "{{ titre }}: die Poster",
           "compte_html": "<b data-vus>{{ vus }}</b> von <b>{{ total }}</b> Postern",
+          "plus": "Weitere Poster ansehen",
           "fin": {
             "one": "Sie haben das Poster gesehen.",
             "other": "Sie haben alle {{ count }} Poster gesehen.",
