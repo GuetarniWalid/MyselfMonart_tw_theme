@@ -601,7 +601,7 @@ test('la feuille : au survol, l’œuvre pivote de 12° en perspective, sans gro
   assert.deepEqual(transitions.map((r) => r.head).sort(), [H, `${H} .like`, SURVOL].sort(), 'l’objet ne porte aucune transition à lui')
   // L'angle, l'œil à 3,5 largeurs de scène.
   assert.match(corps(`${H} .oeuvre-card-piece`), /--pivot-angle: calc\(var\(--refonte-pivot\) \* 12deg\); transform: rotateY\(calc\(-1 \* var\(--pivot-angle\)\)\);/)
-  assert.match(corps(`${H} .oeuvre-card-stage`), /perspective: calc\(3\.5 \* 100cqw\);/)
+  assert.match(corps(`${H} .oeuvre-card-stage`), /perspective: max\(600px, 3\.5 \* 100cqw\);/)
   assert.match(corps(`${H} .oeuvre-card`), /container-type: inline-size;/)
   // La tranche : la largeur qu'on en voit vraiment, et ses arêtes qui fuient vers le mur.
   const tranche = corps(`${H} .oeuvre-card-tranche`)

@@ -815,12 +815,13 @@
       --refonte-pivot: 1;
       transition: --refonte-pivot 0.8s cubic-bezier(0.2, 0.75, 0.25, 1);
     }
-    /* L'œil, à 3,5 largeurs de scène : la vignette est le conteneur qui donne sa largeur à la scène. */
+    /* L'œil, à 3,5 largeurs de scène : la vignette est le conteneur qui donne sa largeur à la scène. Jamais plus près
+       que 600 px : une scène mesurée à zéro un instant (une capture d'écran l'a fait) mettrait l'œil contre l'œuvre. */
     :root[data-refonte-page] .refonte-carte .oeuvre-card {
       container-type: inline-size;
     }
     :root[data-refonte-page] .refonte-carte .oeuvre-card-stage {
-      perspective: calc(3.5 * 100cqw);
+      perspective: max(600px, 3.5 * 100cqw);
     }
     :root[data-refonte-page] .refonte-carte .oeuvre-card-piece {
       --pivot-angle: calc(var(--refonte-pivot) * 12deg);
