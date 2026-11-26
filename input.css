@@ -2419,7 +2419,8 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
     --emb: clamp(44px, min(var(--emb-h), var(--emb-l)), 66px);
     position: absolute; top: calc(100% + 2px); right: auto; bottom: auto; left: 0; width: 100%;
     display: block; height: auto; max-height: calc(100dvh - var(--menu-haut, 123px) - 40px);
-    overflow: hidden auto; overscroll-behavior: contain;
+    /* La molette sur le panneau fait défiler la page (l'en-tête part, le menu se ferme), comme ailleurs. */
+    overflow: hidden auto; overscroll-behavior: auto;
     border-top: 0; transform: none; transition: none;
     clip-path: inset(0 0 100% 0);
   }

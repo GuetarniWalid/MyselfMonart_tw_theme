@@ -718,22 +718,33 @@ class MenuOrdinateur {
     const departVieux = enCours && enCours.neuf === vieux ? ou(vieux) : { opacity: 1, transform: 'none' };
     const departNeuf = enCours && enCours.vieux === neuf ? ou(neuf) : null;
     const hauteurAvant = this.hauteurVue();
+    // « Suivre ma commande » : d'où on le voit maintenant.
+    const pied = menu.querySelector('.menu-tel-pied');
+    const piedAvant = pied ? pied.getBoundingClientRect().top : 0;
     this.annulerChangement();
     // L'ancien rayon reste là, par-dessus, le temps de partir (data-part, input.css).
     vieux.setAttribute('data-part', '');
     this.montrer(apres);
     const hauteurApres = menu.offsetHeight;
+    const piedApres = pied ? pied.getBoundingClientRect().top : 0;
     const sens = apres > avant ? 1 : -1;
     const options = { duration: MenuOrdinateur.CHANGEMENT, easing: MenuOrdinateur.COURBE };
     const part = vieux.animate([departVieux, { opacity: 0, transform: `translateX(${-24 * sens}px)` }], options);
     const arrive = neuf.animate([departNeuf || { opacity: 0, transform: `translateX(${24 * sens}px)` }, { opacity: 1, transform: 'none' }], options);
     let hauteur = null;
+    let glisse = null;
     const H = Math.ceil(Math.max(hauteurAvant, hauteurApres));
     if (Math.abs(hauteurAvant - hauteurApres) >= 1) {
       menu.style.minHeight = `${H}px`;
       hauteur = menu.animate([{ clipPath: `inset(0 0 ${H - hauteurAvant}px 0)` }, { clipPath: `inset(0 0 ${H - hauteurApres}px 0)` }], options);
+      // Le pied suit le bord du panneau, de sa place d'avant à celle d'après (mesurée sans la hauteur gardée le temps du
+      // changement) : il ne disparaît ni ne saute à la fin.
+      if (pied) {
+        const pendant = pied.getBoundingClientRect().top;
+        glisse = pied.animate([{ transform: `translateY(${piedAvant - pendant}px)` }, { transform: `translateY(${piedApres - pendant}px)` }], options);
+      }
     }
-    const changement = { vieux, neuf, part, arrive, hauteur, H };
+    const changement = { vieux, neuf, part, arrive, hauteur, glisse, H };
     this.changement = changement;
     arrive.finished.then(() => this.changement === changement && this.annulerChangement(), () => {});
   }
@@ -755,6 +766,7 @@ class MenuOrdinateur {
     c.part.cancel();
     c.arrive.cancel();
     if (c.hauteur) c.hauteur.cancel();
+    if (c.glisse) c.glisse.cancel();
     c.vieux.removeAttribute('data-part');
     this.menu.style.minHeight = '';
   }
