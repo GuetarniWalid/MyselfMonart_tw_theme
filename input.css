@@ -2377,14 +2377,26 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
     cursor: pointer; -webkit-tap-highlight-color: transparent;
   }
   .menu-ordi-rayon:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
-  /* La pastille, une seule : blanche, cerclée d'encre, l'ombre de celle du téléphone. Le script la pose sous un rayon, à
-     sa largeur, et la fait glisser par sa seule transformation (depuis son bord gauche), sur sa propre couche : rien ne
-     se repeint quand elle s'arrête. Avant lui, le rayon de la page porte son dessin (data-pret : elle a pris le relais,
-     au même endroit). */
+  /* La pastille, une seule : blanche, cerclée d'encre, l'ombre de celle du téléphone. Le script la pose sous un rayon et
+     la fait glisser par les seules transformations de ses parts : la carte graphique joue le mouvement seule, rien ne se
+     repeint pendant qu'il passe. Quatre parts, pour que sa largeur change sans rien déformer : ses deux bouts ronds
+     (--d : la hauteur de la pastille), qui ne font que se déplacer ; son milieu, qui s'étire de l'un à l'autre (ses
+     traits d'encre, en haut et en bas, gardent leur épaisseur) ; dessous, son ombre douce. Pas de will-change : Chrome
+     garderait le dessin fait au début du mouvement, à son échelle (un milieu étiré, une pastille à 94 %), flou et avec
+     une couture une fois arrêtée ; sans lui, chaque part prend sa couche le temps du mouvement, puis se redessine nette.
+     Avant le script, le rayon de la page porte son dessin (data-pret : elle a pris le relais, au même endroit). */
   .menu-ordi-pastille {
-    position: absolute; top: 3px; left: 0; width: 0; height: 42px; border-radius: 999px;
-    background: var(--blanc); box-shadow: 0 0 0 1px var(--encre), 0 4px 12px var(--encre-12);
-    opacity: 0; pointer-events: none; transform-origin: 0 50%; will-change: transform;
+    --d: 42px;
+    position: absolute; top: 3px; left: 0; width: 0; height: var(--d);
+    opacity: 0; pointer-events: none; transform-origin: 0 50%;
+  }
+  .menu-ordi-pastille > span { position: absolute; top: 0; height: 100%; }
+  .menu-ordi-pastille-ombre, .menu-ordi-pastille-bout { left: 0; width: var(--d); }
+  .menu-ordi-pastille-ombre { border-radius: 999px; box-shadow: 0 4px 12px var(--encre-12); transform-origin: 0 50%; }
+  .menu-ordi-pastille-bout { border-radius: 50%; background: var(--blanc); box-shadow: 0 0 0 1px var(--encre); }
+  .menu-ordi-pastille-milieu {
+    left: calc(var(--d) / 2); width: 0; background: var(--blanc);
+    box-shadow: 0 -1px 0 var(--encre), 0 1px 0 var(--encre); transform-origin: 0 50%;
   }
   .menu-ordi-rayons:not([data-pret]) .menu-ordi-rayon[aria-current="true"] { background: var(--blanc); box-shadow: 0 0 0 1px var(--encre), 0 4px 12px var(--encre-12); }
 
@@ -2396,7 +2408,8 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
 
   /* Le panneau : le menu du téléphone, sous l'en-tête, fermé (découpé) tant que le script ne l'ouvre pas (data-ordi).
      Les emblèmes y prennent la plus grande taille, de 44 à 66 px, où tout le rayon tient sans défiler :
-     - en hauteur, sous l'en-tête entier (--menu-haut, le bandeau d'annonce compris), en laissant 40 px de la page en vue :
+     - en hauteur, sous l'en-tête entier (--panneau-haut, le bandeau d'annonce compris, que mesure le script ; le menu
+       du téléphone a son propre --menu-haut), en laissant 40 px de la page en vue :
        --rangees rangées de 1,3 fois l'emblème, plus ce qui ne grandit pas avec lui (--fixe : les marges, les noms, les
        nombres, les lignes de plus des noms longs, en allemand surtout). Le script mesure ces deux nombres sur le rayon
        qui a le plus de rangées ; sans lui, cinq rangées et une ligne par nom ;
@@ -2414,11 +2427,11 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
     --rangee-h: 9px;
     --rangee-b: 5px;
     --rangee-l: calc(100cqw - var(--cote-g) - var(--cote-d) - var(--col-g) - var(--col-ecart) - var(--col-titre) - 12px);
-    --emb-h: calc((100dvh - var(--menu-haut, 123px) - 40px - var(--fixe, 302px)) / (1.3 * var(--rangees, 5)));
+    --emb-h: calc((100dvh - var(--panneau-haut, 123px) - 40px - var(--fixe, 302px)) / (1.3 * var(--rangees, 5)));
     --emb-l: calc((var(--rangee-l) - var(--colonnes, 7) * (var(--emb-marge) + 2px) + var(--emb-marge) / 2) / (var(--colonnes, 7) + 0.5));
     --emb: clamp(44px, min(var(--emb-h), var(--emb-l)), 66px);
     position: absolute; top: calc(100% + 2px); right: auto; bottom: auto; left: 0; width: 100%;
-    display: block; height: auto; max-height: calc(100dvh - var(--menu-haut, 123px) - 40px);
+    display: block; height: auto; max-height: calc(100dvh - var(--panneau-haut, 123px) - 40px);
     /* La molette sur le panneau fait défiler la page (l'en-tête part, le menu se ferme), comme ailleurs. */
     overflow: hidden auto; overscroll-behavior: auto;
     border-top: 0; transform: none; transition: none;
@@ -2439,6 +2452,11 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
   :root .menu-ordi-barre .menu-tel[data-ordi] .menu-tel-rayon.menu-tel-rayon { display: block; position: absolute; top: 0; left: 0; right: 0; content-visibility: hidden; }
   :root .menu-ordi-barre .menu-tel[data-ordi] .menu-tel-rayon.menu-tel-rayon[data-vu] { position: relative; content-visibility: visible; }
   :root .menu-ordi-barre .menu-tel[data-ordi] .menu-tel-rayon.menu-tel-rayon[data-part] { content-visibility: visible; pointer-events: none; }
+  /* Un navigateur qui ne connaît pas content-visibility (Safari avant la version 18) : les rayons cachés le sont à
+     l'ancienne. */
+  @supports not (content-visibility: hidden) {
+    :root .menu-ordi-barre .menu-tel[data-ordi] .menu-tel-rayon.menu-tel-rayon:not([data-vu], [data-part]) { visibility: hidden; height: 0; overflow: hidden; }
+  }
   :root .menu-ordi-barre .menu-tel-defile { display: block; overflow: visible; padding: var(--air-h) var(--cote-d) var(--air-b) var(--cote-g); }
   /* Sur ordinateur, ni l'interrupteur (la bascule de l'en-tête le remplace), ni les réseaux et le pays (au pied de page). */
   :root .menu-ordi-barre :is(.menu-tel-bascule, .menu-tel-reseaux, .menu-tel-pays, .menu-tel-pile, .menu-tel-chevron) { display: none; }
@@ -2462,10 +2480,12 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
   :root .menu-ordi-barre .menu-tel .menu-tel-suivi { min-height: 46px; padding: 0 14px; gap: 9px; font-size: 14.5px; }
 
   /* Le voile : la page, derrière le panneau, adoucie d'encre (et floutée, plus bas). Sous l'en-tête, jusqu'en bas de
-     l'écran (le script pose sa hauteur) ; un clic dessus ferme le menu. Caché, il n'est ni peint ni touché. */
+     l'écran, où que soit l'en-tête : il fait la hauteur de l'écran, et ce qui dépasse en bas n'allonge pas la page
+     (l'en-tête est un conteneur : ce qui en déborde ne compte pas dans le défilement). Un clic dessus ferme le menu.
+     Caché, il n'est ni peint ni touché. */
   :root .menu-ordi-voile {
     position: absolute; top: calc(100% + 1px); left: 0; right: 0; z-index: -1; display: block;
-    height: calc(100dvh - var(--menu-haut, 123px)); background: var(--voile); opacity: 0; visibility: hidden;
+    height: 100vh; background: var(--voile); opacity: 0; visibility: hidden;
   }
   :root .menu-ordi-voile[data-vu] { opacity: 1; visibility: visible; }
 }

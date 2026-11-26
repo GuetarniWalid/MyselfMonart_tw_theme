@@ -221,7 +221,7 @@
           {% render 'tw-default-logo', sans_rond: nouvel_entete %}
         {% endif %}
         {%- if nouvel_entete %}
-        <span class="menu-ordi-nom font-heading" aria-hidden="true">MyselfMonArt</span>
+        <span class="menu-ordi-nom font-heading" aria-hidden="true">{{ shop.name | escape }}</span>
         {%- else %}
         <span class="ml-3 hidden md:block font-heading text-4xl">MyselfMonArt</span>
         {%- endif %}

@@ -1,14 +1,15 @@
 {%- comment -%}
   menu-telephone — le menu du téléphone (demande de Walid du 25/11/2026 : « beaucoup plus joli », les emblèmes des
   collections en rangées qui défilent à la place des listes de liens, et plus rien de coupé en bas). Rendu par
-  snippets/tw-sticky-header.liquid dans <details class="md:hidden">, sous l'en-tête ; pour l'instant dans la vue de test
-  de la nouvelle page collection seulement (nouvel_entete).
+  snippets/tw-sticky-header.liquid dans le <details> du bouton du menu (menu-ordi-details), sous l'en-tête ; pour
+  l'instant dans la vue de test de la nouvelle page collection seulement (nouvel_entete).
 
   Les mêmes liens, dans le même ordre, que le menu d'avant : les blocs de la section (section.blocks, réglés dans
   config/settings_data.json), les mêmes adresses et les mêmes noms, lus en entier dans le lien.
-  - Un titre (title_only) : un onglet (« Nos Tableaux | Posters & Affiches »), le dessin de l'interrupteur de la page
-    collection. Des boutons radio et la feuille (:has) : sans script aussi. Sur une fiche ou une collection de posters,
-    l'onglet des posters est choisi d'abord. Un seul titre, ou aucun : pas d'onglets.
+  - Un titre (title_only) : un onglet (« Tableaux | Posters »), le dessin de l'interrupteur de la page collection. Des
+    boutons radio et la feuille (:has) : sans script aussi. L'onglet choisi d'abord : celui du rayon de la page
+    (snippets/menu-rayon-page.liquid, la règle du menu d'ordinateur aussi : sur une fiche ou une collection de posters,
+    les posters), sinon le premier. Un seul titre, ou aucun : pas d'onglets.
   - Un lien seul (collection_only, product_only, page_only) : une tuile, en haut (« Tous les Tableaux », « Best-seller »).
   - Un ensemble de collections (set_of_collections) : un groupe qui s'ouvre, un seul à la fois. Fermé, trois de ses
     emblèmes en petit, pour voir ce qu'il contient ; ouvert, sa rangée d'emblèmes (snippets/collection-embleme.liquid),
@@ -24,35 +25,24 @@
   Tests : scripts/menu-telephone.test.cjs.
 {%- endcomment -%}
 {%- liquid
-  # La page en cours : sa collection est marquée et son groupe ouvert ; sur un poster, l'onglet des posters d'abord.
+  # La page en cours : sa collection est marquée et son groupe ouvert.
   assign mt_page = 0
-  assign mt_poster = false
   if template.name == 'collection'
     assign mt_page = collection.id
-    if collection.metafields.custom.type_of_collection == 'poster'
-      assign mt_poster = true
-    endif
-  elsif template.name == 'product'
-    if product.type == 'poster' or product.metafields.artwork.type == 'poster'
-      assign mt_poster = true
-    endif
   endif
 
-  # Les onglets : un par titre du menu ; l'onglet choisi, le premier, ou celui dont un lien mène à des posters.
+  # Les onglets : un par titre du menu.
   assign mt_titres = 0
-  assign mt_choisi = 0
   for bloc in section.blocks
     if bloc.type == 'title_only'
       assign mt_titres = mt_titres | plus: 1
-    elsif mt_poster and mt_choisi == 0 and bloc.type == 'collection_only'
-      if bloc.settings.collection.metafields.custom.type_of_collection == 'poster'
-        assign mt_choisi = mt_titres | at_least: 1
-      endif
     endif
   endfor
-  assign mt_choisi = mt_choisi | at_least: 1
   assign mt_rayons = mt_titres | at_least: 1
 -%}
+{%- comment -%} L'onglet choisi d'abord : celui du rayon de la page, sinon le premier. {%- endcomment -%}
+{%- capture mt_choisi -%}{%- render 'menu-rayon-page', blocs: section.blocks -%}{%- endcapture -%}
+{%- assign mt_choisi = mt_choisi | plus: 0 | at_least: 1 -%}
 {%- capture mt_chevron -%}<svg class="menu-tel-chevron" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 4l4 4 4-4"/></svg>{%- endcapture -%}
 <div
   class="menu-tel absolute bottom-0 left-0 w-screen close-nav transition-transform duration-200"

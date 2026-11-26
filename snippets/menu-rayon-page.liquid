@@ -1,0 +1,44 @@
+{%- comment -%}
+  menu-rayon-page — le rayon de la page, une seule règle pour les deux menus de l'en-tête (ticket 13) : le bouton du menu
+  d'ordinateur s'en marque, et la pastille s'y pose (snippets/menu-ordinateur.liquid) ; le menu du téléphone s'ouvre sur
+  son onglet (snippets/menu-telephone.liquid).
+  Rend son numéro (1 : le premier titre du menu), ou 0 sur une page sans rayon (accueil, panier, page…). Sur une
+  collection ou une fiche : le premier rayon dont une tuile (collection_only) est du même type qu'elle
+  (custom.type_of_collection ; une fiche : poster, sinon toile), sinon le premier. Les tapisseries trouvent ainsi leur
+  rayon le jour où il a sa tuile.
+
+  Accepts:
+    - blocs: {Array} les blocs de la section de l'en-tête (section.blocks)
+
+  Usage :
+    {%- capture rayon -%}{%- render 'menu-rayon-page', blocs: section.blocks -%}{%- endcapture -%}
+    {%- assign rayon = rayon | plus: 0 -%}
+  Tests : scripts/menu-ordinateur.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  assign rp_type = ''
+  if template.name == 'collection'
+    assign rp_type = collection.metafields.custom.type_of_collection | default: 'painting'
+  elsif template.name == 'product'
+    assign rp_type = 'painting'
+    if product.type == 'poster' or product.metafields.artwork.type == 'poster'
+      assign rp_type = 'poster'
+    endif
+  endif
+
+  assign rp_rayon = 0
+  if rp_type != ''
+    assign rp_titres = 0
+    for bloc in blocs
+      if bloc.type == 'title_only'
+        assign rp_titres = rp_titres | plus: 1
+      elsif rp_rayon == 0 and bloc.type == 'collection_only'
+        if bloc.settings.collection.metafields.custom.type_of_collection == rp_type
+          assign rp_rayon = rp_titres | at_least: 1
+        endif
+      endif
+    endfor
+    assign rp_rayon = rp_rayon | at_least: 1
+  endif
+  echo rp_rayon
+-%}

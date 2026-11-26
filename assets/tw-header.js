@@ -201,9 +201,12 @@ class MenuTelephone {
     this.defile = panneau.querySelector('.menu-tel-defile');
     this.groupes = panneau.querySelectorAll('.menu-tel-groupe');
     this.pays = panneau.querySelector('.menu-tel-pays');
-    // Sur ordinateur (MenuOrdinateur, ordinateur : true), ses groupes sont tous ouverts : rien à suivre.
-    this.ordinateur = false;
-    this.groupes.forEach((groupe) => groupe.addEventListener('toggle', () => groupe.open && !this.ordinateur && this.suivre(groupe)));
+    // Sur ordinateur (passerSurOrdinateur), ses groupes sont tous ouverts : rien à suivre, et leurs titres ne les ferment pas.
+    this.surOrdinateur = false;
+    this.groupes.forEach((groupe) => {
+      groupe.addEventListener('toggle', () => groupe.open && !this.surOrdinateur && this.suivre(groupe));
+      groupe.querySelector('summary')?.addEventListener('click', (e) => this.surOrdinateur && e.preventDefault());
+    });
     panneau.addEventListener('change', (e) => {
       if (e.target.name === 'menu-tel-onglet') this.defile.scrollTop = 0;
     });
@@ -222,6 +225,34 @@ class MenuTelephone {
       groupe.open = groupe.hasAttribute('data-ouvert');
     });
     if (this.pays) this.pays.open = false;
+  }
+
+  /* Le panneau passe au menu d'ordinateur (MenuOrdinateur), qui l'ouvre sous l'en-tête, ou revient au téléphone. Sur
+     ordinateur, il n'est plus un dialogue (le reste de la page n'est pas bloqué) : sa liste prend le nom qu'il avait, la
+     bascule portant déjà celui de « Navigation principale » ; ses groupes sont tous ouverts, leurs titres ne sont plus que
+     des titres (ni clic, ni tabulation). De retour au téléphone, tout revient comme au départ. */
+  passerSurOrdinateur(oui) {
+    if (oui === this.surOrdinateur) return;
+    this.surOrdinateur = oui;
+    const liste = this.panneau.querySelector('nav');
+    if (oui) {
+      this.attributs = ['role', 'aria-modal', 'aria-label'].map((nom) => [nom, this.panneau.getAttribute(nom)]);
+      this.attributs.forEach(([nom]) => this.panneau.removeAttribute(nom));
+      this.nomListe = liste ? liste.getAttribute('aria-label') : null;
+      const nom = this.attributs[2][1];
+      if (liste && nom) liste.setAttribute('aria-label', nom);
+    } else {
+      this.attributs.forEach(([nom, valeur]) => valeur !== null && this.panneau.setAttribute(nom, valeur));
+      if (liste && this.nomListe !== null) liste.setAttribute('aria-label', this.nomListe);
+    }
+    this.groupes.forEach((groupe) => {
+      const titre = groupe.querySelector('summary');
+      if (oui) groupe.open = true;
+      if (!titre) return;
+      if (oui) titre.setAttribute('tabindex', '-1');
+      else titre.removeAttribute('tabindex');
+    });
+    if (!oui) this.fermer();
   }
 
   // Le dernier élément qui prend le focus : dans la liste des pays si elle est ouverte, sinon son bouton.
@@ -282,7 +313,7 @@ class MenuOrdinateur {
   static suite(avant, geste) {
     const etat = { ...avant };
     const faire = [];
-    const pastille = () => faire.push({ pastille: etat.vise || etat.ouvert || etat.courant || 0 });
+    const pastille = () => faire.push({ pastille: MenuOrdinateur.cible(etat) });
     const ouvrir = (rayon, par) => {
       faire.push({ annuler: 'ouvre' }, { annuler: 'ferme' });
       if (etat.ouvert !== rayon) faire.push({ ouvrir: rayon, avant: etat.ouvert });
@@ -375,6 +406,9 @@ class MenuOrdinateur {
     this.barre = stickyHeader.querySelector('.menu-ordi-barre');
     this.voile = stickyHeader.querySelector('.menu-ordi-voile');
     this.pastille = nav.querySelector('.menu-ordi-pastille');
+    this.ombre = nav.querySelector('.menu-ordi-pastille-ombre');
+    this.boutDroit = nav.querySelectorAll('.menu-ordi-pastille-bout')[1];
+    this.milieu = nav.querySelector('.menu-ordi-pastille-milieu');
     this.boutons = [...nav.querySelectorAll('.menu-ordi-rayon')];
     this.rayons = [...this.menu.querySelectorAll('.menu-tel-rayon')];
     this.ordinateur = window.matchMedia('(min-width: 768px)');
@@ -419,14 +453,14 @@ class MenuOrdinateur {
     document.addEventListener('keydown', (e) => e.key === 'Escape' && this.etat.ouvert && this.geste({ type: 'echap', focusDedans: this.dansLaZone(document.activeElement) }));
     // Sous 768 px, le menu redevient celui du téléphone ; au-dessus, la pastille reprend sa place.
     this.ordinateur.addEventListener('change', () => {
-      if (this.ordinateur.matches) this.placerPastille(this.cible(), false);
+      if (this.ordinateur.matches) this.placerPastille(MenuOrdinateur.cible(this.etat), false);
       else {
         this.geste({ type: 'telephone' });
         this.rendre();
       }
     });
     // La pastille suit la largeur des mots (la police qui arrive, une fenêtre qu'on élargit).
-    if ('ResizeObserver' in window) new ResizeObserver(() => this.placerPastille(this.cible(), false)).observe(nav);
+    if ('ResizeObserver' in window) new ResizeObserver(() => this.placerPastille(MenuOrdinateur.cible(this.etat), false)).observe(nav);
     // Une fenêtre qui change : la place sous l'en-tête et la taille des emblèmes se mesurent de nouveau.
     let attente = 0;
     window.addEventListener('resize', () => {
@@ -437,7 +471,7 @@ class MenuOrdinateur {
         this.mesurerPanneau();
       }, 250);
     });
-    this.placerPastille(this.cible(), false);
+    this.placerPastille(MenuOrdinateur.cible(this.etat), false);
     // Au repos, une fois la page chargée (après le premier tableau) : le panneau se prépare, caché, avec les images du
     // rayon de la page. Le premier survol le trouve prêt.
     const auRepos = () => {
@@ -478,9 +512,9 @@ class MenuOrdinateur {
     this.boutons.forEach((b, i) => b.setAttribute('aria-expanded', String(this.etat.ouvert === i + 1)));
   }
 
-  // Le rayon que la pastille marque : celui que la souris vise, sinon l'ouvert, sinon celui de la page.
-  cible() {
-    return this.etat.vise || this.etat.ouvert || this.etat.courant || 0;
+  // Le rayon que la pastille marque : celui que la souris vise, sinon l'ouvert, sinon celui de la page (0 : aucun).
+  static cible(etat) {
+    return etat.vise || etat.ouvert || etat.courant || 0;
   }
 
   dansLaZone(element) {
@@ -540,20 +574,12 @@ class MenuOrdinateur {
     }
   }
 
-  /* Le panneau passe à l'ordinateur : il n'est plus un dialogue (le reste de la page n'est pas bloqué), ses groupes
-     sont tous ouverts, leurs titres ne sont plus que des titres (ni clic, ni tabulation). Son onglet de téléphone (le
-     bouton radio) ne change pas : sur ordinateur, c'est data-vu qui montre un rayon. */
+  /* Le panneau passe à l'ordinateur (MenuTelephone.passerSurOrdinateur : plus un dialogue, tous ses groupes ouverts).
+     Son onglet de téléphone (le bouton radio) ne change pas : sur ordinateur, c'est data-vu qui montre un rayon. */
   prendre() {
     if (this.main) return;
     this.main = true;
-    if (this.tel) this.tel.ordinateur = true;
-    this.attributsTelephone = ['role', 'aria-modal', 'aria-label'].map((nom) => [nom, this.menu.getAttribute(nom)]);
-    this.attributsTelephone.forEach(([nom]) => this.menu.removeAttribute(nom));
-    this.menu.querySelectorAll('.menu-tel-groupe').forEach((groupe) => {
-      groupe.open = true;
-      const titre = groupe.querySelector('summary');
-      if (titre) titre.setAttribute('tabindex', '-1');
-    });
+    this.tel.passerSurOrdinateur(true);
     // La plus longue rangée (input.css : la taille des emblèmes, en largeur).
     const colonnes = Math.max(1, ...[...this.menu.querySelectorAll('.menu-tel-rangee')].map((r) => r.children.length));
     this.menu.style.setProperty('--colonnes', colonnes);
@@ -590,33 +616,28 @@ class MenuOrdinateur {
     this.montrer(vu ? vu.dataset.rayon : this.etat.ouvert || this.etat.courant || 1);
   }
 
-  // Tout revient comme au téléphone : le <details> fermé, ses groupes et leurs titres, ses rayons.
+  // Tout revient comme au téléphone : le <details> fermé, le panneau, ses groupes et leurs titres, ses rayons.
   rendre() {
     if (!this.main) return;
     this.annulerChangement();
     this.main = false;
-    if (this.tel) this.tel.ordinateur = false;
     this.details.open = false;
     this.vagues(null);
     this.menu.removeAttribute('data-ordi');
-    this.attributsTelephone.forEach(([nom, valeur]) => valeur !== null && this.menu.setAttribute(nom, valeur));
-    this.menu.querySelectorAll('.menu-tel-groupe').forEach((groupe) => {
-      groupe.open = groupe.hasAttribute('data-ouvert');
-      const titre = groupe.querySelector('summary');
-      if (titre) titre.removeAttribute('tabindex');
-    });
+    this.tel.passerSurOrdinateur(false);
     this.rayons.forEach((s) => s.removeAttribute('data-vu'));
     this.voile.removeAttribute('data-vu');
   }
 
   /* La hauteur au-dessus du panneau, en haut de la page (le bandeau d'annonce et l'en-tête entier) : la taille des
-     emblèmes en dépend (input.css), elle ne change pas quand on défile. */
+     emblèmes en dépend (input.css), elle ne change pas quand on défile. Son nom n'est pas --menu-haut, que le menu du
+     téléphone pose sur le panneau lui-même quand il s'ouvre. */
   mesurer() {
     const annonce = document.getElementById('shopify-section-tw-announcement-bar');
     const haut = (annonce ? annonce.offsetHeight : 0) + this.barre.offsetHeight + 2;
     if (haut !== this.haut) {
       this.haut = haut;
-      this.cadre.style.setProperty('--menu-haut', `${haut}px`);
+      this.cadre.style.setProperty('--panneau-haut', `${haut}px`);
     }
   }
 
@@ -643,9 +664,10 @@ class MenuOrdinateur {
     });
   }
 
-  // Sur ordinateur seulement : au téléphone, son menu charge ses images quand il s'ouvre.
+  /* Sur ordinateur seulement (au téléphone, son menu charge ses images quand il s'ouvre), et la page chargée : jamais
+     avant ses premiers tableaux. Ouvrir le menu plus tôt fait venir les images de son rayon (deplier). */
   chargerTout() {
-    if (this.ordinateur.matches) this.rayons.forEach((s) => this.chargerImages(s.dataset.rayon));
+    if (this.ordinateur.matches && document.readyState === 'complete') this.rayons.forEach((s) => this.chargerImages(s.dataset.rayon));
   }
 
   /* Le rideau descend : le panneau se découpe de haut en bas, son contenu monte par vagues, le voile arrive. Tout se lit
@@ -656,7 +678,6 @@ class MenuOrdinateur {
     const menu = this.menu;
     const revient = menu.dataset.ordi === 'ferme';
     const premier = !this.details.open;
-    const bas = this.barre.getBoundingClientRect().bottom;
     this.preparer();
     this.montrer(rayon);
     this.chargerImages(rayon);
@@ -664,8 +685,6 @@ class MenuOrdinateur {
     if (premier) void menu.offsetHeight;
     if (!revient && !this.reduit.matches) this.vagues(this.section(rayon));
     menu.dataset.ordi = 'ouvert';
-    // Le voile : de sous l'en-tête jusqu'en bas de l'écran.
-    this.voile.style.height = `${Math.max(0, Math.floor(window.innerHeight - bas - 1))}px`;
     this.voile.setAttribute('data-vu', '');
   }
 
@@ -772,11 +791,9 @@ class MenuOrdinateur {
   }
 
   /* La pastille, sous un rayon (0 : aucun). Elle glisse en 0,42 s, sa largeur épousant celle du mot ; là où il n'y en
-     avait pas, elle apparaît en fondu en passant de 94 % à 100 % (et disparaît de même). Elle ne bouge que par sa
-     transformation et son opacité, en une seule animation que la carte graphique joue seule : la bascule garde ses 60
-     images par seconde même quand la page travaille (le panneau qui s'ouvre). Sa largeur d'arrivée est posée d'emblée ;
-     la transformation part de la place et de la largeur d'où elle vient, et finit sans échelle : rien ne se repeint
-     autrement à la fin. Sans anime : posée tout de suite. */
+     avait pas, elle apparaît en fondu en passant de 94 % à 100 % (et disparaît de même). Elle ne bouge que par les
+     transformations de ses parts et son opacité, des animations que la carte graphique joue seule : la bascule garde ses
+     60 images par seconde même quand la page travaille (le panneau qui s'ouvre). Sans anime : posée tout de suite. */
   placerPastille(rayon, anime) {
     const bouton = rayon ? this.boutons[rayon - 1] : null;
     if (!bouton || !bouton.offsetWidth) {
@@ -791,23 +808,38 @@ class MenuOrdinateur {
     this.nav.setAttribute('data-pret', '');
   }
 
-  // vers, depuis : { x, w, o, s } : le bord gauche et la largeur qu'on voit, l'opacité, l'échelle autour du centre.
+  /* vers, depuis : { x, w, o, s } : le bord gauche et la largeur qu'on voit, l'opacité, l'échelle autour du centre. Les
+     parts (input.css) : le tout se déplace et prend l'échelle ; le bout droit se pose à la largeur, le milieu et l'ombre
+     s'étirent jusqu'à lui. Leurs tailles d'arrivée sont posées d'emblée, et chaque transformation part de la place et de
+     la largeur d'où vient la pastille : à la fin, plus rien n'est étiré, rien ne se repeint. */
   poser(vers, anime, depuis = null) {
     const p = this.pastille;
+    const d = this.boutDroit.offsetWidth;
     const largeur = vers.w;
-    const transformation = (e) => `translateX(${e.x + (e.w * (1 - e.s)) / 2}px) scale(${(e.w * e.s) / largeur}, ${e.s})`;
+    const milieu = Math.max(1, largeur - d);
+    const formes = (e) => [
+      [p, `translateX(${e.x + (e.w * (1 - e.s)) / 2}px) scale(${e.s})`],
+      [this.ombre, `scaleX(${e.w / largeur})`],
+      [this.boutDroit, `translateX(${e.w - d}px)`],
+      [this.milieu, `scaleX(${Math.max(0, e.w - d) / milieu})`],
+    ];
     let de = depuis;
     if (!de && anime && this.posee) {
       // D'où elle est, ce qu'on voit : en plein glissement aussi.
-      const cs = window.getComputedStyle(p);
-      const m = new DOMMatrixReadOnly(cs.transform === 'none' ? undefined : cs.transform);
-      const s = m.d || 1;
-      const w = (parseFloat(cs.width) * m.a) / s;
-      de = { x: m.m41 - (w * (1 - s)) / 2, w, s, o: parseFloat(cs.opacity) };
+      const matrice = (el) => {
+        const t = window.getComputedStyle(el).transform;
+        return new DOMMatrixReadOnly(t === 'none' ? undefined : t);
+      };
+      const m = matrice(p);
+      const s = m.a || 1;
+      const w = matrice(this.boutDroit).m41 + d;
+      de = { x: m.m41 - (w * (1 - s)) / 2, w, s, o: parseFloat(window.getComputedStyle(p).opacity) };
     }
-    p.getAnimations().forEach((a) => a.cancel());
-    p.style.width = `${largeur}px`;
-    p.style.transform = transformation(vers);
+    p.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+    this.ombre.style.width = `${largeur}px`;
+    this.milieu.style.width = `${milieu}px`;
+    const fin = formes(vers);
+    for (const [el, t] of fin) el.style.transform = t;
     p.style.opacity = vers.o;
     this.posee = vers;
     if (!anime || !de) return;
@@ -815,7 +847,10 @@ class MenuOrdinateur {
       if (de.o !== vers.o) p.animate([{ opacity: de.o }, { opacity: vers.o }], { duration: MenuOrdinateur.FONDU, easing: 'ease' });
       return;
     }
-    p.animate([{ transform: transformation(de), opacity: de.o }, { transform: transformation(vers), opacity: vers.o }], { duration: MenuOrdinateur.GLISSE, easing: MenuOrdinateur.COURBE });
+    const options = { duration: MenuOrdinateur.GLISSE, easing: MenuOrdinateur.COURBE };
+    const debut = formes(de);
+    p.animate([{ transform: debut[0][1], opacity: de.o }, { transform: fin[0][1], opacity: vers.o }], options);
+    if (de.w !== vers.w) for (let i = 1; i < fin.length; i++) fin[i][0].animate([{ transform: debut[i][1] }, { transform: fin[i][1] }], options);
   }
 
   // Une fermeture demandée d'ailleurs : l'en-tête qui part, la recherche ou le panier qui s'ouvrent.
@@ -870,6 +905,8 @@ class StickyHeader extends HTMLElement {
 
     this.menuOpener.addEventListener('click', async (e) => {
       e.preventDefault();
+      // Sur ordinateur, le <details> est au menu d'ordinateur (et ce bouton, caché) : le téléphone n'y touche pas.
+      if (this.menuOrdi?.aLaMain()) return;
       // Close desktop dropdown if open (for iPad/landscape mode)
       if (this.currentOpenDropdown) {
         this.closeDesktopDropdown();

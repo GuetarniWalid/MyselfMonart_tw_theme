@@ -155,11 +155,14 @@ test('le rayon de la page : celui de sa collection ou de sa fiche, toile ou post
     const html = basculeSeule(page)
     assert.deepEqual(courant(html), attendu, JSON.stringify(page.collection ? page.collection.handle : page.product))
   }
-  // Dans la vue de test, le même rayon que l'onglet choisi d'abord au téléphone.
-  for (const collection of [SALON, TOUS, BLEU, ZEN, POSTERS, LION_POSTER]) {
-    const html = entete({ collection })
+  // Dans la vue de test, le même rayon que l'onglet choisi d'abord au téléphone : une seule règle pour les deux menus
+  // (snippets/menu-rayon-page.liquid), les tapisseries comprises.
+  for (const [collection, blocks] of [[SALON, BLOCS], [TOUS, BLOCS], [BLEU, BLOCS], [ZEN, BLOCS], [POSTERS, BLOCS], [LION_POSTER, BLOCS], [TAP_SALON, BLOCS_3], [ZEN, BLOCS_3]]) {
+    const html = entete({ collection, blocks })
     assert.deepEqual(courant(html), ongletTelephone(html), collection.handle)
   }
+  assert.deepEqual(ongletTelephone(entete({ collection: TAP_SALON, blocks: BLOCS_3 })), ['Tapisseries'])
+  for (const fichier of ['snippets/menu-ordinateur.liquid', 'snippets/menu-telephone.liquid']) assert.match(code(fichier), /render 'menu-rayon-page'/, fichier)
   // Une page sans rayon : aucun bouton marqué (la pastille n'y est pas).
   for (const name of ['index', 'cart', 'page', 'search', 'article', '404']) {
     assert.deepEqual(courant(basculeSeule({ name, collection: null })), [], name)
@@ -212,7 +215,9 @@ test('la barre : le bouton du téléphone, le logo et son nom, la bascule, la re
   }
   // Vides, la pastille et le voile ne se cachent pas (input.css cache tout élément vide sans data-allow-empty).
   assert.match(html, /<\/div>\s*<div class="menu-ordi-voile" data-allow-empty><\/div>/)
-  assert.match(html, /<span class="menu-ordi-pastille" aria-hidden="true" data-allow-empty><\/span>/)
+  // La pastille, en quatre parts vides : son ombre, ses deux bouts, son milieu.
+  const PARTS = ['ombre', 'bout', 'bout', 'milieu'].map((part) => `<span class="menu-ordi-pastille-${part}" data-allow-empty></span>`)
+  assert.match(html, new RegExp(`<span class="menu-ordi-pastille" aria-hidden="true">\\s*${PARTS.join('\\s*')}\\s*</span>`))
   // Hors de la vue de test, rien de tout cela.
   for (const page of [{ name: 'index', suffix: null, collection: null }, { suffix: null }, { suffix: 'tableau-salon' }]) {
     assert.doesNotMatch(entete(page), /menu-ordi/, JSON.stringify(page))
@@ -250,7 +255,7 @@ test('la feuille : un bloc à part, dont chaque règle vise le nouvel en-tête (
   for (const { head } of liste) for (const s of head.split(/,(?![^(]*\))/)) assert.match(s, /\.menu-ordi/, head)
   // Chaque classe de la bascule a sa règle.
   const classes = new Set([...code('snippets/menu-ordinateur.liquid').matchAll(/class="([^"]*)"/g)].flatMap((m) => m[1].split(/\s+/)).filter((c) => c.startsWith('menu-ordi')))
-  assert.deepEqual([...classes].sort(), ['menu-ordi-bascule', 'menu-ordi-pastille', 'menu-ordi-rayon', 'menu-ordi-rayons'])
+  assert.deepEqual([...classes].sort(), ['menu-ordi-bascule', 'menu-ordi-pastille', 'menu-ordi-pastille-bout', 'menu-ordi-pastille-milieu', 'menu-ordi-pastille-ombre', 'menu-ordi-rayon', 'menu-ordi-rayons'])
   for (const classe of [...classes, 'menu-ordi-entete', 'menu-ordi-barre', 'menu-ordi-details', 'menu-ordi-nom', 'menu-ordi-outils', 'menu-ordi-loupe', 'menu-ordi-mot', 'menu-ordi-voile']) {
     assert.match(BLOC, new RegExp(`\\.${classe}(?![\\w-])`), classe)
   }
@@ -277,12 +282,22 @@ test('la feuille : les couleurs sont celles des nouvelles pages, et la pastille 
   const ailleurs = REGLES.filter((r) => !(r.head === ':root .menu-ordi-entete' && !r.context.length)).map((r) => r.body).join('\n')
   assert.doesNotMatch(ailleurs, /#[0-9a-f]{3,8}\b|\brgba?\(|\bhsla?\(/i)
   for (const [, police] of ailleurs.matchAll(/\bfont:\s*([^;]+);/g)) assert.match(police, /var\(--sans\)$/, police)
-  // Une seule pastille : blanche, cerclée d'encre, l'ombre de celle du téléphone (.menu-tel-bascule::before).
+  // Une seule pastille : blanche, cerclée d'encre, l'ombre de celle du téléphone (.menu-tel-bascule::before), que ses
+  // parts se partagent : le cercle d'encre autour des bouts, ses deux traits sur le milieu, l'ombre douce dessous.
   const TEL = read('input.css').replace(/\r\n/g, '\n')
   const ombreTel = /\.menu-tel-bascule::before \{[^}]*box-shadow: ([^;]+);/.exec(TEL)[1]
-  const pastille = corps('.menu-ordi-pastille', (c) => c.includes(ORDI))
-  assert.match(pastille, /background: var\(--blanc\);/)
-  assert.ok(pastille.includes(`box-shadow: ${ombreTel};`), pastille)
+  const [cercle, douce] = ombreTel.split(/,\s*(?![^(]*\))/)
+  const [, trait, encre] = /^0 0 0 (\d+px) (.+)$/.exec(cercle)
+  const part = (nom) => corps(`.menu-ordi-pastille-${nom}`, (c) => c.includes(ORDI))
+  for (const nom of ['bout', 'milieu']) assert.match(part(nom), /background: var\(--blanc\);/, nom)
+  assert.ok(part('bout').includes(`box-shadow: ${cercle};`), part('bout'))
+  assert.ok(part('milieu').includes(`box-shadow: 0 -${trait} 0 ${encre}, 0 ${trait} 0 ${encre};`), part('milieu'))
+  assert.ok(part('ombre').includes(`box-shadow: ${douce};`), part('ombre'))
+  // Les bouts sont ronds, de la hauteur de la pastille ; le milieu part du centre du premier, et s'étire depuis là.
+  assert.match(corps('.menu-ordi-pastille', (c) => c.includes(ORDI)), /--d: 42px;[^}]*height: var\(--d\);/)
+  assert.match(corps('.menu-ordi-pastille-ombre, .menu-ordi-pastille-bout', (c) => c.includes(ORDI)), /width: var\(--d\);/)
+  assert.match(part('bout'), /border-radius: 50%;/)
+  assert.match(part('milieu'), /left: calc\(var\(--d\) \/ 2\);[^}]*transform-origin: 0 50%;/)
 })
 
 test('la feuille : le mouvement, seulement sans « mouvements réduits » ; le rideau, le voile et ses 6 px de flou, des vagues finies avant 0,6 s', () => {
@@ -326,12 +341,15 @@ test('la feuille : les emblèmes, à la plus grande taille entre 44 et 66 px où
   // Une formule : la hauteur sous l'en-tête (40 px de la page restent en vue), la largeur de l'écran, le nombre de rangées
   // et d'emblèmes de la plus longue rangée (posés par le script).
   assert.match(panneau, /--emb: clamp\(44px, min\(var\(--emb-h\), var\(--emb-l\)\), 66px\);/)
-  assert.match(panneau, /--emb-h: calc\(\(100dvh - var\(--menu-haut, 123px\) - 40px - var\(--fixe, 302px\)\) \/ \(1\.3 \* var\(--rangees, 5\)\)\);/)
+  // --panneau-haut, et non --menu-haut, que le menu du téléphone pose sur le même panneau quand il s'ouvre : les deux
+  // menus ne se mélangent pas.
+  assert.match(panneau, /--emb-h: calc\(\(100dvh - var\(--panneau-haut, 123px\) - 40px - var\(--fixe, 302px\)\) \/ \(1\.3 \* var\(--rangees, 5\)\)\);/)
+  assert.doesNotMatch(BLOC, /--menu-haut/)
   assert.match(panneau, /--rangee-l: calc\(100cqw /)
   assert.match(panneau, /--emb-l: calc\(\(var\(--rangee-l\) - var\(--colonnes, 7\)/)
   // Ce que le script mesure et pose sur le panneau.
   const script = read('assets/tw-header.js')
-  for (const nom of ['--fixe', '--rangees', '--colonnes', '--menu-haut']) assert.ok(script.includes(`'${nom}'`), nom)
+  for (const nom of ['--fixe', '--rangees', '--colonnes', '--panneau-haut']) assert.ok(script.includes(`'${nom}'`), nom)
 })
 
 test('le téléphone : quatre onglets, comme trois', () => {
@@ -348,19 +366,19 @@ test('la feuille construite porte le menu d’ordinateur', () => {
 /* ---------- Les gestes (MenuOrdinateur.suite, pur) ---------- */
 
 /* Le script de l'en-tête, tel que le navigateur le lit (ce n'est pas un module), dans un bac à sable : la logique des
-   gestes s'y lit sans page. */
-function menuOrdinateur() {
+   gestes s'y lit sans page. Rend la classe demandée (MenuOrdinateur, MenuTelephone). */
+function duScript(nom) {
   const bac = { HTMLElement: class {}, customElements: { define() {}, get() {} }, document: { querySelector: () => null } }
   bac.window = bac
   vm.createContext(bac)
   vm.runInContext(read('assets/tw-header.js'), bac, { filename: 'assets/tw-header.js' })
-  return vm.runInContext('MenuOrdinateur', bac)
+  return vm.runInContext(nom, bac)
 }
 
 /* Un essai de gestes, avec une horloge : chaque geste passe par MenuOrdinateur.suite ; les minuteries qu'il pose
    sonnent quand on attend. On lit l'état, la pastille et ce qui a été fait (ouvrir, fermer, entrer dans le panneau). */
 function essai({ courant = 1 } = {}) {
-  const { suite } = menuOrdinateur()
+  const { suite } = duScript('MenuOrdinateur')
   let etat = { ouvert: 0, par: null, vise: 0, courant }
   let temps = 0
   let minuteries = []
@@ -519,6 +537,66 @@ test('un clic à côté, le focus qui sort, l’en-tête qui part le ferment ; l
   const f = essai()
   f.geste({ type: 'entre', rayon: 2 }).attendre(100).geste({ type: 'telephone' }).attendre(2000)
   assert.deepEqual(f.resume, [])
+})
+
+/* ---------- Le panneau, à l'ordinateur puis rendu au téléphone (MenuTelephone.passerSurOrdinateur) ---------- */
+
+/* Un panneau d'essai, tel que le rend snippets/menu-telephone.liquid : un dialogue nommé, sa liste (nav), deux groupes
+   (le premier ouvert d'abord : data-ouvert) et leurs titres. */
+function panneauEssai() {
+  const element = (attributs = {}) => {
+    const e = { attributs: { ...attributs }, ecouteurs: {} }
+    e.getAttribute = (nom) => (nom in e.attributs ? e.attributs[nom] : null)
+    e.setAttribute = (nom, valeur) => { e.attributs[nom] = String(valeur) }
+    e.removeAttribute = (nom) => { delete e.attributs[nom] }
+    e.hasAttribute = (nom) => nom in e.attributs
+    e.addEventListener = (type, f) => { e.ecouteurs[type] = f }
+    return e
+  }
+  const groupe = (depart) => {
+    const g = element(depart ? { 'data-ouvert': '' } : {})
+    g.open = depart
+    g.titre = element()
+    g.querySelector = (s) => (s === 'summary' ? g.titre : null)
+    return g
+  }
+  const p = element({ role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Menu de navigation', tabindex: '-1' })
+  p.liste = element({ 'aria-label': 'Navigation principale' })
+  p.groupes = [groupe(true), groupe(false)]
+  p.querySelector = (s) => ({ nav: p.liste })[s] || null
+  p.querySelectorAll = () => p.groupes
+  return p
+}
+
+test('sur ordinateur, le panneau n’est plus un dialogue et sa liste prend son nom ; ses groupes restent ouverts, leurs titres ne les ferment pas ; au téléphone, tout revient', () => {
+  const MenuTelephone = duScript('MenuTelephone')
+  const p = panneauEssai()
+  const tel = new MenuTelephone(p)
+  const clic = (g) => {
+    let empeche = false
+    g.titre.ecouteurs.click({ preventDefault: () => (empeche = true) })
+    return empeche
+  }
+  // Au téléphone, un titre ouvre et ferme son groupe.
+  assert.equal(clic(p.groupes[0]), false)
+  tel.passerSurOrdinateur(true)
+  // Le reste de la page n'est pas bloqué ; la bascule s'appelle déjà « Navigation principale » : la liste prend le nom
+  // du menu, pas deux fois le même.
+  assert.deepEqual(p.attributs, { tabindex: '-1' })
+  assert.equal(p.liste.getAttribute('aria-label'), 'Menu de navigation')
+  assert.deepEqual(p.groupes.map((g) => g.open), [true, true])
+  assert.deepEqual(p.groupes.map((g) => g.titre.getAttribute('tabindex')), ['-1', '-1'])
+  assert.deepEqual(p.groupes.map(clic), [true, true])
+  // Une seconde fois ne change rien.
+  tel.passerSurOrdinateur(true)
+  assert.equal(p.liste.getAttribute('aria-label'), 'Menu de navigation')
+  // De retour au téléphone : le dialogue et ses noms, le groupe du départ seul ouvert, les titres qui marchent.
+  tel.passerSurOrdinateur(false)
+  assert.deepEqual(p.attributs, { role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Menu de navigation', tabindex: '-1' })
+  assert.equal(p.liste.getAttribute('aria-label'), 'Navigation principale')
+  assert.deepEqual(p.groupes.map((g) => g.open), [true, false])
+  assert.deepEqual(p.groupes.map((g) => g.titre.getAttribute('tabindex')), [null, null])
+  assert.deepEqual(p.groupes.map(clic), [false, false])
 })
 
 /* ---------- Le cocon : pour Google, rien ne change ---------- */

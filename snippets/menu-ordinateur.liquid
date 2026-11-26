@@ -6,43 +6,34 @@
     mot seul, sans chevron : une seule pastille blanche glisse de l'un à l'autre (assets/tw-header.js, MenuOrdinateur).
   - Ces boutons ouvrent le menu du téléphone (snippets/menu-telephone.liquid), au rayon choisi, habillé en panneau par
     la feuille : les liens n'y sont qu'une fois dans la page. Aucun lien ici.
-  - Le rayon de la page (aria-current="true") : sur une collection ou une fiche, le premier rayon dont une tuile
-    (collection_only) est du même type qu'elle (custom.type_of_collection ; une fiche : poster, sinon toile), sinon le
-    premier. C'est l'onglet que le téléphone choisit d'abord (mt_choisi), et il suit les tapisseries le jour où elles ont
-    leur rayon. Au repos, la pastille est dessous ; sur une page sans rayon (accueil, panier…), il n'y en a pas.
+  - Le rayon de la page (aria-current="true", snippets/menu-rayon-page.liquid : la règle du menu du téléphone aussi) :
+    sur une collection ou une fiche, celui de son type (toile, poster, et demain tapisserie). Au repos, la pastille est
+    dessous ; sur une page sans rayon (accueil, panier…), il n'y en a pas.
   Styles : input.css, « Le menu d'ordinateur ». Tests : scripts/menu-ordinateur.test.cjs.
 {%- endcomment -%}
 {%- liquid
-  # Le type de la page : celui de sa collection, ou d'une fiche (poster ou toile). Ailleurs, aucun.
-  assign mo_type = ''
-  if template.name == 'collection'
-    assign mo_type = collection.metafields.custom.type_of_collection | default: 'painting'
-  elsif template.name == 'product'
-    assign mo_type = 'painting'
-    if product.type == 'poster' or product.metafields.artwork.type == 'poster'
-      assign mo_type = 'poster'
-    endif
-  endif
-
-  # Les rayons, un par titre (au moins un) ; et celui de la page.
+  # Les rayons, un par titre (au moins un).
   assign mo_titres = 0
-  assign mo_page = 0
   for bloc in section.blocks
     if bloc.type == 'title_only'
       assign mo_titres = mo_titres | plus: 1
-    elsif mo_type != '' and mo_page == 0 and bloc.type == 'collection_only'
-      if bloc.settings.collection.metafields.custom.type_of_collection == mo_type
-        assign mo_page = mo_titres | at_least: 1
-      endif
     endif
   endfor
   assign mo_rayons = mo_titres | at_least: 1
-  if mo_type != '' and mo_page == 0
-    assign mo_page = 1
-  endif
 -%}
+{%- capture mo_page -%}{%- render 'menu-rayon-page', blocs: section.blocks -%}{%- endcapture -%}
+{%- assign mo_page = mo_page | plus: 0 -%}
 <nav class="menu-ordi-rayons" aria-label="{{ 'snippet.tw_sticky_header.main_nav' | t }}" data-n="{{ mo_rayons }}">
-  <span class="menu-ordi-pastille" aria-hidden="true" data-allow-empty></span>
+  {%- comment -%}
+    La pastille, en quatre parts (input.css) : son ombre, ses deux bouts ronds, et son milieu qui s'étire. Vides, elles
+    ont data-allow-empty (input.css cache tout élément vide sans lui).
+  {%- endcomment %}
+  <span class="menu-ordi-pastille" aria-hidden="true">
+    <span class="menu-ordi-pastille-ombre" data-allow-empty></span>
+    <span class="menu-ordi-pastille-bout" data-allow-empty></span>
+    <span class="menu-ordi-pastille-bout" data-allow-empty></span>
+    <span class="menu-ordi-pastille-milieu" data-allow-empty></span>
+  </span>
   <ul class="menu-ordi-bascule">
     {%- if mo_titres == 0 %}
     <li><button type="button" class="menu-ordi-rayon" data-rayon="1" aria-expanded="false" aria-controls="menu-tel-rayon-1"{% if mo_page == 1 %} aria-current="true"{% endif %}>{{ 'snippet.tw_sticky_header.navigation' | t }}</button></li>
