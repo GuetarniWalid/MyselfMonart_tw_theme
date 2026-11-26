@@ -255,6 +255,11 @@ test('la feuille : chaque règle commence par la page qui porte la marque, rien 
       assert.match(head, /^@keyframes refonte-[a-z-]+$/, head)
       continue
     }
+    // Une propriété déclarée pour être animée (@property) : à son nom de la page, elle ne touche rien d'autre.
+    if (/^@property /.test(head)) {
+      assert.match(head, /^@property --refonte-[a-z-]+$/, head)
+      continue
+    }
     // :root[data-refonte-page] d'abord, ou une classe de la page (.refonte, .refonte-…).
     for (const selector of selecteurs(head)) {
       assert.match(selector, /^(:root\[data-refonte-page\](?=$|[\s:.[#>~+])|\.refonte(?:-[\w-]+)?\b)/, `sélecteur « ${selector} »`)

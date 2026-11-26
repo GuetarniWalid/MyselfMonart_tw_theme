@@ -31,10 +31,9 @@
       collection, snippets/collection-carte.liquid). Sans lui, celui de la grille .product-grid des collections
       d'aujourd'hui. Facultatif.
     - tranche: {Boolean} la tranche de l'objet, que la grille de la nouvelle page collection montre quand l'œuvre pivote
-      au survol (snippets/collection-carte.liquid ; assets/collection-refonte.css, « Grille et suite ») : la toile y
-      reprend le bord de son image (--tranche : l'image en 10 px de large, celle que l'image floue a déjà chargée), le
-      poster encadré la teinte de son cadre ; le poster sans cadre n'en a pas. Facultatif : les autres pages ne la
-      demandent pas.
+      au survol (snippets/collection-carte.liquid ; assets/collection-refonte.css, « Grille et suite ») : blanche pour
+      la toile (sa bordure blanche), à la teinte du cadre pour le poster encadré ; le poster sans cadre n'en a pas.
+      Facultatif : les autres pages ne la demandent pas.
 
   Dans la carte, la porte-fenêtre reflétée par la vitre du poster passe au défilement (son script,
   assets/oeuvre-card-reflet.js, est chargé par la carte) et la face porte .skeleton. Au panier (data-context),
@@ -87,7 +86,7 @@
   {%- if kind == 'poster' %} data-look="{% if frame == 'sans' %}papier{% else %}verre{% endif %}"{% endif %}
   {%- if frame != 'sans' %} data-frame="{{ frame }}"{% endif %}
   {%- if context != 'carte' and context != 'studio' %} data-context="{{ context }}"{% endif %}
-  style="--r: {{ image.aspect_ratio | round: 4 }}{% if montre_tranche and kind == 'toile' %}; --tranche: url('{{ image | image_url: width: 10 }}'){% endif %}">
+  style="--r: {{ image.aspect_ratio | round: 4 }}">
   <div class="oeuvre-card-stage">
     <div class="oeuvre-card-piece">
       {%- if kind == 'poster' -%}<div class="oeuvre-card-sheet">{%- endif -%}

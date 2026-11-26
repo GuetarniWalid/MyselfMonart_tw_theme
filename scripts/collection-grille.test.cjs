@@ -97,7 +97,7 @@ test('la carte d’un nouveau produit : l’œuvre en objet, son nom court, « D
   assert.match(html, /<\/li>$/)
   // L'œuvre seule, en toile de face, sans cadre : la vignette des nouveaux produits (snippets/artwork-object.liquid),
   // avec sa tranche, qui se montre quand elle pivote au survol.
-  assert.match(html, /<div\s+class="oeuvre-card"\s+data-kind="toile"\s+style="--r: 0\.75; --tranche: url\('[^']+'\)">/)
+  assert.match(html, /<div\s+class="oeuvre-card"\s+data-kind="toile"\s+style="--r: 0\.75">/)
   assert.doesNotMatch(html, /data-frame=/)
   const [art] = imgs(html)
   assert.equal(imgs(html).length, 1, 'une seule image : l’œuvre à plat')
@@ -143,7 +143,7 @@ test('la carte d’un ancien produit : son œuvre à plat (2e image), jamais sa 
   const p = ancienneToile()
   const html = await carte(p)
   assert.match(html, /^<li class="refonte-carte">/)
-  assert.match(html, /<div\s+class="oeuvre-card"\s+data-kind="toile"\s+style="--r: 0\.75; --tranche: url\('[^']+'\)">/)
+  assert.match(html, /<div\s+class="oeuvre-card"\s+data-kind="toile"\s+style="--r: 0\.75">/)
   const [art] = imgs(html)
   assert.equal(imgs(html).length, 1)
   assert.ok(attr(art, 'data-srcset').startsWith(`${FILES}tableau-paysage-fleuve-japon.jpg?v=1&width=200 200w,`), 'la 2e image')
@@ -172,28 +172,22 @@ test('la carte d’un poster : sous verre, au cadre noir, avec son contour blanc
 })
 
 /* Au survol, l'œuvre pivote et montre sa tranche (Walid, 26/11/2026 : « on vend un tableau, pas une image »). */
-test('la tranche de l’œuvre : la toile reprend le bord de son image, déjà chargée ; le poster sous verre, son cadre ; les autres pages n’en ont pas', { skip: SKIP }, async () => {
+test('la tranche de l’œuvre : une par carte, toile ou poster sous verre ; les autres pages n’en ont pas', { skip: SKIP }, async () => {
   const TRANCHE = '<span class="oeuvre-card-tranche" aria-hidden="true" data-allow-empty></span>'
-  for (const p of [nouvelleToile(), ancienneToile()]) {
+  for (const p of [nouvelleToile(), ancienneToile(), ancienPoster(), nouveauPoster()]) {
     const html = await carte(p, { lazy: true })
-    // Dans l'objet, après la face : une seule par carte.
+    // Dans l'objet, à la fin : une seule par carte. Sa teinte est dans la feuille (blanche pour une toile, celle du cadre
+    // pour un poster) : aucune image de plus à charger.
     assert.equal(html.split(TRANCHE).length - 1, 1, p.handle)
-    assert.match(html, new RegExp(`</div>${TRANCHE.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*</div>\\s*</div>\\s*</div>`), p.handle)
-    // Le bord de l'image : la même image en 10 px que l'image floue de la carte, déjà là quand on la survole.
-    const [, url] = /--tranche: url\('([^']+)'\)/.exec(html)
-    assert.equal(url, attr(imgs(html)[0], 'src'), p.handle)
-    assert.match(url, /width=10$/)
-  }
-  for (const p of [ancienPoster(), nouveauPoster()]) {
-    const html = await carte(p)
-    assert.equal(html.split(TRANCHE).length - 1, 1, p.handle)
-    assert.doesNotMatch(html, /--tranche/, `${p.handle} : la teinte de son cadre, pas son image`)
+    assert.match(html, new RegExp(`${TRANCHE.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*</div>\\s*</div>\\s*</div>`), p.handle)
+    assert.match(html, /style="--r: 0\.75">/, p.handle)
+    assert.equal(imgs(html).length, 1, p.handle)
   }
   // Ailleurs (carte des collections d'aujourd'hui, « Mes j'aime », panier) : la vignette sans tranche, inchangée.
   const vignette = (options) => engine('fr').renderFile('artwork-object', { product: nouvelleToile(), image: nouvelleToile().media[0], context: 'carte', lazy: true, ...options }, { globals: globals() })
   for (const kind of ['toile', 'poster']) {
     const html = await vignette({ kind, frame: kind === 'poster' ? 'noir' : 'sans' })
-    assert.doesNotMatch(html, /oeuvre-card-tranche|--tranche/, kind)
+    assert.doesNotMatch(html, /oeuvre-card-tranche/, kind)
     assert.match(html, /style="--r: 0\.75">/, kind)
   }
   // Un poster sans cadre n'a pas d'épaisseur : pas de tranche, même demandée.
@@ -591,30 +585,54 @@ test('la feuille : chaque classe de la grille et de sa carte a sa règle, dans l
   for (const name of classes) assert.match(heads, new RegExp(`\\.${name}(?![\\w-])`), name)
 })
 
-test('la feuille : au survol, l’œuvre pivote de 12° en perspective, sans grossir ; sa tranche, son ombre, sa lumière et le reflet suivent le même pas', () => {
+test('la feuille : au survol, l’œuvre pivote de 12° en perspective, sans grossir ; tout suit une seule valeur, sans rien repeindre d’un coup à la fin', () => {
   const bloc = blocCss()
   const H = ':root[data-refonte-page] .refonte-carte'
   const SURVOL = `${H}:is(:hover, :has(.refonte-carte-lien:focus-visible))`
   const CTX = '@media (prefers-reduced-motion: no-preference) / @media (hover: hover)'
+  const corps = (head) => regle(bloc, head, CTX).body.replace(/\s+/g, ' ')
   // Plus rien ne grossit l'œuvre : un tableau, pas une image (Walid, 26/11/2026).
   assert.ok(!bloc.some((r) => /\bscale:\s*1\.\d|scale\(/.test(r.body)), 'aucun agrandissement')
-  assert.match(regle(bloc, `${SURVOL} .oeuvre-card-piece`, CTX).body, /transform: perspective\(calc\(3\.5 \* var\(--s\)\)\) rotateY\(-12deg\);/)
-  // La tranche : la profondeur de l'objet vue sous 12°, ouverte avec la rotation ; l'ombre de la toile glisse d'autant.
-  const [tan, sin] = [Math.tan, Math.sin].map((f) => f((12 * Math.PI) / 180).toFixed(4))
-  assert.match(regle(bloc, `${H} .oeuvre-card-tranche`, CTX).body, new RegExp(`left: 100%;\\s*width: calc\\(var\\(--D\\) \\* ${tan} \\* var\\(--s\\)\\);\\s*transform-origin: 0 50%;\\s*scale: 0 1;`))
-  assert.match(regle(bloc, `${SURVOL} .oeuvre-card-tranche`, CTX).body, /scale: 1;/)
-  assert.match(regle(bloc, `${SURVOL} .oeuvre-card[data-kind="toile"] .oeuvre-card-piece::before`, CTX).body, new RegExp(`translate: calc\\(var\\(--D\\) \\* ${sin} \\* var\\(--s\\)\\) 0;`))
-  assert.match(regle(bloc, `${H} .oeuvre-card[data-kind="toile"] .oeuvre-card-tranche`, CTX).body, /var\(--tranche\) right center \/ auto 100% no-repeat/)
-  assert.match(regle(bloc, `${H} .oeuvre-card[data-look="verre"] .oeuvre-card-tranche`, CTX).body, /var\(--frame\)/)
-  // Chaque mouvement au même pas : celui de l'aller au survol, celui du retour sinon.
-  assert.match(regle(bloc, H, CTX).body, /--pivot-pas: 0\.7s cubic-bezier\([^)]+\);/)
-  assert.match(regle(bloc, SURVOL, CTX).body, /--pivot-pas: 0\.8s cubic-bezier\([^)]+\);/)
-  const pas = bloc.filter((r) => /transition:/.test(r.body) && /oeuvre-card/.test(r.head))
-  assert.equal(pas.length, 5)
-  for (const r of pas) {
-    assert.match(r.body, /transition: [\w-]+ var\(--pivot-pas\);/, r.head)
-    assert.equal(r.context.join(' / '), CTX, r.head)
+  // Une seule valeur, déclarée pour s'animer, de 0 au repos à 1 au survol ; la carte seule a une transition.
+  assert.match(bloc.find((r) => r.head === '@property --refonte-pivot').body.replace(/\s+/g, ' '), /syntax: "<number>"; inherits: true; initial-value: 0;/)
+  assert.match(corps(H), /transition: --refonte-pivot 0\.7s cubic-bezier\([^)]+\);/)
+  assert.match(corps(SURVOL), /--refonte-pivot: 1; transition: --refonte-pivot 0\.8s cubic-bezier\([^)]+\);/)
+  const transitions = bloc.filter((r) => /transition:/.test(r.body))
+  assert.deepEqual(transitions.map((r) => r.head).sort(), [H, `${H} .like`, SURVOL].sort(), 'l’objet ne porte aucune transition à lui')
+  // L'angle, l'œil à 3,5 largeurs de scène.
+  assert.match(corps(`${H} .oeuvre-card-piece`), /--pivot-angle: calc\(var\(--refonte-pivot\) \* 12deg\); transform: rotateY\(calc\(-1 \* var\(--pivot-angle\)\)\);/)
+  assert.match(corps(`${H} .oeuvre-card-stage`), /perspective: calc\(3\.5 \* 100cqw\);/)
+  assert.match(corps(`${H} .oeuvre-card`), /container-type: inline-size;/)
+  // La tranche : la largeur qu'on en voit vraiment, et ses arêtes qui fuient vers le mur.
+  const tranche = corps(`${H} .oeuvre-card-tranche`)
+  assert.match(tranche, /width: max\(0px, var\(--D\) \* var\(--s\) \* \(sin\(var\(--pivot-angle\)\) - var\(--ew\) \/ 7 \* cos\(var\(--pivot-angle\)\) \* cos\(var\(--pivot-angle\)\)\)\);/)
+  assert.match(tranche, /--fuite: calc\(var\(--eh\) \* var\(--s\) \* var\(--D\) \* cos\(var\(--pivot-angle\)\) \/ 7\);/)
+  assert.match(tranche, /clip-path: polygon\(0 0, 100% var\(--fuite\), 100% calc\(100% - var\(--fuite\)\), 0 100%\);/)
+  // Cette largeur est celle de la vraie perspective : le côté d'une boîte de profondeur D, de face de largeur ew, tourné
+  // de a, vu d'un œil à 3,5 (en largeurs de scène), à quelques pour cent près ; caché sous 6°.
+  const D = 0.056
+  for (const ew of [0.6, 0.75, 0.8]) {
+    for (const deg of [3, 6, 9, 12]) {
+      const a = (deg * Math.PI) / 180
+      const P = 3.5
+      const avant = ((ew / 2) * Math.cos(a) * P) / (P - (ew / 2) * Math.sin(a))
+      const fond = (((ew / 2) * Math.cos(a) + D * Math.sin(a)) * P) / (P - ((ew / 2) * Math.sin(a) - D * Math.cos(a)))
+      const vraie = Math.max(0, fond - avant)
+      const css = Math.max(0, D * (Math.sin(a) - (ew / 7) * Math.cos(a) ** 2))
+      assert.ok(Math.abs(css - vraie) < 0.0004, `${ew} ${deg}° : ${css.toFixed(5)} pour ${vraie.toFixed(5)}`)
+    }
   }
+  // Toile : sa bordure blanche, dans l'ombre ; poster : la paroi de son cadre.
+  assert.match(corps(`${H} .oeuvre-card[data-kind="toile"] .oeuvre-card-tranche`), /background: linear-gradient\(90deg, color-mix\(in srgb, var\(--blanc\) 86%, var\(--encre\)\), color-mix\(in srgb, var\(--blanc\) 79%, var\(--encre\)\)\);/)
+  assert.match(corps(`${H} .oeuvre-card[data-look="verre"] .oeuvre-card-tranche`), /var\(--frame\)/)
+  // L'ombre de la toile, la lumière sur sa face et le reflet de la vitre suivent la même valeur.
+  assert.match(corps(`${H} .oeuvre-card[data-kind="toile"] .oeuvre-card-piece::before`), /translate: calc\(var\(--D\) \* var\(--s\) \* sin\(var\(--pivot-angle\)\)\) 0;/)
+  assert.match(corps(`${H} .oeuvre-card[data-kind="toile"] .oeuvre-card-face::after`), /opacity: var\(--refonte-pivot\);/)
+  assert.match(corps(`${H} .oeuvre-card-glare`), /left: calc\(var\(--gx, 26%\) \+ 16% \* var\(--refonte-pivot\)\);/)
+  // Tout cela seulement avec une souris, sans « mouvements réduits ».
+  const pivot = bloc.filter((r) => !r.head.startsWith('@property') && /pivot|tranche|perspective/.test(r.head + r.body))
+  assert.ok(pivot.length >= 10)
+  for (const r of pivot) assert.equal(r.context.join(' / '), CTX, r.head)
 })
 
 test('la feuille : 2 colonnes, 3 dès 700 px, 4 dès 1100 px ; la scène des vignettes de toile, sur le blanc ; la carte monte au défilement', () => {
