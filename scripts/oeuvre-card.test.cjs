@@ -131,6 +131,13 @@ test('CSS : hors de tout @layer, et chaque classe du balisage y a sa règle', ()
       assert.match(read('templates/product.photo-studio.liquid'), new RegExp(`\\.photo-studio \\.${name}[ \\[:]`), name)
       continue
     }
+    // La tranche n'est demandée que par la grille de la nouvelle page collection (tranche: true), où l'œuvre pivote au
+    // survol : ses règles sont dans la feuille de cette page, rien pour les autres.
+    if (name === 'oeuvre-card-tranche') {
+      assert.doesNotMatch(block, new RegExp(name))
+      assert.match(read('assets/collection-refonte.css'), /:root\[data-refonte-page\] \.refonte-carte \.oeuvre-card-tranche \{/)
+      continue
+    }
     assert.match(block, new RegExp(`\\.${name}(?![\\w-])`), name)
   }
 })

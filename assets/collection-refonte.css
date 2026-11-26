@@ -772,7 +772,7 @@
 }
 
 /* Les mouvements : chaque carte monte un peu à son arrivée, au rythme du défilement (bloc « Le mouvement » de la
-   maquette), et l'œuvre s'avance au survol. Rien pour qui demande moins de mouvement. */
+   maquette), et l'œuvre pivote au survol. Rien pour qui demande moins de mouvement. */
 @keyframes refonte-monte {
   from { transform: translateY(34px); }
   to { transform: none; }
@@ -785,12 +785,74 @@
       animation-range: cover 0% cover 20%;
     }
   }
+  /* Au survol, l'œuvre pivote un peu, comme vue de côté, sans grossir : on vend un tableau, pas une image (Walid,
+     26/11/2026). Elle tourne de 12° sur son axe vertical, sa face vers la lumière de la vignette (en haut à gauche) :
+     son bord droit vient vers nous, en perspective (un œil à 3,5 largeurs de scène), et sa tranche droite se montre,
+     dans l'ombre (snippets/artwork-object.liquid, tranche: true) : de sa profondeur D vue sous 12° (D × tan 12°), elle
+     s'ouvre avec la rotation. Le reste suit le même pas : l'ombre de la toile glisse d'autant au mur (D × sin 12°), sa
+     face prend un peu de lumière, le reflet de la fenêtre glisse sur la vitre du poster. Le lien du tableau, au
+     clavier, fait de même. À l'aller, un départ franc et un long freinage ; au retour, l'objet se repose. */
   @media (hover: hover) {
-    :root[data-refonte-page] .refonte-carte .oeuvre-card-piece {
-      transition: scale 0.35s ease;
+    :root[data-refonte-page] .refonte-carte {
+      --pivot-pas: 0.7s cubic-bezier(0.45, 0, 0.3, 1);
     }
-    :root[data-refonte-page] .refonte-carte:hover .oeuvre-card-piece {
-      scale: 1.04;
+    :root[data-refonte-page] .refonte-carte:is(:hover, :has(.refonte-carte-lien:focus-visible)) {
+      --pivot-pas: 0.8s cubic-bezier(0.2, 0.75, 0.25, 1);
+    }
+    :root[data-refonte-page] .refonte-carte .oeuvre-card-piece {
+      transition: transform var(--pivot-pas);
+    }
+    :root[data-refonte-page] .refonte-carte:is(:hover, :has(.refonte-carte-lien:focus-visible)) .oeuvre-card-piece {
+      transform: perspective(calc(3.5 * var(--s))) rotateY(-12deg);
+    }
+    :root[data-refonte-page] .refonte-carte .oeuvre-card-tranche {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 100%;
+      width: calc(var(--D) * 0.2126 * var(--s));
+      transform-origin: 0 50%;
+      scale: 0 1;
+      transition: scale var(--pivot-pas);
+    }
+    :root[data-refonte-page] .refonte-carte:is(:hover, :has(.refonte-carte-lien:focus-visible)) .oeuvre-card-tranche {
+      scale: 1;
+    }
+    /* La toile : le bord de son image, dans l'ombre, plus sombre vers le mur. */
+    :root[data-refonte-page] .refonte-carte .oeuvre-card[data-kind="toile"] .oeuvre-card-tranche {
+      border-radius: 0 1px 1px 0;
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--encre) 40%, transparent), color-mix(in srgb, var(--encre) 62%, transparent)),
+        var(--tranche) right center / auto 100% no-repeat,
+        var(--encre-55);
+    }
+    /* Le poster : la paroi de son cadre, à sa teinte, dans l'ombre. */
+    :root[data-refonte-page] .refonte-carte .oeuvre-card[data-look="verre"] .oeuvre-card-tranche {
+      background: linear-gradient(90deg, color-mix(in srgb, var(--frame) 72%, var(--encre)), color-mix(in srgb, var(--frame) 50%, var(--encre)));
+    }
+    :root[data-refonte-page] .refonte-carte .oeuvre-card[data-kind="toile"] .oeuvre-card-piece::before {
+      transition: translate var(--pivot-pas);
+    }
+    :root[data-refonte-page] .refonte-carte:is(:hover, :has(.refonte-carte-lien:focus-visible)) .oeuvre-card[data-kind="toile"] .oeuvre-card-piece::before {
+      translate: calc(var(--D) * 0.2079 * var(--s)) 0;
+    }
+    :root[data-refonte-page] .refonte-carte .oeuvre-card[data-kind="toile"] .oeuvre-card-face::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background: linear-gradient(102deg, color-mix(in srgb, var(--blanc) 9%, transparent), transparent 48%);
+      pointer-events: none;
+      transition: opacity var(--pivot-pas);
+    }
+    :root[data-refonte-page] .refonte-carte:is(:hover, :has(.refonte-carte-lien:focus-visible)) .oeuvre-card[data-kind="toile"] .oeuvre-card-face::after {
+      opacity: 1;
+    }
+    :root[data-refonte-page] .refonte-carte .oeuvre-card-glare {
+      transition: left var(--pivot-pas);
+    }
+    :root[data-refonte-page] .refonte-carte:is(:hover, :has(.refonte-carte-lien:focus-visible)) .oeuvre-card-glare {
+      left: calc(var(--gx, 26%) + 16%);
     }
     :root[data-refonte-page] .refonte-carte .like {
       transition: background-color 0.2s ease;

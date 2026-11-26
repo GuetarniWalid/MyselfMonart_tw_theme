@@ -30,6 +30,11 @@
     - sizes: {String} carte : l'attribut sizes de l'œuvre, selon la grille qui la montre (la grille de la nouvelle page
       collection, snippets/collection-carte.liquid). Sans lui, celui de la grille .product-grid des collections
       d'aujourd'hui. Facultatif.
+    - tranche: {Boolean} la tranche de l'objet, que la grille de la nouvelle page collection montre quand l'œuvre pivote
+      au survol (snippets/collection-carte.liquid ; assets/collection-refonte.css, « Grille et suite ») : la toile y
+      reprend le bord de son image (--tranche : l'image en 10 px de large, celle que l'image floue a déjà chargée), le
+      poster encadré la teinte de son cadre ; le poster sans cadre n'en a pas. Facultatif : les autres pages ne la
+      demandent pas.
 
   Dans la carte, la porte-fenêtre reflétée par la vitre du poster passe au défilement (son script,
   assets/oeuvre-card-reflet.js, est chargé par la carte) et la face porte .skeleton. Au panier (data-context),
@@ -68,6 +73,12 @@
       assign art_width = 120
   endcase
   assign art_width_2x = art_width | times: 2
+  assign montre_tranche = false
+  if tranche
+    if kind == 'toile' or frame != 'sans'
+      assign montre_tranche = true
+    endif
+  endif
 -%}
 {%- capture art_alt -%}{% if product.metafields.meta_object.media.value.alts.value[flat_index] %}{{ product.metafields.meta_object.media.value.alts.value[flat_index] | escape }}{% else %}{{ image.alt | escape }}{% endif %}{%- endcapture -%}
 <div
@@ -76,7 +87,7 @@
   {%- if kind == 'poster' %} data-look="{% if frame == 'sans' %}papier{% else %}verre{% endif %}"{% endif %}
   {%- if frame != 'sans' %} data-frame="{{ frame }}"{% endif %}
   {%- if context != 'carte' and context != 'studio' %} data-context="{{ context }}"{% endif %}
-  style="--r: {{ image.aspect_ratio | round: 4 }}">
+  style="--r: {{ image.aspect_ratio | round: 4 }}{% if montre_tranche and kind == 'toile' %}; --tranche: url('{{ image | image_url: width: 10 }}'){% endif %}">
   <div class="oeuvre-card-stage">
     <div class="oeuvre-card-piece">
       {%- if kind == 'poster' -%}<div class="oeuvre-card-sheet">{%- endif -%}
@@ -162,6 +173,7 @@
           <span class="oeuvre-card-sheen" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty></span></span>
         {%- endif -%}
       {%- endif -%}
+      {%- if montre_tranche -%}<span class="oeuvre-card-tranche" aria-hidden="true" data-allow-empty></span>{%- endif -%}
     </div>
   </div>
 </div>

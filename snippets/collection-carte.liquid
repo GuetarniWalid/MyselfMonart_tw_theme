@@ -15,6 +15,8 @@
   ou sa 1re quand elle n'est pas carrée (ses mises en scène le sont toutes).
   Dessous : le nom court (métachamp title.short, à défaut le titre), le titre entier pour les lecteurs d'écran, le plus
   bas prix, « Dès 62,50 € », et le cœur. Le lien du nom couvre toute la carte.
+  Au survol, l'œuvre pivote un peu et montre sa tranche (tranche: true ; assets/collection-refonte.css, « Grille et
+  suite ») : un objet, pas une image (Walid, 26/11/2026).
 
   Règle de repli : un produit qui n'est pas une œuvre (tapisserie, carte cadeau…) ou
   dont l'œuvre à plat manque (pas d'image à son index) garde la carte d'aujourd'hui (snippets/card-product.liquid),
@@ -81,7 +83,7 @@
     assign prix = product.price_min | money
   -%}
   <li class="refonte-carte">
-    {%- render 'artwork-object', product: product, image: flat, image_index: flat_index, kind: kind, frame: frame, contour: contour, context: 'carte', lazy: lazy, sizes: sizes -%}
+    {%- render 'artwork-object', product: product, image: flat, image_index: flat_index, kind: kind, frame: frame, contour: contour, context: 'carte', lazy: lazy, sizes: sizes, tranche: true -%}
     {%- if kind == 'poster' -%}
       {%- comment -%} Le reflet qui passe sur la vitre, là où le CSS seul ne sait pas le faire : un module, une seule exécution par page. {%- endcomment -%}
       <script type="module" src="{{ 'oeuvre-card-reflet.js' | asset_url }}"></script>
