@@ -19,7 +19,7 @@ class InfiniteScroll extends HTMLElement {
 
     this.sectionId = this.dataset.sectionId;
     // La page suivante se charge quand la fin approche à moins de `marge` px : 300 par défaut, data-marge pour une
-    // autre (700 sur la nouvelle page collection, sections/collection-grille.liquid).
+    // autre (1200 sur la nouvelle page collection, sections/collection-grille.liquid).
     this.margin = Number(this.dataset.marge) || 300;
     this.previousPageExists =
       Number(this.previousElementSibling?.dataset?.page) === this.page - 1;
@@ -52,7 +52,9 @@ class InfiniteScroll extends HTMLElement {
        et se pose ;
      - elle arrive par le haut (on remonte depuis le guide ou les questions) : rien ne se pose, rien ne bouge ; la page
        suivante est seulement demandée, et le bouton la pose d'un coup ;
-     - un lot arrivé quand la fin est déjà passée au-dessus du milieu de l'écran (on a filé vers le bas) attend de même ;
+     - un lot en retard, quand la fin est déjà passée au-dessus du milieu de l'écran : si l'on descend encore (l'élan
+       du doigt) et qu'elle se voit, il se pose sous nos yeux ; arrêté, ou plus bas qu'elle (on a filé vers le bas, on
+       lit ce qui suit), il attend de même ;
      - remonté dans les tableaux plus loin que la marge, on redescend : la suite revient seule.
      Le bouton se montre tant qu'une page suivante existe, et marche toujours (une demande lente, hors ligne). */
   watchEnd() {
@@ -62,6 +64,13 @@ class InfiniteScroll extends HTMLElement {
       this.plusButton.addEventListener('click', this.onPlus);
       this.plusButton.hidden = false;
     }
+    // Le dernier mouvement vers le bas, l'élan du doigt compris.
+    this.lastY = window.scrollY;
+    this.onScroll = () => {
+      if (window.scrollY > this.lastY) this.lastDown = performance.now();
+      this.lastY = window.scrollY;
+    };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
     this.endObserver = new IntersectionObserver((entries) => {
       if (!entries[entries.length - 1].isIntersecting) return;
       if (this.endAhead()) this.showNext();
@@ -73,6 +82,7 @@ class InfiniteScroll extends HTMLElement {
   stopWatching() {
     this.endObserver?.disconnect();
     this.endObserver = null;
+    if (this.onScroll) window.removeEventListener('scroll', this.onScroll);
     if (this.plusButton) {
       this.plusButton.removeEventListener('click', this.onPlus);
       this.plusButton.removeAttribute('aria-busy');
@@ -82,6 +92,12 @@ class InfiniteScroll extends HTMLElement {
   // La fin des tableaux est devant nous : sous le milieu de l'écran, ou plus bas.
   endAhead() {
     return this.querySelector(`.${this.bottom}`).getBoundingClientRect().top > window.innerHeight / 2;
+  }
+
+  // On descend encore (un défilement vers le bas il y a moins de 250 ms), et la fin des tableaux se voit.
+  stillGoingDown() {
+    if (!(performance.now() - this.lastDown < 250)) return false;
+    return this.querySelector(`.${this.bottom}`).getBoundingClientRect().top >= 0;
   }
 
   // La page suivante, demandée une seule fois ; après un échec (hors ligne), le prochain besoin la redemande.
@@ -114,8 +130,9 @@ class InfiniteScroll extends HTMLElement {
     }
     // Déjà posée, ou un filtre a remplacé la grille pendant la demande.
     if (this.placed || !this.isConnected) return;
-    // On a filé plus bas pendant la demande : le lot attend le bouton, ou qu'on redescende vers la fin.
-    if (!this.asked && !this.endAhead()) return;
+    // En retard : la fin est passée au-dessus du milieu de l'écran. Arrêté, ou plus bas qu'elle, on lit ce qui suit la
+    // grille : le lot attend le bouton, ou qu'on redescende vers la fin.
+    if (!this.asked && !this.endAhead() && !this.stillGoingDown()) return;
     this.placed = true;
     const button = this.plusButton;
     this.stopWatching();

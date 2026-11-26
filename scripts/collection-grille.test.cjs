@@ -449,20 +449,20 @@ test('la section : ses places dans l’ordre, le titre invisible, la ligne des f
   }
 })
 
-test('la section : les liens ?page=N restent, et la suite arrive seule, 700 px avant la fin, ou par son bouton', { skip: SKIP }, async () => {
+test('la section : les liens ?page=N restent, et la suite arrive seule, 1 200 px avant la fin, ou par son bouton', { skip: SKIP }, async () => {
   const html = await grille(collection(80))
   // Les liens des pages, pour Google et sans JavaScript (snippets/pagination.liquid).
   const nav = /<div id="pages" class="refonte-pages">\s*(<nav[\s\S]*?<\/nav>)\s*<\/div>/.exec(html)
   assert.ok(nav, 'les liens des pages')
   const hrefs = [...nav[1].matchAll(/href="([^"]+)"/g)].map((m) => m[1]).filter(Boolean)
   assert.deepEqual(hrefs, ['/collections/tableaux-nature-sauvage?page=2', '/collections/tableaux-nature-sauvage?page=3', '/collections/tableaux-nature-sauvage?page=4', '/collections/tableaux-nature-sauvage?page=2'])
-  // La suite : <infinite-scroll> (assets/collection.js) autour des cartes de la page, avec sa marge de 700 px et l'id
+  // La suite : <infinite-scroll> (assets/collection.js) autour des cartes de la page, avec sa marge de 1 200 px et l'id
   // de son bouton, au bout de la suite.
   const suite = /<div id="liste" class="refonte-liste">\s*<infinite-scroll\s([^>]*)>\s*<ul class="refonte-cartes" role="list">/.exec(html)
   assert.ok(suite, 'la liste dans <infinite-scroll>')
   const data = Object.fromEntries([...suite[1].matchAll(/([\w-]+)="([^"]*)"/g)].map((m) => [m[1], m[2]]))
   assert.deepEqual(data, {
-    id: 'infinite-scroll-607047844187-1', 'data-pages': '4', 'data-page': '1', 'data-section-id': 'template--1__grille', 'data-marge': '700',
+    id: 'infinite-scroll-607047844187-1', 'data-pages': '4', 'data-page': '1', 'data-section-id': 'template--1__grille', 'data-marge': '1200',
     'data-bouton': 'suite-plus', 'data-paginate-previous-url': '', 'data-paginate-next-url': '/collections/tableaux-nature-sauvage?page=2',
   })
   assert.match(html, /<collection-suite id="suite"[\s\S]*<button type="button" id="suite-plus"[\s\S]*<\/collection-suite>/)
@@ -663,6 +663,8 @@ function pageDuScript({ search = '?view=refonte' } = {}) {
   // Une réponse qu'on retient (le serveur tarde), ou qui échoue (hors ligne).
   let attente = null
   let echecs = 0
+  let horloge = 1000
+  const fenetre = {}
   const body = new El('body')
   const document = {
     body,
@@ -683,6 +685,10 @@ function pageDuScript({ search = '?view=refonte' } = {}) {
     requestAnimationFrame: (fn) => fn(),
     scrollY: 0,
     innerHeight: 800,
+    // L'horloge et les défilements de la fenêtre, menés par le test (defiler, avancer).
+    performance: { now: () => horloge },
+    addEventListener: (type, fn) => { (fenetre[type] = fenetre[type] || []).push(fn) },
+    removeEventListener: (type, fn) => { fenetre[type] = (fenetre[type] || []).filter((f) => f !== fn) },
     // Un défilement fait par le script : noté avec les évènements, pour leur ordre.
     scrollTo(...args) { events.push({ type: 'scrollTo', args }) },
     location: { pathname: '/collections/tableaux-nature-sauvage', search },
@@ -704,6 +710,10 @@ function pageDuScript({ search = '?view=refonte' } = {}) {
     // Le serveur tarde : la réponse part quand on la relâche.
     retenir() { let relacher; attente = new Promise((resolve) => { relacher = resolve }); return () => { attente = null; relacher() } },
     echouer(n = 1) { echecs = n },
+    // La page défile de dy px (vers le bas si dy > 0) ; le temps passe.
+    defiler(dy) { context.scrollY += dy; (fenetre.scroll || []).forEach((fn) => fn({ type: 'scroll' })) },
+    avancer(ms) { horloge += ms },
+    ecouteursDeDefilement: () => (fenetre.scroll || []).length,
     // Un lot annoncé sur document, comme le fait <infinite-scroll>.
     annoncer: (detail) => document.dispatchEvent({ type: 'mma:collection-lot', detail }),
     // Un élément du script, déjà dans la page, construit puis branché, comme le navigateur le fait.
@@ -797,7 +807,7 @@ function grilleRefonte({ pages = '14', page = '1' } = {}) {
   const bouton = new p.El('button', { attrs: { type: 'button', id: 'suite-plus', class: 'refonte-suite-plus', hidden: '' } })
   p.body.append(liste)
   p.body.append(new p.El('collection-suite', { attrs: { id: 'suite' }, children: [bouton] }))
-  const lot = p.monter('infinite-scroll', { 'data-pages': pages, 'data-page': page, 'data-section-id': 'template--1__grille', 'data-marge': '700', 'data-bouton': 'suite-plus' }, [new p.El('ul')], liste)
+  const lot = p.monter('infinite-scroll', { 'data-pages': pages, 'data-page': page, 'data-section-id': 'template--1__grille', 'data-marge': '1200', 'data-bouton': 'suite-plus' }, [new p.El('ul')], liste)
   const fin = lot.querySelector('.elem-bottom')
   const guet = p.observers.find((o) => o.targets[0] === fin)
   return {
@@ -809,9 +819,9 @@ function grilleRefonte({ pages = '14', page = '1' } = {}) {
   }
 }
 
-test('<infinite-scroll data-bouton> : on descend, la fin arrive par le bas de l’écran (700 px avant) : la page suivante se pose seule', async () => {
+test('<infinite-scroll data-bouton> : on descend, la fin arrive par le bas de l’écran (1 200 px avant) : la page suivante se pose seule', async () => {
   const g = grilleRefonte()
-  assert.equal(g.guet.options.rootMargin, '0px 0px 700px 0px')
+  assert.equal(g.guet.options.rootMargin, '0px 0px 1200px 0px')
   // Le bouton : caché dans le HTML (sans JavaScript, les liens des pages servent), montré par le script.
   assert.equal(g.bouton.hidden, false)
   g.finA(800 + 640)
@@ -861,27 +871,73 @@ test('<infinite-scroll data-bouton> : on remonte du bas de la page, la fin arriv
   assert.equal(g.lots().length, 1)
 })
 
-test('<infinite-scroll data-bouton> : un lot arrivé quand on a filé sous la fin attend ; remonté dans les tableaux, on redescend : il se pose', async () => {
+test('<infinite-scroll data-bouton> : un lot en retard, arrêté sous la fin, attend ; remonté dans les tableaux, on redescend : il se pose', async () => {
   const g = grilleRefonte()
   const relacher = g.retenir()
-  g.finA(800 + 600)
+  g.finA(800 + 1100)
   const demande = g.guet.fire(true)
-  // Le serveur tarde ; la fin est passée au-dessus du milieu de l'écran : on lit ce qui suit la grille.
+  // Le serveur tarde ; on a filé, la fin est passée au-dessus du milieu de l'écran, et l'on s'est arrêté pour lire.
+  g.defiler(1880)
   g.finA(120)
+  g.avancer(400)
   relacher()
   await demande
   await attendre()
   assert.equal(g.suivant(), null, 'rien ne pousse ce qu’on lit')
   assert.equal(g.guet.live, true)
   // Remonté dans les tableaux plus loin que la marge : la fin sort par le bas ; on redescend, elle revient par le bas.
-  g.finA(800 + 900)
+  g.finA(800 + 1400)
   await g.guet.fire(false)
-  g.finA(800 + 690)
+  g.finA(800 + 1190)
   await g.guet.fire(true)
   await attendre()
   assert.equal(g.requests.length, 1, 'la page déjà là')
   assert.equal(g.suivant().dataset.page, '2')
   assert.equal(g.document.activeElement, null, 'le focus ne bouge que pour le bouton')
+})
+
+test('<infinite-scroll data-bouton> : un lot en retard, on descend encore (l’élan du doigt) et la fin se voit : il se pose ; plus bas qu’elle, il attend', async () => {
+  const g = grilleRefonte()
+  let relacher = g.retenir()
+  g.finA(800 + 1100)
+  const demande = g.guet.fire(true)
+  // L'élan : la page défile encore, la fin passe au-dessus du milieu de l'écran, toujours visible.
+  g.defiler(900)
+  g.avancer(16)
+  g.defiler(700)
+  g.finA(300)
+  g.avancer(120)
+  relacher()
+  await demande
+  await attendre()
+  assert.equal(g.suivant().dataset.page, '2')
+  assert.equal(g.ecouteursDeDefilement(), 0, 'plus rien à guetter')
+  // La fin a quitté l'écran par le haut : même en descendant encore, on lit ce qui suit la grille ; le lot attend.
+  const h = grilleRefonte()
+  relacher = h.retenir()
+  h.finA(800 + 1100)
+  const suite = h.guet.fire(true)
+  h.defiler(2200)
+  h.finA(-250)
+  h.avancer(60)
+  relacher()
+  await suite
+  await attendre()
+  assert.equal(h.suivant(), null)
+  // En remontant, rien de neuf : le défilement vers le haut ne compte pas pour un élan.
+  const k = grilleRefonte()
+  relacher = k.retenir()
+  k.finA(800 + 1100)
+  const montee = k.guet.fire(true)
+  k.defiler(1600)
+  k.avancer(400)
+  k.defiler(-300)
+  k.finA(380)
+  k.avancer(30)
+  relacher()
+  await montee
+  await attendre()
+  assert.equal(k.suivant(), null)
 })
 
 test('<infinite-scroll data-bouton> : touché pendant la demande, le bouton attend la réponse, puis la pose', async () => {

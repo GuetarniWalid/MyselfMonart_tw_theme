@@ -5,7 +5,7 @@
   - Les tableaux, 24 par page (paginate), dans des cartes où l'œuvre est seule, en objet, sur le blanc de la page,
     anciens produits compris (snippets/collection-carte.liquid). Deux colonnes, trois dès 700 px, quatre dès 1100 px.
   - La suite arrive seule quand on descend vers la fin des tableaux : <infinite-scroll> (assets/collection.js) charge la
-    page suivante (?page=N&section_id=), 700 px avant la fin, et l'annonce (évènement mma:collection-lot) ;
+    page suivante (?page=N&section_id=), 1 200 px avant la fin, et l'annonce (évènement mma:collection-lot) ;
     <collection-suite> (même fichier) tient le compte au bout du dernier lot : « 48 tableaux sur 327 » et une jauge, puis
     « Vous avez vu les 327 tableaux. ». Quand on remonte depuis le bas de la page, rien ne se pose ni ne bouge : le
     bouton « Voir plus de tableaux » (data-bouton, caché sans JavaScript) attend au bout (Walid, 26/11/2026).
@@ -77,7 +77,7 @@
               data-pages="{{ paginate.pages }}"
               data-page="{{ paginate.current_page }}"
               data-section-id="{{ section.id }}"
-              data-marge="700"
+              data-marge="1200"
               data-bouton="suite-plus"
               data-paginate-previous-url="{{ paginate.previous.url }}"
               data-paginate-next-url="{{ paginate.next.url }}">
