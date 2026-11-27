@@ -2482,9 +2482,12 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
   /* Le voile : la page, derrière le panneau, adoucie d'encre (et floutée, plus bas). Sous l'en-tête, jusqu'en bas de
      l'écran, où que soit l'en-tête : il fait la hauteur de l'écran, et ce qui dépasse en bas n'allonge pas la page
      (l'en-tête est un conteneur : ce qui en déborde ne compte pas dans le défilement). Un clic dessus ferme le menu.
-     Caché, il n'est ni peint ni touché. */
+     Caché, il n'est ni peint ni touché.
+     Sa largeur est écrite en largeur du conteneur (100cqw) : dans Firefox (Gecko, et Zen), un élément placé en absolu
+     dans un conteneur « inline-size » se mesure sur une boîte de largeur nulle. Avec left: 0 et right: 0 seuls, ou
+     width: 100 %, le voile y faisait 0 px et ne se voyait pas (mesuré dans Zen 1.24, Gecko 160, le 27/11/2026). */
   :root .menu-ordi-voile {
-    position: absolute; top: calc(100% + 1px); left: 0; right: 0; z-index: -1; display: block;
+    position: absolute; top: calc(100% + 1px); left: 0; right: 0; width: 100cqw; z-index: -1; display: block;
     height: 100vh; background: var(--voile); opacity: 0; visibility: hidden;
   }
   :root .menu-ordi-voile[data-vu] { opacity: 1; visibility: visible; }

@@ -273,6 +273,13 @@ test('la feuille : sous 768 px, rien de l’ordinateur ne se montre ; dès 768 p
   assert.match(corps(':root .menu-ordi-entete', (c) => c.includes(ORDI)), /container: menu-ordi \/ inline-size;/)
 })
 
+test('la feuille : le voile a la largeur du conteneur écrite en cqw (Firefox et Zen le mesuraient à 0 px)', () => {
+  // Placé en absolu dans un conteneur « inline-size », un élément se mesure dans Gecko sur une boîte de largeur nulle :
+  // left: 0 et right: 0 seuls, ou width: 100 %, y donnaient 0 px (Zen 1.24, Gecko 160, le 27/11/2026) ; 100cqw, la
+  // largeur du conteneur, donne la même chose dans Chrome et dans Gecko.
+  assert.match(corps(':root .menu-ordi-voile', (c) => c.includes(ORDI)), /position: absolute;[^}]*left: 0;[^}]*width: 100cqw;/)
+})
+
 test('la feuille : les couleurs sont celles des nouvelles pages, et la pastille a le dessin de celle du téléphone', () => {
   const variables = (css) => Object.fromEntries([...css.matchAll(/(--[a-z][\w-]*):\s*([^;]+);/g)].map(([, nom, valeur]) => [nom, valeur.trim()]))
   const page = variables(rules(read('assets/collection-refonte.css').replace(/\/\*[\s\S]*?\*\//g, '')).find((r) => r.head === ':root[data-refonte-page]').body)
