@@ -310,7 +310,6 @@ class CartItem extends HTMLElement {
         line: this.index,
         quantity,
         sections: `${this.cartDrawerSectionId}`,
-        sections_url: adresseDeLaPage(),
       }),
     });
     const json = await response.json();
@@ -350,7 +349,6 @@ class CartItem extends HTMLElement {
       body: JSON.stringify({
         updates,
         sections: `${this.cartDrawerSectionId}`,
-        sections_url: adresseDeLaPage(),
       }),
     });
     const json = await response.json();
@@ -447,7 +445,7 @@ class QuickAddToCart extends HTMLElement {
 
   async makeOrder(itemIds, quantity) {
     const response = await fetch(
-      `/cart/add.js?sections=tw-cart-drawer&sections_url=${encodeURIComponent(adresseDeLaPage())}`,
+      '/cart/add.js?sections=tw-cart-drawer',
       {
         method: 'POST',
         headers: {

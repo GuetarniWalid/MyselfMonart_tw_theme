@@ -227,23 +227,26 @@ function appels(source) {
 }
 const demandeDesSections = (appel) => /cart/.test(appel) && /\bsections\b/.test(appel.replace(/sections_url/g, ''))
 
-test('à chaque appel du panier qui demande des sections, Shopify reçoit l’adresse de la page, recherche comprise (sections_url)', () => {
-  let nombre = 0
-  for (const file of SCRIPTS_DU_PANIER) {
+/* sections_url (l'adresse de la page, recherche comprise) part seulement des appels du panier des tuiles. Les appels
+   d'aujourd'hui (l'ancien tiroir, la fiche, le studio, l'ancienne page panier) restent tels quels jusqu'à la bascule :
+   pendant le Black Friday, rien ne change hors de la vue de test (décision du 27/11, à la relecture du ticket 14). Shopify
+   ignore ?view= dans cette API : le paramètre ne sert pas à garder le tiroir des tuiles, qui demande sa section par son
+   nom. */
+test('les appels du panier des tuiles envoient l’adresse de la page (sections_url) ; ceux d’aujourd’hui ne changent pas', () => {
+  const tuiles = appels(read('assets/panier.js')).filter(demandeDesSections)
+  assert.ok(tuiles.length, 'assets/panier.js : un appel du panier avec des sections')
+  for (const appel of tuiles) assert.match(appel, /sections_url:\s*adresseDeLaPage\(\)/, appel.slice(0, 120))
+  let anciens = 0
+  for (const file of SCRIPTS_DU_PANIER.filter((f) => f !== 'assets/panier.js')) {
     const lus = appels(read(file)).filter(demandeDesSections)
     assert.ok(lus.length, `${file} : un appel du panier avec des sections`)
     for (const appel of lus) {
-      nombre++
-      assert.match(appel, /sections_url/, `${file} : ${appel.slice(0, 120)}`)
+      anciens++
+      assert.doesNotMatch(appel, /sections_url/, `${file} : ${appel.slice(0, 120)}`)
     }
   }
-  // Le tiroir (3 : quantité, quantité avec lot, ajout rapide), la fiche, le studio (2), la page panier d'aujourd'hui, et
-  // le panier des tuiles (un seul appel, pour tous ses changements : assets/panier.js, envoyer).
-  assert.ok(nombre >= 8, String(nombre))
-  // L'adresse, chemin et recherche : une seule façon de l'écrire, partout.
-  for (const file of SCRIPTS_DU_PANIER) {
-    for (const [, valeur] of read(file).matchAll(/sections_url(?::\s*|=\$\{)([^,}\n]+)/g)) assert.match(valeur,/adresseDeLaPage\(\)|window\.location\.pathname \+ window\.location\.search|encodeURIComponent\(window\.location\.pathname \+ window\.location\.search\)/, `${file} : ${valeur}`)
-  }
+  // L'ancien tiroir (3 : quantité, quantité avec lot, ajout rapide), la fiche, le studio (2), l'ancienne page panier.
+  assert.ok(anciens >= 7, String(anciens))
 })
 
 test('dans la vue de test, le tiroir se met à jour par sa propre section : Shopify ignore ?view=refonte dans l’API du panier', { skip: SKIP }, async () => {
