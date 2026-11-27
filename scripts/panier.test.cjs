@@ -285,6 +285,22 @@ test('les lots et le kit, comme aujourd’hui : au retrait, les variantes du lot
   assert.equal(phrase('« [article] » : [quantite]. Total [total].', { article: 'Frida', quantite: 2, total: '69,92 €' }), '« Frida » : 2. Total 69,92 €.')
 })
 
+test('« Annuler » remet une ligne sans propriétés sans en envoyer : Shopify écrit [] et l’API du panier refuse un tableau', () => {
+  const { proprietesDeLaLigne } = require('../assets/panier.js')
+  // Relevé en ligne le 27/11/2026 : la toile Frida Kahlo, sans propriétés, porte data-proprietes="[]", et
+  // /cart/add.js répond 400 « expected Array to be a Hash: properties » quand ce tableau lui revient.
+  assert.equal(proprietesDeLaLigne('[]'), null)
+  assert.equal(proprietesDeLaLigne('{}'), null)
+  assert.equal(proprietesDeLaLigne(''), null)
+  assert.equal(proprietesDeLaLigne(undefined), null)
+  assert.equal(proprietesDeLaLigne('pas du JSON'), null)
+  assert.deepEqual(proprietesDeLaLigne('{"Cadre":"Chêne clair","_aperçu":"https://cdn.example/a.jpg"}'), { Cadre: 'Chêne clair', _aperçu: 'https://cdn.example/a.jpg' })
+  // Le script s'en sert pour la ligne à remettre : pas de clé properties quand il n'y en a pas.
+  const script = read('assets/panier.js')
+  assert.match(script, /const proprietes = proprietesDeLaLigne\(ligne\.dataset\.proprietes\)/)
+  assert.match(script, /\.\.\.\(proprietes \? \{ properties: proprietes \} : \{\}\)/)
+})
+
 /* ---------- Les textes, dans les cinq langues ---------- */
 
 const FICHIERS_DU_PANIER = ['snippets/panier-tiroir.liquid', 'snippets/panier-corps.liquid', 'snippets/panier-ligne.liquid', 'snippets/panier-complements.liquid', 'snippets/panier-vide.liquid', 'snippets/panier-logos.liquid', 'snippets/panier-textes.liquid', 'sections/panier-page.liquid', 'sections/panier-tiroir.liquid']

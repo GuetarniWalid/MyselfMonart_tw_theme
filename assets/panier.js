@@ -47,8 +47,21 @@
     return Object.entries(valeurs).reduce((texte, [nom, valeur]) => texte.split(`[${nom}]`).join(String(valeur)), String(modele || ''));
   }
 
+  /* Les propriétés d'une ligne, telles que le tiroir les écrit (data-proprietes : item.properties | json), pour la remettre
+     avec « Annuler ». Shopify écrit [] pour une ligne sans propriétés, et l'API du panier refuse un tableau (400,
+     « expected Array to be a Hash: properties », relevé en ligne le 27/11/2026) : seul un objet non vide est gardé,
+     sinon null, et la ligne repart sans propriétés. */
+  function proprietesDeLaLigne(texte) {
+    try {
+      const lu = JSON.parse(texte || '{}');
+      return lu && typeof lu === 'object' && !Array.isArray(lu) && Object.keys(lu).length ? lu : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   if (typeof window === 'undefined') {
-    module.exports = { quantitesDuLot, articlesDuGroupe, phrase };
+    module.exports = { quantitesDuLot, articlesDuGroupe, phrase, proprietesDeLaLigne };
     return;
   }
   if (window.customElements.get('panier-contenu')) return;
@@ -137,17 +150,12 @@
       const cle = ligne.dataset.cle;
       const nom = ligne.dataset.nom;
       const lies = this.lignesLiees(ligne);
-      let proprietes = {};
-      try {
-        proprietes = JSON.parse(ligne.dataset.proprietes || '{}') || {};
-      } catch (e) {
-        proprietes = {};
-      }
+      const proprietes = proprietesDeLaLigne(ligne.dataset.proprietes);
       const souvenir = {
         nom,
         cle,
         place: [...this.querySelectorAll('[data-panier-liste] > .panier-ligne')].indexOf(ligne),
-        ligne: { id: Number(ligne.dataset.variante), quantity: avant, properties: proprietes },
+        ligne: { id: Number(ligne.dataset.variante), quantity: avant, ...(proprietes ? { properties: proprietes } : {}) },
         lies,
       };
       retrait = null;
