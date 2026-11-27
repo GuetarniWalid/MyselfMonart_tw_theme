@@ -47,7 +47,8 @@
  * (photos et prénoms des clients), pour les sessions tirées au sort. Le tirage est fait ici et non
  * dans PostHog, qui chargerait les 69 Ko compressés de l'enregistreur et le ferait tourner chez
  * tout le monde avant de jeter ce qui n'est pas retenu. La durée minimale et le masquage se règlent
- * dans le projet PostHog. Les lignes du panier (cart-item) sont bloquées : texte libre, aperçus.
+ * dans le projet PostHog. Les lignes du panier (cart-item, et .panier-ligne du panier des tuiles) sont
+ * bloquées : texte libre, aperçus.
  *
  * Le calcul et le suivi sont testés : scripts/posthog-tracking.test.cjs.
  */
@@ -252,7 +253,7 @@
       disable_product_tours: true,
       advanced_disable_feature_flags: true,
       disable_session_recording: true,
-      session_recording: { maskAllInputs: true, blockSelector: 'cart-item', captureJsonLd: false },
+      session_recording: { maskAllInputs: true, blockSelector: 'cart-item, .panier-ligne', captureJsonLd: false },
     };
   }
 

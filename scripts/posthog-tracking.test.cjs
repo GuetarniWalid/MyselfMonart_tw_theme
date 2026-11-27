@@ -470,6 +470,9 @@ test('démarrage : le jeton du projet, et rien d’automatique (ni clics, ni pag
   assert.equal(options.disable_session_recording, true);
   assert.equal(options.person_profiles, 'identified_only');
   assert.equal(options.session_recording.maskAllInputs, true);
+  // Les lignes du panier ne s'enregistrent pas (texte libre des personnalisés, aperçus) : celles du tiroir
+  // d'aujourd'hui (cart-item) et celles du panier des tuiles (.panier-ligne, ticket 14).
+  assert.equal(options.session_recording.blockSelector, 'cart-item, .panier-ligne');
 });
 
 // ---- Consentement ----
