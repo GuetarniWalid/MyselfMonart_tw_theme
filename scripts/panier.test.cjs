@@ -7,7 +7,7 @@
 // Lancer : NODE_PATH=<un node_modules qui a liquidjs> node --test scripts/panier.test.cjs
 const test = require('node:test')
 const assert = require('node:assert/strict')
-const { SKIP, read, locales, KIT, toile, poster, ligne, panier, ESSAI, VIDE, AVEC_KIT, TIROIR, TIROIR_AVANT, rendre, PAGES_DU_JOUR, entete, gabarit } = require('./panier-banc.cjs')
+const { SKIP, read, locales, KIT, toile, poster, posterPerso, ligne, panier, ESSAI, VIDE, AVEC_KIT, TIROIR, TIROIR_AVANT, rendre, PAGES_DU_JOUR, entete, gabarit } = require('./panier-banc.cjs')
 
 test('hors de la vue de test, le tiroir d’aujourd’hui à l’octet près ; dans la vue de test, le tiroir des tuiles', { skip: SKIP }, async () => {
   for (const page of PAGES_DU_JOUR) {
@@ -74,6 +74,10 @@ test('le kit : un par toile et par poster encadré, jamais pour un poster sans c
       ['deux fois la toile', [ligne(toile(lang), { quantity: 2 })], 2],
       ['un kit déjà là, pour la seule toile', [ligne(KIT, { remise: false }), ligne(poster(lang)), ligne(toile(lang))], 0],
       ['un kit déjà là, deux œuvres à accrocher', [ligne(KIT, { remise: false }), ligne(poster(lang, true)), ligne(toile(lang))], 1],
+      // Un poster personnalisé n'a pas de fiche d'œuvre : il est un poster par son métachamp artwork.type.
+      ['le poster personnalisé sans cadre seul', [ligne(posterPerso(lang))], 0],
+      ['le poster personnalisé encadré seul', [ligne(posterPerso(lang, true), { properties: { _cadre: 'cadre-noir-mat-1' } })], 1],
+      ['le poster personnalisé sans cadre et la toile', [ligne(posterPerso(lang)), ligne(toile(lang))], 1],
     ]
     for (const [nom, lignes, attendu] of cas) {
       const kit = tuileKit(await rendre(TIROIR, { lang, cart: panier(lignes) }))
@@ -150,15 +154,15 @@ test('la page : le bouton de paiement s’atteint au clavier ; la barre du tél�
   assert.match(read('sections/page-cart-subtotal.liquid'), /name="checkout"[\s\S]*?tabindex="-1"/)
 })
 
-test('la page : le récapitulatif (sous-total, réduction, total), puis trois assurances confirmées', { skip: SKIP }, async () => {
+test('la page : le récapitulatif (sous-total, promotion, total), puis trois assurances confirmées', { skip: SKIP }, async () => {
   const html = await pagePanier({ cart: ESSAI() })
   const recap = texte(/<aside class="panier-recap"[\s\S]*?<\/aside>/.exec(html)[0])
-  assert.ok(recap.startsWith('Récapitulatif Sous-total 87,40 € Réduction −17,48 € Total 69,92 € Paiement sécurisé'), recap)
+  assert.ok(recap.startsWith('Récapitulatif Sous-total 87,40 € Promotion −17,48 € Total 69,92 € Paiement sécurisé'), recap)
   assert.ok(recap.endsWith('Livraison offerte, sous 7 jours ouvrés 14 jours pour changer d’avis Une vraie personne vous répond 7 jours sur 7.'), recap)
   assert.doesNotMatch(recap, /confirmer/)
-  // Sans remise, le total seul : ni sous-total qui le répète, ni ligne de réduction.
+  // Sans remise, comme le prototype : le sous-total, puis le total, sans ligne de promotion.
   const sansRemise = texte(/<aside class="panier-recap"[\s\S]*?<\/aside>/.exec(await pagePanier({ cart: panier([ligne(toile(), { remise: false })]) }))[0])
-  assert.ok(sansRemise.startsWith('Récapitulatif Total 62,50 € Paiement sécurisé'), sansRemise)
+  assert.ok(sansRemise.startsWith('Récapitulatif Sous-total 62,50 € Total 62,50 € Paiement sécurisé'), sansRemise)
   // Panier vide : le titre le dit, les tuiles du menu et « Suivre ma commande ».
   const vide = await pagePanier({ cart: VIDE() })
   assert.match(vide, /<h1 class="panier-page-titre">Votre panier est vide<\/h1>/)

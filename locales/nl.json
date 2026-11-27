@@ -640,6 +640,7 @@
         "livraison": "Gratis levering, binnen 7 werkdagen",
         "economie": "Je bespaart {{ montant }}",
         "recapitulatif": "Overzicht",
+        "promotion": "Korting",
         "retours": "14 dagen bedenktijd",
         "kit_titre": {
           "one": "Om het meteen op te hangen",

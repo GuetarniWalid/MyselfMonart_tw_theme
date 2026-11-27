@@ -638,6 +638,7 @@
         "livraison": "Kostenlose Lieferung, innerhalb von 7 Werktagen",
         "economie": "Sie sparen {{ montant }}",
         "recapitulatif": "Übersicht",
+        "promotion": "Rabatt",
         "retours": "14 Tage Rückgaberecht",
         "kit_titre": {
           "one": "Gleich nach Erhalt aufhängen",

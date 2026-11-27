@@ -1024,6 +1024,7 @@
         "livraison": "Livraison offerte, sous 7 jours ouvrés",
         "economie": "Vous économisez {{ montant }}",
         "recapitulatif": "Récapitulatif",
+        "promotion": "Promotion",
         "retours": "14 jours pour changer d’avis",
         "kit_titre": {
           "one": "Pour l’accrocher dès réception",

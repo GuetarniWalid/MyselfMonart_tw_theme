@@ -2798,3 +2798,193 @@
 }
 
 /* === Retouches avant la bascule (ticket 10) : fin === */
+
+/* === La page panier de test (ticket 14) : début === */
+
+/* La page panier « B · Les tuiles » (sections/panier-page.liquid, /cart?view=refonte ; dossier .scratch/collection-design,
+   ticket 14), qui charge cette feuille pour son en-tête, son pied de page et Albert Sans (layout/cart.liquid). Ses
+   morceaux partagés avec le tiroir du panier (tuiles, kit, promotion, bouton noir) sont dans la feuille commune
+   (input.css, « Le panier »). Ici, sa mise en page seule : « Votre panier », les tuiles à gauche, le récapitulatif
+   crème à droite, qui reste à l'écran sur ordinateur ; au téléphone, une colonne et la barre noire collée en bas,
+   jusqu'à ce que le bouton du récapitulatif soit à l'écran (assets/panier.js). Seuil « ordinateur » : 900 px. */
+:root[data-refonte-page] .panier-page-dedans {
+  max-width: 1336px;
+  margin: 0 auto;
+  padding: 0 var(--goutd) 112px var(--gout);
+}
+:root[data-refonte-page] .panier-page-titre {
+  margin: 26px 0 0;
+  font: 300 34px/1.05 var(--sans);
+  letter-spacing: -0.025em;
+}
+:root[data-refonte-page] .panier-page-titre b {
+  font-weight: 700;
+}
+:root[data-refonte-page] .panier-page-nombre {
+  margin: 6px 0 0;
+  font: 400 14px/1.3 var(--sans);
+  color: var(--encre-55);
+}
+:root[data-refonte-page] .panier-page-grille {
+  display: grid;
+  gap: 22px;
+  margin-top: 18px;
+}
+/* Les tuiles de la page : plus grandes que dans le tiroir, d'un bord à l'autre de la colonne. */
+:root[data-refonte-page] .panier-page .panier-ligne {
+  grid-template-columns: 110px minmax(0, 1fr);
+  margin: 8px 0;
+}
+:root[data-refonte-page] .panier-page .panier-vignette {
+  width: 110px;
+  height: 136px;
+}
+:root[data-refonte-page] .panier-page :is(.panier-promo, .panier-kit, .panier-annule, .panier-lots) {
+  margin-left: 0;
+  margin-right: 0;
+}
+:root[data-refonte-page] .panier-page .panier-continuer {
+  justify-content: flex-start;
+  margin-top: 4px;
+}
+:root[data-refonte-page] .panier-page .panier-vide {
+  max-width: 520px;
+  padding: 20px 0 0;
+}
+/* Le récapitulatif crème : sous-total, promotion, total ; le bouton, Klarna, les logos ; puis trois assurances. */
+:root[data-refonte-page] .panier-recap {
+  align-self: start;
+  display: grid;
+  gap: 16px;
+  padding: 22px 20px;
+  border-radius: 24px;
+  background-color: var(--creme);
+}
+:root[data-refonte-page] .panier-recap-titre {
+  margin: 0;
+  font: 700 18px/1.2 var(--sans);
+}
+:root[data-refonte-page] .panier-recap-lignes {
+  display: grid;
+  gap: 10px;
+}
+:root[data-refonte-page] .panier-recap-ligne {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font: 400 15px/1.3 var(--sans);
+}
+:root[data-refonte-page] .panier-recap-ligne span:last-child {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+:root[data-refonte-page] .panier-recap-total {
+  padding-top: 14px;
+  border-top: 1px solid var(--encre-12);
+}
+:root[data-refonte-page] .panier-recap-total span {
+  font: 700 17px/1.2 var(--sans);
+}
+:root[data-refonte-page] .panier-recap-total b {
+  font: 700 24px/1.1 var(--sans);
+}
+:root[data-refonte-page] .panier-recap-trait {
+  width: 100%;
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--encre-12);
+}
+:root[data-refonte-page] .panier-assurances {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+:root[data-refonte-page] .panier-assurances li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font: 400 13.5px/1.35 var(--sans);
+  color: var(--encre-70);
+}
+:root[data-refonte-page] .panier-coche {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--menthe);
+  color: var(--encre);
+}
+:root[data-refonte-page] .panier-coche svg {
+  width: 11px;
+  height: 11px;
+}
+/* La barre noire du téléphone, sur un dégradé du blanc de la page. */
+:root[data-refonte-page] .panier-barre {
+  position: fixed;
+  z-index: 30;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px max(14px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px));
+  background: linear-gradient(transparent, color-mix(in srgb, var(--blanc) 94%, transparent) 28%);
+}
+:root[data-refonte-page] .panier-barre[data-cachee] {
+  visibility: hidden;
+  opacity: 0;
+}
+@media (min-width: 900px) {
+  :root[data-refonte-page] .panier-page-dedans {
+    padding-bottom: 48px;
+  }
+  :root[data-refonte-page] .panier-page-titre {
+    margin-top: 34px;
+    font-size: 46px;
+  }
+  :root[data-refonte-page] .panier-page-grille {
+    grid-template-columns: minmax(0, 1fr) 384px;
+    gap: 56px;
+    margin-top: 22px;
+  }
+  /* Sous l'en-tête, qui peut revenir au défilement (--tete-h). */
+  :root[data-refonte-page] .panier-recap {
+    position: sticky;
+    top: calc(var(--tete-h, 90px) + 24px);
+    padding: 24px;
+  }
+  /* Le kit, en une rangée. */
+  :root[data-refonte-page] .panier-page .panier-kit {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px;
+    padding: 14px 14px 14px 16px;
+  }
+  :root[data-refonte-page] .panier-page .panier-kit-haut {
+    margin-bottom: 0;
+  }
+  :root[data-refonte-page] .panier-page .panier-kit .panier-trait {
+    width: auto;
+    padding: 6px 22px;
+  }
+  :root[data-refonte-page] .panier-barre {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-refonte-page] .panier-barre {
+    transition: opacity 0.2s ease, visibility 0s linear 0s;
+  }
+  :root[data-refonte-page] .panier-barre[data-cachee] {
+    transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+  }
+}
+
+/* === La page panier de test (ticket 14) : fin === */

@@ -637,6 +637,7 @@
         "livraison": "Envío gratis, en 7 días laborables",
         "economie": "Ahorras {{ montant }}",
         "recapitulatif": "Resumen",
+        "promotion": "Descuento",
         "retours": "14 días para cambiar de opinión",
         "kit_titre": {
           "one": "Para colgarlo nada más recibirlo",

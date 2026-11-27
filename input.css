@@ -2597,7 +2597,9 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
    Le panier « B · Les tuiles », choix de Walid du 27/11/2026 (ticket 14 de .scratch/collection-design ; la maquette :
    .scratch/collection-design/panier/prototype, version B). Pour l'instant dans la vue de test seulement : le tiroir des
    nouvelles pages collection en essai, et la page panier d'essai. Le tiroir est sur toutes les pages : ses styles sont
-   ici, dans la feuille commune, et ceux de la page avec eux (les mêmes morceaux).
+   ici, dans la feuille commune, avec ceux des morceaux qu'il partage avec la page panier (tuiles, kit, promotion,
+   bouton). La mise en page propre à la page (titre, colonnes, récapitulatif, barre du téléphone) est dans la feuille
+   de la nouvelle page, qu'elle charge.
    Les couleurs du menu du téléphone : le bandeau pêche de la promotion, les œuvres sur des tuiles crème, le kit sur une
    tuile menthe, le bouton noir pleine largeur. Albert Sans. Les couleurs sont posées une fois, ici, comme pour le menu
    (les mêmes valeurs que la feuille de la nouvelle page collection). Aucun mouvement avec « mouvements réduits ».
@@ -2606,6 +2608,7 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
    tuiles quand elle porte <cart-drawer data-vue="tuiles">. Fermée, elle est cachée (visibility) : rien d'elle ne prend
    le clavier. Scripts : assets/cart-drawer.js (les gestes du tiroir), assets/panier.js (le contenu). */
 :root .cart-drawer:has(> [data-vue="tuiles"]),
+:root #overlay-content.panier-voile,
 :root .panier {
   --encre: rgb(var(--color-main-rgb));
   --encre-70: rgba(var(--color-main-rgb), 0.72);
@@ -2615,10 +2618,9 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
   --encre-16: rgba(var(--color-main-rgb), 0.16);
   --encre-12: rgba(var(--color-main-rgb), 0.12);
   --encre-06: rgba(var(--color-main-rgb), 0.06);
-  --encre-appui: #3a2a1d;
   --blanc: #ffffff;
-  --blanc-0: rgba(255, 255, 255, 0);
-  --blanc-94: rgba(255, 255, 255, 0.94);
+  /* Le bouton noir sous le doigt : l'encre (le réglage main_color), éclaircie d'un huitième. */
+  --encre-appui: color-mix(in srgb, var(--encre) 88%, var(--blanc));
   --creme: #f7f2ea;
   --peche: #ffcaa8;
   --menthe: #b9e9d0;
@@ -2654,7 +2656,7 @@ cart-drawer[data-vue="tuiles"] { display: block; height: 100%; }
 cart-drawer[data-vue="tuiles"]:focus { outline: none; }
 /* Le voile sur la page, derrière le tiroir ouvert (#overlay-content, assets/cart-drawer.js). */
 #overlay-content.panier-voile {
-  background-color: rgba(var(--color-main-rgb), 0.38);
+  background-color: var(--encre-38);
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
@@ -2743,7 +2745,7 @@ cart-drawer[data-vue="tuiles"]:focus { outline: none; }
 }
 .panier .panier-pas-bouton::after { content: ""; position: absolute; inset: -3px; }
 .panier .panier-pas-bouton svg { width: 14px; height: 14px; }
-.panier-corbeille svg { width: 15px; height: 16px; }
+.panier .panier-corbeille svg { width: 15px; height: 16px; }
 @media (hover: hover) { .panier .panier-pas-bouton:hover { background-color: var(--encre-06); } }
 .panier-pas-nombre { min-width: 18px; text-align: center; font: 600 15px/1 var(--sans); font-variant-numeric: tabular-nums; }
 /* Le prix ; avec une remise, l'ancien prix au-dessus, barré, en petit. */
@@ -2914,62 +2916,14 @@ cart-drawer[data-vue="tuiles"]:focus { outline: none; }
   .panier-tuiles { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* La page : « Votre panier », les tuiles à gauche, le récapitulatif crème à droite ; au téléphone, une colonne et la
-   barre noire collée en bas. Seuil « ordinateur » : 900 px, celui de la nouvelle page collection. */
-.panier-page-dedans { max-width: 1336px; margin: 0 auto; padding: 0 20px 112px; }
-.panier-page-titre { margin: 26px 0 0; font: 300 34px/1.05 var(--sans); letter-spacing: -0.025em; }
-.panier-page-titre b { font-weight: 700; }
-.panier-page-nombre { margin: 6px 0 0; font: 400 14px/1.3 var(--sans); color: var(--encre-55); }
-.panier-page-grille { display: grid; gap: 22px; margin-top: 18px; }
-.panier-page .panier-ligne { grid-template-columns: 110px minmax(0, 1fr); margin: 8px 0; }
-.panier-page .panier-vignette { width: 110px; height: 136px; }
-.panier-page :is(.panier-promo, .panier-kit, .panier-annule, .panier-lots) { margin-left: 0; margin-right: 0; }
-.panier-page .panier-continuer { justify-content: flex-start; margin-top: 4px; }
-.panier-page .panier-vide { max-width: 520px; padding: 20px 0 0; }
-.panier-recap {
-  align-self: start; display: grid; gap: 16px;
-  padding: 22px 20px; border-radius: 24px; background-color: var(--creme);
-}
-.panier-recap-titre { margin: 0; font: 700 18px/1.2 var(--sans); }
-.panier-recap-lignes { display: grid; gap: 10px; }
-.panier-recap-ligne { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 0; font: 400 15px/1.3 var(--sans); }
-.panier-recap-ligne span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.panier-recap-total { padding-top: 14px; border-top: 1px solid var(--encre-12); }
-.panier-recap-total span { font: 700 17px/1.2 var(--sans); }
-.panier-recap-total b { font: 700 24px/1.1 var(--sans); }
-.panier-recap-trait { width: 100%; height: 0; margin: 0; border: 0; border-top: 1px solid var(--encre-12); }
-.panier-assurances { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
-.panier-assurances li { display: flex; align-items: flex-start; gap: 10px; font: 400 13.5px/1.35 var(--sans); color: var(--encre-70); }
-.panier-coche { flex: none; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background-color: var(--menthe); color: var(--encre); }
-.panier-coche svg { width: 11px; height: 11px; }
-/* La barre du téléphone, tant que le bouton du récapitulatif n'est pas à l'écran (assets/panier.js). */
-.panier-barre {
-  position: fixed; z-index: 30; left: 0; right: 0; bottom: 0;
-  padding: 10px 14px calc(12px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(var(--blanc-0), var(--blanc-94) 28%);
-}
-.panier-barre[data-cachee] { visibility: hidden; opacity: 0; }
-@media (min-width: 900px) {
-  .panier-page-dedans { padding: 0 48px 48px; }
-  .panier-page-titre { margin-top: 34px; font-size: 46px; }
-  .panier-page-grille { grid-template-columns: minmax(0, 1fr) 384px; gap: 56px; margin-top: 22px; }
-  .panier-recap { position: sticky; top: calc(var(--tete-h, 90px) + 24px); padding: 24px; }
-  .panier-page .panier-kit { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 18px; padding: 14px 14px 14px 16px; }
-  .panier-page .panier-kit-haut { margin-bottom: 0; }
-  .panier-page .panier-kit .panier-trait { width: auto; padding: 6px 22px; }
-  .panier-barre { display: none; }
-}
-
 /* Les mouvements, seulement sans « mouvements réduits » : le tiroir glisse de la droite (0,3 s), le voile arrive,
-   les boutons changent de fond, la barre du téléphone s'efface. */
+   les boutons changent de fond. */
 @keyframes panier-voile-vient { from { opacity: 0; } }
 @media (prefers-reduced-motion: no-preference) {
   :root .cart-drawer:has(> [data-vue="tuiles"]) { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.3s; }
   :root .cart-drawer.translate-x-0:has(> [data-vue="tuiles"]) { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s; }
   #overlay-content.panier-voile { animation: panier-voile-vient 0.24s ease; }
   .panier .panier-payer, .panier .panier-trait, .panier .panier-pas-bouton, .panier .panier-fermer { transition: background-color 0.15s ease, box-shadow 0.15s ease; }
-  .panier-barre { transition: opacity 0.2s ease, visibility 0s linear 0s; }
-  .panier-barre[data-cachee] { transition: opacity 0.2s ease, visibility 0s linear 0.2s; }
 }
 @media (prefers-reduced-motion: reduce) {
   :root .cart-drawer:has(> [data-vue="tuiles"]) { transition: none; }

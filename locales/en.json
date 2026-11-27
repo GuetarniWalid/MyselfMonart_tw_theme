@@ -879,6 +879,7 @@
         "livraison": "Free delivery, within 7 working days",
         "economie": "You save {{ montant }}",
         "recapitulatif": "Order summary",
+        "promotion": "Discount",
         "retours": "14 days to change your mind",
         "kit_titre": {
           "one": "To hang it as soon as it arrives",

@@ -92,6 +92,28 @@ function poster(lang = 'fr', cadre = false) {
     metafields: { bundle: { products: { value: [KIT] } }, painting_options: { frames_poster: { value: [{ name: 'Noir', system: { handle: 'cadre-noir-mat-1' } }] } }, meta_object: {} },
   }
 }
+/* Un poster personnalisé (modèle personalized-poster, relevé le 27/11/2026 sur « Cadeau Personnalisé Foot Coloré ») :
+   pas de fiche d'œuvre (snippet artwork-kind : rien), mais un poster par son métachamp artwork.type, avec le kit en
+   métachamp bundle.products, et ses options Format puis Cadre, « Sans cadre » en premier. */
+function posterPerso(lang = 'fr', cadre = false) {
+  const m = motsDe(lang)
+  const images = [img('affiche-personnalisee-joueur-football-bleu-rouge-chambre-garcon.jpg', 1588, 1588), img('joueur-foot.jpg', 1308, 1760, 'Joueur de foot')]
+  const variants = [
+    { id: 53565327540571, title: `30x40 cm / ${m.sans}`, option1: '30x40 cm', option2: m.sans, option3: null, price: 3990 },
+    { id: 53565327573339, title: `30x40 cm / ${m.avec}`, option1: '30x40 cm', option2: m.avec, option3: null, price: 6290 },
+  ]
+  return {
+    id: 9199870378331, title: 'Cadeau Personnalisé Foot Coloré', type: 'Poster Personnalisé', template_suffix: 'personalized-poster',
+    url: '/products/cadeau-personnalise-foot-colore', handle: 'cadeau-personnalise-foot-colore',
+    has_only_default_variant: false, images, featured_image: images[0], variants, first_available_variant: variants[0], price: 3990,
+    variant: variants[cadre ? 1 : 0],
+    options_with_values: [
+      { name: 'Format', position: 1, values: ['30x40 cm'].map(optionValue) },
+      { name: m.cadres, position: 2, values: [m.sans, m.avec].map(optionValue) },
+    ],
+    metafields: { artwork: { type: { value: 'poster' } }, bundle: { products: { value: [KIT] } }, meta_object: {} },
+  }
+}
 const REMISE = 'Black Friday : -20 % sur tous les tableaux'
 /* Une ligne du panier, telle que Shopify la donne : sa remise de 20 % si remise est vrai. */
 function ligne(product, { variant = product.variant || product.first_available_variant, quantity = 1, properties = {}, remise = true, index = 0 } = {}) {
@@ -196,6 +218,6 @@ const gabarit = (file, content, { lang = 'fr', cookie = true, suffix = null } = 
 })
 
 module.exports = {
-  SKIP, read, engine, locales, LANGS, templateOf, MOTS, KIT, REMISE, toile, poster, ligne, panier, VIDE, ESSAI, AVEC_KIT,
+  SKIP, read, engine, locales, LANGS, templateOf, MOTS, KIT, REMISE, toile, poster, posterPerso, ligne, panier, VIDE, ESSAI, AVEC_KIT,
   TIROIR, TIROIR_AVANT, sansSchema, ROUTES, globalsDe, rendre, PAGES_DU_JOUR, BLOCS, entete, gabarit,
 }

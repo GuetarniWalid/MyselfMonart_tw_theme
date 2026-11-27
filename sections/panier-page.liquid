@@ -11,15 +11,17 @@
   - Le titre : « Votre panier », en maigre puis le dernier mot en gras, comme « Tableaux Nature » ; dessous, le nombre
     d'articles. C'est le seul h1 de la page.
   - À gauche : le bandeau de la promotion, les tuiles, le kit, « Continuer les achats » (snippets/panier-corps.liquid).
-  - À droite, crème, et qui reste à l'écran sur ordinateur : le récapitulatif (sous-total et réduction s'il y a une
-    remise, total), le bouton noir « Paiement sécurisé », Klarna, les logos, puis trois assurances.
+  - À droite, crème, et qui reste à l'écran sur ordinateur : le récapitulatif (le sous-total avant remise, la
+    promotion s'il y en a une, le total), le bouton noir « Paiement sécurisé », Klarna, les logos, puis trois
+    assurances.
   - Au téléphone : une barre noire « Paiement sécurisé · total » collée en bas, jusqu'à ce que le bouton du
     récapitulatif soit à l'écran (assets/panier.js). Elle double ce bouton à la souris et au doigt ; le clavier et les
     lecteurs d'écran ont celui du récapitulatif, qui s'atteint au clavier (celui d'aujourd'hui porte tabindex="-1").
   - Panier vide : « Votre panier est vide », les tuiles du menu, « Suivre ma commande » (snippets/panier-vide.liquid).
   Quand le panier change, assets/panier.js demande à Shopify cette section par son nom (panier-page), avec l'adresse
   de la page : sans réglage, elle se rend de même hors de son modèle.
-  Styles : input.css, « Le panier ». Tests : scripts/panier.test.cjs.
+  Styles : la mise en page, assets/collection-refonte.css (bloc du ticket 14) ; les morceaux partagés avec le tiroir,
+  input.css (« Le panier »). Tests : scripts/panier.test.cjs.
 {%- endcomment -%}
 {%- liquid
   assign pp_vide = true
@@ -52,12 +54,12 @@
       </div>
       <aside class="panier-recap" aria-labelledby="panier-recap-titre">
         <h2 id="panier-recap-titre" class="panier-recap-titre">{{ 'sections.mma.panier.recapitulatif' | t }}</h2>
-        {%- if pp_eco > 0 %}
         <div class="panier-recap-lignes">
           <p class="panier-recap-ligne"><span>{{ 'sections.tw_cart_drawer.subtotal' | t }}</span><span>{{ cart.original_total_price | money }}</span></p>
-          <p class="panier-recap-ligne"><span>{{ 'customer.order.discount' | t }}</span><span>−{{ pp_eco | money }}</span></p>
+          {%- if pp_eco > 0 %}
+          <p class="panier-recap-ligne"><span>{{ 'sections.mma.panier.promotion' | t }}</span><span>−{{ pp_eco | money }}</span></p>
+          {%- endif %}
         </div>
-        {%- endif %}
         <p class="panier-total panier-recap-total"><span>{{ pp_cle_total | t }}</span><b data-panier-total>{{ cart.total_price | money }}</b></p>
         <form action="{{ routes.cart_url }}" method="post" id="panier-page-form" class="panier-form">
           <button type="submit" name="checkout" class="panier-payer" data-focus="payer" data-panier-bouton>{% render 'icon-padlock' %}<span>{{ 'sections.tw_cart_drawer.checkout' | t }}</span></button>
