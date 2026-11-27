@@ -448,8 +448,16 @@ class MenuOrdinateur {
       });
     }
     this.menu.addEventListener('keydown', (e) => this.tabulation(e));
-    // Un clic ou un toucher à côté (le voile, le bandeau, la page) ; Échap.
-    document.addEventListener('pointerdown', (e) => this.etat.ouvert && !this.barre.contains(e.target) && this.geste({ type: 'dehors' }), true);
+    // Un clic ou un toucher à côté (le bandeau, la page, le vide de la barre) ; Échap.
+    document.addEventListener('pointerdown', (e) => this.etat.ouvert && this.dehors(e.target) && this.geste({ type: 'dehors' }), true);
+    /* Le voile ferme au clic, et non à l'appui : le toucher qui le ferme s'arrête sur lui. Fermé dès l'appui, le voile
+       s'effaçait (0,24 s, aussitôt avec « mouvements réduits ») avant que le doigt se lève, et le clic tombait sur le
+       tableau du dessous, qui s'ouvrait (Walid, sur iPad, le 27/11/2026). Un second toucher ouvre ce qu'on vise. */
+    this.voile.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (this.etat.ouvert) this.geste({ type: 'dehors' });
+    });
     document.addEventListener('keydown', (e) => e.key === 'Escape' && this.etat.ouvert && this.geste({ type: 'echap', focusDedans: this.dansLaZone(document.activeElement) }));
     // Sous 768 px, le menu redevient celui du téléphone ; au-dessus, la pastille reprend sa place.
     this.ordinateur.addEventListener('change', () => {
@@ -614,6 +622,16 @@ class MenuOrdinateur {
     }
     menu.style.contentVisibility = '';
     this.montrer(vu ? vu.dataset.rayon : this.etat.ouvert || this.etat.courant || 1);
+  }
+
+  /* Ce qui ferme le menu dès l'appui, menu ouvert : tout ce qui est hors de la barre (le bandeau, la page), sauf le voile,
+     qui ferme au clic ; et dans la barre, son vide (pas le panneau, ni les rayons, ni un lien, un bouton ou un champ). Sur
+     iPad, le haut de l'écran autour de la bascule ferme ainsi le menu, comme le voile. */
+  dehors(cible) {
+    if (!cible || cible === this.voile) return false;
+    if (!this.barre.contains(cible)) return true;
+    if (this.menu.contains(cible) || this.nav.contains(cible)) return false;
+    return !cible.closest('a, button, input, select, textarea, summary, label, [role="button"], [tabindex]');
   }
 
   // Tout revient comme au téléphone : le <details> fermé, le panneau, ses groupes et leurs titres, ses rayons.

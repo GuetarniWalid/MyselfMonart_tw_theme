@@ -345,12 +345,17 @@ test('la feuille : le mouvement, seulement sans « mouvements réduits » ; le r
 
 test('la feuille : les emblèmes, à la plus grande taille entre 44 et 66 px où tout le rayon tient', () => {
   const panneau = corps(':root .menu-ordi-barre .menu-tel', (c) => c.includes(ORDI) && !c.includes('prefers'))
-  // Une formule : la hauteur sous l'en-tête (40 px de la page restent en vue), la largeur de l'écran, le nombre de rangées
-  // et d'emblèmes de la plus longue rangée (posés par le script).
-  assert.match(panneau, /--emb: clamp\(44px, min\(var\(--emb-h\), var\(--emb-l\)\), 66px\);/)
+  // Une formule : la hauteur sous l'en-tête (ce qui reste de la page en vue, --reste), la largeur de l'écran, le nombre de
+  // rangées et d'emblèmes de la plus longue rangée (posés par le script).
+  assert.match(panneau, /--reste: 40px;[^}]*--emb-min: 44px;/)
+  assert.match(panneau, /--emb: clamp\(var\(--emb-min\), min\(var\(--emb-h\), var\(--emb-l\)\), 66px\);/)
   // --panneau-haut, et non --menu-haut, que le menu du téléphone pose sur le même panneau quand il s'ouvre : les deux
   // menus ne se mélangent pas.
-  assert.match(panneau, /--emb-h: calc\(\(100dvh - var\(--panneau-haut, 123px\) - 40px - var\(--fixe, 302px\)\) \/ \(1\.3 \* var\(--rangees, 5\)\)\);/)
+  assert.match(panneau, /--emb-h: calc\(\(100dvh - var\(--panneau-haut, 123px\) - var\(--reste\) - var\(--fixe, 302px\)\) \/ \(1\.3 \* var\(--rangees, 5\)\)\);/)
+  assert.match(panneau, /max-height: calc\(100dvh - var\(--panneau-haut, 123px\) - var\(--reste\)\);/)
+  // Sur un écran tactile (iPad), le doigt ferme le menu en touchant le voile : 72 px de la page restent en vue, et non 40
+  // au ras du bord (Walid, 27/11/2026) ; les emblèmes descendent jusqu'à 40 px pour que tout tienne.
+  assert.match(corps(':root .menu-ordi-barre .menu-tel', (c) => c.includes(ORDI) && c.includes('(hover: none)')), /^\s*--reste: 72px; --emb-min: 40px;\s*$/)
   assert.doesNotMatch(BLOC, /--menu-haut/)
   assert.match(panneau, /--rangee-l: calc\(100cqw /)
   assert.match(panneau, /--emb-l: calc\(\(var\(--rangee-l\) - var\(--colonnes, 7\)/)
@@ -528,6 +533,40 @@ test('au clavier : Entrée ou Espace ouvrent, flèche bas ouvre et entre, les fl
   // Échap, menu fermé : rien.
   e.geste({ type: 'echap', focusDedans: true })
   assert.equal(e.faits.length, 7)
+})
+
+test('le voile ferme au clic et garde ce clic (un tableau dessous ne s’ouvre pas) ; le vide de la barre et la page ferment dès l’appui', () => {
+  const M = duScript('MenuOrdinateur')
+  // Un faux arbre : contains et closest suivent les parents (closest ne lit que les noms de balise).
+  const noeud = (nom, parent = null, balise = 'div') => ({
+    nom, parent, balise,
+    contains(x) { for (let n = x; n; n = n.parent) if (n === this) return true; return false },
+    closest(selecteur) { const balises = selecteur.split(',').map((s) => s.trim()); for (let n = this; n; n = n.parent) if (balises.includes(n.balise)) return n; return null },
+  })
+  const page = noeud('page')
+  const carte = noeud('lien d’une carte', page, 'a')
+  const entete = noeud('en-tête')
+  const barre = noeud('barre', entete)
+  const voile = noeud('voile', entete)
+  const nav = noeud('bascule', barre, 'nav')
+  const rayon = noeud('rayon', nav, 'button')
+  const menu = noeud('panneau', barre)
+  const lien = noeud('emblème', menu, 'a')
+  const vide = noeud('vide de la barre', barre, 'ul')
+  const logo = noeud('logo', barre, 'a')
+  const loupe = noeud('recherche', barre, 'button')
+  const dehors = (cible) => M.prototype.dehors.call({ barre, voile, nav, menu }, cible)
+  // Le voile ne ferme pas à l'appui : au clic seulement (plus bas).
+  assert.equal(dehors(voile), false)
+  for (const x of [carte, page, vide]) assert.equal(dehors(x), true, x.nom)
+  for (const x of [rayon, nav, menu, lien, logo, loupe]) assert.equal(dehors(x), false, x.nom)
+  assert.equal(dehors(null), false)
+  // Le script : l'appui passe par dehors(), et le voile a son écouteur de clic, qui garde le clic et ferme le menu.
+  const script = read('assets/tw-header.js')
+  assert.match(script, /document\.addEventListener\('pointerdown', \(e\) => this\.etat\.ouvert && this\.dehors\(e\.target\) && this\.geste\(\{ type: 'dehors' \}\), true\);/)
+  assert.match(script, /this\.voile\.addEventListener\('click', \(e\) => \{\s*e\.preventDefault\(\);\s*e\.stopPropagation\(\);\s*if \(this\.etat\.ouvert\) this\.geste\(\{ type: 'dehors' \}\);\s*\}\);/)
+  // Pas de reflet gris au toucher, sur iPad.
+  assert.match(corps(':root .menu-ordi-voile', (c) => c.includes(ORDI)), /-webkit-tap-highlight-color: transparent;/)
 })
 
 test('un clic à côté, le focus qui sort, l’en-tête qui part le ferment ; le passage au téléphone le ferme tout de suite', () => {
