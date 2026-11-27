@@ -2733,6 +2733,8 @@ cart-drawer[data-vue="tuiles"]:focus { outline: none; }
    blanc) se fond dans le crème ; un aperçu personnalisé garde ses couleurs. */
 .panier-vignette-image { display: block; width: 100%; height: 100%; object-fit: contain; }
 .panier-vignette-photo { mix-blend-mode: multiply; }
+/* La photo d'une commande sur mesure (l'œuvre encadrée sur un mur, carrée) remplit la case, sans bandes. */
+.panier-vignette-scene { object-fit: cover; }
 .panier-info { display: flex; flex-direction: column; min-width: 0; }
 .panier-nom {
   margin: 0; font: 600 15px/1.26 var(--sans); letter-spacing: -0.01em;

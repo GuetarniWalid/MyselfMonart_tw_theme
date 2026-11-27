@@ -69,7 +69,13 @@
     {%- elsif pl_apercu != blank -%}
       <img class="panier-vignette-image" src="{{ pl_apercu | escape }}" onerror="this.onerror=null;this.src='{{ item.image | image_url: width: pl_largeur }}'" alt="" width="{{ pl_largeur }}" height="{{ pl_largeur }}" loading="lazy">
     {%- else -%}
-      <img class="panier-vignette-image panier-vignette-photo" src="{{ item.image | image_url: width: pl_largeur }}" alt="" width="{{ pl_largeur }}" height="{{ pl_largeur }}" loading="lazy">
+      {%- comment -%}
+        Une commande sur mesure n'a qu'une photo : l'œuvre encadrée comme elle a été commandée, sur un mur. Elle
+        remplit la case, sans bandes (panier-vignette-scene). Toute autre photo de produit (le kit, sur fond blanc)
+        s'y pose entière et se fond dans le crème (panier-vignette-photo).
+      {%- endcomment -%}
+      {%- if item.product.template_suffix == 'sur-mesure' -%}{%- assign pl_photo = 'panier-vignette-scene' -%}{%- else -%}{%- assign pl_photo = 'panier-vignette-photo' -%}{%- endif -%}
+      <img class="panier-vignette-image {{ pl_photo }}" src="{{ item.image | image_url: width: pl_largeur }}" alt="" width="{{ pl_largeur }}" height="{{ pl_largeur }}" loading="lazy">
     {%- endif -%}
   </a>
   <div class="panier-info">

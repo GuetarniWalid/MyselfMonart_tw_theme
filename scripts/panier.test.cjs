@@ -330,8 +330,11 @@ test('les vignettes se posent sur le crème de la tuile : un fond uni, sans bord
   // La photo d'un produit (le kit, sur fond blanc) se fond dans le crème ; l'aperçu d'un personnalisé garde ses couleurs.
   assert.match(read('input.css'), /\.panier-vignette-photo \{ mix-blend-mode: multiply; \}/)
   const ligne = read('snippets/panier-ligne.liquid')
-  assert.match(ligne, /<img class="panier-vignette-image panier-vignette-photo" src="\{\{ item\.image/)
+  assert.match(ligne, /<img class="panier-vignette-image \{\{ pl_photo \}\}" src="\{\{ item\.image/)
   assert.match(ligne, /<img class="panier-vignette-image" src="\{\{ pl_apercu/)
+  // Une commande sur mesure (sa seule photo : l'œuvre encadrée sur un mur, carrée) remplit la case, sans bandes.
+  assert.match(ligne, /item\.product\.template_suffix == 'sur-mesure' -%\}\{%- assign pl_photo = 'panier-vignette-scene'/)
+  assert.match(read('input.css'), /\.panier-vignette-scene \{ object-fit: cover; \}/)
 })
 
 test('le voile couvre toute la fenêtre, bandeau d’annonce et en-tête compris, et le tiroir passe au-dessus de lui', () => {
