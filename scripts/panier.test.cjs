@@ -113,6 +113,19 @@ test('une fois ajouté, le kit est une ligne du panier, rangée après les œuvr
   assert.match(kit, /<b>6,00 €<\/b>/)
 })
 
+test('hors du français aussi, le kit est rangé après les œuvres : Shopify traduit son type « Fixation »', { skip: SKIP }, async () => {
+  // Relevé le 27/11/2026 : le type du kit est traduit en en, de, es, nl. Le tiroir le reconnaît comme le produit que les
+  // œuvres proposent en kit (métachamp bundle.products, même identifiant), pas à son type.
+  for (const [lang, type] of [['en', 'Mounting'], ['de', 'Befestigung']]) {
+    const kitTraduit = { ...KIT, type }
+    const cart = panier([ligne(kitTraduit, { remise: false }), ligne(poster(lang)), ligne(toile(lang))])
+    const html = await rendre(TIROIR, { lang, cart })
+    const variantes = [...html.matchAll(/<li class="panier-ligne"[^>]*data-variante="(\d+)"/g)].map((m) => Number(m[1]))
+    assert.equal(variantes.at(-1), KIT.first_available_variant.id, `${lang} : ${variantes.join(', ')}`)
+    assert.equal(variantes.length, 3, lang)
+  }
+})
+
 /* ---------- La page panier de test (/cart?view=refonte) ---------- */
 
 const PAGE = 'sections/panier-page.liquid'

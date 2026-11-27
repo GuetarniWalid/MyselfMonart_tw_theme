@@ -2,9 +2,11 @@
   panier-corps — ce que montrent le tiroir et la page du panier des tuiles (ticket 14), dans cet ordre :
   - le bandeau pêche de la promotion, s'il y a une remise : son nom, tel que Shopify le donne, et « Vous économisez X ».
     Sur les lignes, seulement l'ancien prix, barré, en petit ; aucune étiquette de remise, ni sur le kit, qui n'en a pas ;
-  - une tuile par ligne (snippets/panier-ligne.liquid) : les œuvres, puis les accessoires (le kit d'accrochage, type
-    « Fixation » comme pour le pas de quantité d'aujourd'hui), quel que soit l'ordre de Shopify (le dernier ajouté en
-    tête) ;
+  - une tuile par ligne (snippets/panier-ligne.liquid) : les œuvres, puis les accessoires, quel que soit l'ordre de
+    Shopify (le dernier ajouté en tête). Un accessoire (le kit d'accrochage) est un produit que les œuvres du panier
+    proposent (métachamp bundle.products), reconnu par son identifiant, ou de type « Fixation ». Le type seul ne suffit
+    pas : Shopify le traduit (relevé le 27/11/2026 : 8 à 11 lettres en en, de, es, nl), et le kit se rangeait parmi les
+    œuvres hors du français ;
   - le kit d'accrochage et les lots (snippets/panier-complements.liquid) ;
   - « Continuer les achats » : dans le tiroir, un bouton qui le ferme ; sur la page, un lien vers les tableaux (le
     script en fait la dernière collection vue).
@@ -27,6 +29,12 @@
     assign pc_remises = pc_remises | append: remise.title
   endfor
   assign pc_eco = cart.total_discount | default: 0
+  assign pc_accessoires = '|'
+  for item in cart.items
+    for bundle in item.product.metafields.bundle.products.value
+      assign pc_accessoires = pc_accessoires | append: bundle.id | append: '|'
+    endfor
+  endfor
 -%}
 {%- if pc_eco > 0 %}
 <div class="panier-promo">
@@ -36,12 +44,14 @@
 {%- endif %}
 <ul class="panier-liste" role="list" data-panier-liste>
   {%- for item in cart.items -%}
-    {%- unless item.product.type == 'Fixation' %}
+    {%- assign pc_cle = item.product.id | prepend: '|' | append: '|' -%}
+    {%- unless item.product.type == 'Fixation' or pc_accessoires contains pc_cle %}
   {% render 'panier-ligne', item: item, vue: vue %}
     {%- endunless -%}
   {%- endfor -%}
   {%- for item in cart.items -%}
-    {%- if item.product.type == 'Fixation' %}
+    {%- assign pc_cle = item.product.id | prepend: '|' | append: '|' -%}
+    {%- if item.product.type == 'Fixation' or pc_accessoires contains pc_cle %}
   {% render 'panier-ligne', item: item, vue: vue %}
     {%- endif -%}
   {%- endfor %}
