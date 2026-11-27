@@ -1,4 +1,4 @@
-<cart-drawer
+{% if template.name == 'collection' and template.suffix contains 'refonte' %}{% comment %}Vue de test (ticket 14) : le panier des tuiles, snippets/panier-tiroir.liquid. Ailleurs, le tiroir d'aujourd'hui, à l'octet près : la condition tient sur cette ligne.{% endcomment %}{% render 'panier-tiroir' %}{% else %}<cart-drawer
   role="dialog"
   aria-modal="true"
   aria-label="{{ 'sections.tw_cart_drawer.title' | t }}"
@@ -624,7 +624,7 @@
       </div>
     </div>
   {%- endif -%}
-</cart-drawer>
+</cart-drawer>{% endif %}
 
 {% schema %}
   {

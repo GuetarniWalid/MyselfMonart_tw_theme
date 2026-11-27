@@ -1,0 +1,99 @@
+{%- comment -%}
+  panier-ligne — une ligne du panier des tuiles (ticket 14), dans le tiroir et sur la page : une tuile crème.
+  - La vignette « en objet » d'aujourd'hui (snippets/cart-item-artwork.liquid, validée le 17/11/2026), sur le mur blanc ;
+    toute autre ligne (kit, aperçu personnalisé, tapisserie…) garde son image, comme aujourd'hui.
+  - Le nom (un lien vers la fiche) et les options ; les mots que le client a écrits (propriétés sans « _ »).
+  - − et + : à 1, le − devient la corbeille. assets/panier.js les fait marcher ; il retrouve la ligne par sa clé
+    (data-cle, la clé de Shopify, la même quand la ligne revient par « Annuler »).
+  - Le prix de la ligne ; avec une remise, l'ancien prix au-dessus, barré, en petit, et rien d'autre.
+  Pour « Annuler », la ligne porte ce qu'il faut pour la remettre telle quelle : sa variante, sa quantité et ses
+  propriétés (cadre, contour blanc, aperçu…). data-lies : les variantes ajoutées avec elle en lot (propriétés
+  _variantId_…, assets/cart-drawer.js) : leur quantité suit la sienne, comme aujourd'hui.
+
+  Accepts:
+    - item: {Object} la ligne du panier
+    - vue: {String} 'tiroir' (vignette de 84 px) ou 'page' (110 px)
+{%- endcomment -%}
+{%- liquid
+  assign pl_nom = item.product.title
+  assign pl_titre = item.product.title | escape
+  assign pl_options = ''
+  unless item.product.has_only_default_variant
+    for option in item.options_with_values
+      if option.value == blank or option.value == 'Null'
+        continue
+      endif
+      if pl_options != ''
+        assign pl_options = pl_options | append: ' · '
+      endif
+      assign pl_options = pl_options | append: option.value
+    endfor
+  endunless
+  assign pl_ecrits = ''
+  assign pl_apercu = ''
+  assign pl_lies = ''
+  for property in item.properties
+    assign pl_debut = property.first | slice: 0
+    if pl_debut == '_'
+      if property.first == '_preview' and property.last != blank
+        assign pl_apercu = property.last
+      elsif property.first contains '_variantId_'
+        assign pl_lies = pl_lies | append: property.last | append: ','
+      endif
+      continue
+    endif
+    if property.last == blank
+      continue
+    endif
+    if pl_ecrits != ''
+      assign pl_ecrits = pl_ecrits | append: ' · '
+    endif
+    assign pl_ecrits = pl_ecrits | append: property.last
+  endfor
+  assign pl_lies = pl_lies | remove_last: ','
+  if vue == 'page'
+    assign pl_contexte = 'panier'
+    assign pl_largeur = 220
+  else
+    assign pl_contexte = 'tiroir'
+    assign pl_largeur = 168
+  endif
+-%}
+<li class="panier-ligne" data-cle="{{ item.key }}" data-variante="{{ item.variant_id }}" data-quantite="{{ item.quantity }}" data-nom="{{ pl_titre }}" data-proprietes="{{ item.properties | json | escape }}"{% if pl_lies != '' %} data-lies="{{ pl_lies }}"{% endif %}>
+  <a class="panier-vignette" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+    {%- capture pl_objet -%}{% render 'cart-item-artwork', item: item, context: pl_contexte %}{%- endcapture -%}
+    {%- if pl_objet != blank -%}
+      {{ pl_objet }}
+    {%- elsif pl_apercu != blank -%}
+      <img class="panier-vignette-image" src="{{ pl_apercu | escape }}" onerror="this.onerror=null;this.src='{{ item.image | image_url: width: pl_largeur }}'" alt="" width="{{ pl_largeur }}" height="{{ pl_largeur }}" loading="lazy">
+    {%- else -%}
+      <img class="panier-vignette-image" src="{{ item.image | image_url: width: pl_largeur }}" alt="" width="{{ pl_largeur }}" height="{{ pl_largeur }}" loading="lazy">
+    {%- endif -%}
+  </a>
+  <div class="panier-info">
+    <h3 class="panier-nom"><a href="{{ item.url }}" data-focus="titre-{{ item.key }}">{{ pl_titre }}</a></h3>
+    {%- if pl_options != '' %}
+    <p class="panier-options">{{ pl_options | escape }}</p>
+    {%- endif %}
+    {%- if pl_ecrits != '' %}
+    <p class="panier-options">{{ pl_ecrits | escape }}</p>
+    {%- endif %}
+    <div class="panier-bas">
+      <div class="panier-pas" role="group" aria-label="{{ 'products.product.quantity.input_label' | t: product: pl_nom | escape }}">
+        {%- if item.quantity > 1 %}
+        <button type="button" class="panier-pas-bouton" data-panier="moins" data-focus="moins-{{ item.key }}" aria-label="{{ 'products.product.quantity.decrease' | t: product: pl_nom | escape }}">{% render 'tw-icon-minus' %}</button>
+        {%- else %}
+        <button type="button" class="panier-pas-bouton panier-corbeille" data-panier="retirer" data-focus="moins-{{ item.key }}" aria-label="{{ 'sections.tw_cart_drawer.remove' | t: article: pl_nom | escape }}">{% render 'tw-icon-remove' %}</button>
+        {%- endif %}
+        <output class="panier-pas-nombre" aria-live="off">{{ item.quantity }}</output>
+        <button type="button" class="panier-pas-bouton" data-panier="plus" data-focus="plus-{{ item.key }}" aria-label="{{ 'products.product.quantity.increase' | t: product: pl_nom | escape }}">{% render 'tw-icon-plus', width: 12 %}</button>
+      </div>
+      <p class="panier-prix">
+        {%- if item.original_line_price != item.final_line_price -%}
+        <span class="sr-only">{{ 'products.product.price.regular_price' | t }}</span><s>{{ item.original_line_price | money }}</s><span class="sr-only">{{ 'products.product.price.sale_price' | t }}</span>
+        {%- endif -%}
+        <b>{{ item.final_line_price | money }}</b>
+      </p>
+    </div>
+  </div>
+</li>

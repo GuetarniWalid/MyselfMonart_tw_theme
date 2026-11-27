@@ -1,0 +1,12 @@
+{%- comment -%}
+  panier-textes — les phrases que dit le script du panier des tuiles (assets/panier.js, ticket 14), dans la langue de la
+  page : la ligne « … a été retiré du panier. Annuler », et ce qu'il annonce aux lecteurs d'écran quand une quantité ou
+  le total change. Les trous sont des repères entre crochets ([article], [quantite], [total], [count]), que le script
+  remplit ; le pluriel des kits vient des deux formes de la clé, rendues pour 1 et pour 2.
+{%- endcomment -%}
+{%- liquid
+  assign px_article = '[article]'
+  assign px_quantite = '[quantite]'
+  assign px_total = '[total]'
+-%}
+<script type="application/json" data-panier-textes>{"retire":{{ 'sections.mma.panier.retire' | t: article: px_article | json }},"annuler":{{ 'sections.mma.panier.annuler' | t | json }},"quantite":{{ 'sections.mma.panier.annonce_quantite' | t: article: px_article, quantite: px_quantite, total: px_total | json }},"retrait":{{ 'sections.mma.panier.annonce_retire' | t: article: px_article, total: px_total | json }},"revenu":{{ 'sections.mma.panier.annonce_revenu' | t: article: px_article, total: px_total | json }},"ajoute":{{ 'sections.mma.panier.annonce_ajoute' | t: article: px_article, total: px_total | json }},"kitsUn":{{ 'sections.mma.panier.annonce_kits' | t: count: 1, total: px_total | json }},"kitsPlus":{{ 'sections.mma.panier.annonce_kits' | t: count: 2, total: px_total | replace: '2', '[count]' | json }},"vide":{{ 'sections.tw_cart_drawer.empty_message' | t | json }},"erreur":{{ 'general.cart.cart_error' | t | json }}}</script>

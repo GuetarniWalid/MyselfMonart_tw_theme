@@ -1,0 +1,648 @@
+<cart-drawer
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ 'sections.tw_cart_drawer.title' | t }}"
+  tabindex="-1"
+  aria-expanded="false">
+  {%- if cart == empty -%}
+    <button
+      type="button"
+      class="close absolute top-3 right-4 border border-main p-1 rounded hover:shadow-button transition-shadow duration-100"
+      aria-label="{{ 'sections.tw_cart_drawer.close' | t }}"
+      tabindex="-1">
+      {% render 'tw-icon-close' %}
+    </button>
+    <div class="absolute top-1/2 -translate-y-1/2 w-full text-center">
+      <p class="heading font-bold text-2xl mb-5">{{ 'sections.tw_cart_drawer.empty_message' | t }}</p>
+      <button
+        data-url64="{% if section.settings.keep_shopping_url != blank %}{{ section.settings.keep_shopping_url | base64_encode }}{% else %}{{ routes.all_products_collection_url | base64_encode }}{% endif %}"
+        class="obfuscate border rounded-md border-main py-2 px-4 hover:shadow-button transition-shadow duration-100"
+        tabindex="-1">
+        {{ 'sections.tw_cart_drawer.continue_shopping' | t }}
+      </button>
+      <div class="mt-8">
+        {% render 'tw-order-tracking-link',
+          class: 'justify-center text-sm underline underline-offset-4 hover:translate-x-1 transition-transform duration-200',
+          tabindex: '-1'
+        %}
+      </div>
+    </div>
+    <div class="loading-wrapper h-full flex justify-center items-center hidden">
+      <p>{{ "sections.tw_cart_drawer.loading" | t }}&nbsp;&nbsp;</p>
+      {% render 'tw-icon-loading' %}
+    </div>
+  {%- else -%}
+    <div class="flex justify-between items-center px-4 py-2 border-b border-main">
+      <p class="text-base font-bold heading">{{ 'sections.tw_cart_drawer.title' | t }}&nbsp;({{ cart.item_count }})</p>
+      <button
+        class="close"
+        type="button"
+        aria-label="{{ 'sections.tw_cart_drawer.close' | t }}"
+        tabindex="-1">
+        {% render 'tw-icon-close'
+          , width: "23" %}
+      </button>
+    </div>
+    <div class="px-4 py-3 border-b border-main">
+      {%- if cart.discount_applications.size > 0 -%}
+        <div class="flex justify-between items-center mb-2 text-sm">
+          <p class="heading">
+            <span class="font-bold">{{ 'sections.tw_cart_drawer.promotion' | t }}</span>&nbsp;&nbsp;
+            {% for discount_application in cart.discount_applications %}
+              <span class="text-sm bg-buy-button rounded py-1 px-2 mr-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  class="inline-block"><path fill="currentColor" d="M12.79 21L3 11.21v2c0 .53.21 1.04.59 1.41l7.79 7.79c.78.78 2.05.78 2.83 0l6.21-6.21c.78-.78.78-2.05 0-2.83z" /><path fill="currentColor" d="M11.38 17.41c.39.39.9.59 1.41.59c.51 0 1.02-.2 1.41-.59l6.21-6.21c.78-.78.78-2.05 0-2.83L12.62.58C12.25.21 11.74 0 11.21 0H5C3.9 0 3 .9 3 2v6.21c0 .53.21 1.04.59 1.41zM5 2h6.21L19 9.79L12.79 16L5 8.21z" /><circle
+                    cx="7.25"
+                    cy="4.25"
+                    r="1.25"
+                    fill="currentColor" /></svg>
+                {{ discount_application.title }}
+              </span>
+            {% endfor %}
+          </p>
+          <s id="promo-price" class="text-red-600 font-bold">{{ cart.original_total_price | money }}</s>
+          <span class="hidden">
+            {% render 'tw-icon-loading' %}
+          </span>
+        </div>
+      {% endif %}
+      <div class="flex justify-between items-center text-sm">
+        <p class="font-bold heading">{{ 'sections.tw_cart_drawer.subtotal' | t }}</p>
+        <p id="total-price" class="font-bold">{{ cart.total_price | money }}</p>
+        <span class="hidden">
+          {% render 'tw-icon-loading' %}
+        </span>
+      </div>
+      <klarna-placement
+        id="cart-drawer-klarna-placement"
+        data-key="credit-promotion-badge"
+        data-locale=""
+        data-purchase-amount={{ cart.total_price }}></klarna-placement>
+    </div>
+    <form
+      action="{{ routes.cart_url }}"
+      id="CartDrawer-Form"
+      method="post">
+      <ul class="border-b border-main">
+        {% liquid
+          assign all_bundle_string = ''
+          assign all_bundle_complement_string = ''
+          assign all_general_bundle_string = ''
+          assign all_general_bundle_complement_string = ''
+          assign bundle_variant_tracker = ''
+          assign general_bundle_variant_tracker = ''
+          assign item_product_ids = ''
+          for item in cart.items
+            assign item_product_ids = item_product_ids | append: item.product.id | append: ';;'
+          endfor
+          assign item_product_ids = item_product_ids | remove_last: ';;'
+        %}
+
+        {% comment %} First pass: Build complete trackers {% endcomment %}
+        {% for item in cart.items %}
+          {%- comment -%} Toile, poster ou rien, d'après le modèle de page du produit (règle unique : snippet artwork-kind). {%- endcomment -%}
+          {%- capture item_artwork_kind -%}{% render 'artwork-kind', product: item.product, suffix: item.product.template_suffix %}{%- endcapture -%}
+          {%- liquid
+            # Portrait ou paysage : le format de l'œuvre à plat, 2e photo des produits de toujours, seule photo des
+            # nouveaux produits (snippet artwork-flat-index). De même pour chaque tableau proposé en lot,
+            # ci-dessous et dans la 2e passe.
+            capture item_flat_index
+              render 'artwork-flat-index', product: item.product
+            endcapture
+            assign item_flat_index = item_flat_index | plus: 0
+          -%}
+          {% for bundle in item.product.metafields.bundle.paintings.value %}
+            {% unless item_product_ids contains bundle.id %}
+              {% if item_artwork_kind == 'toile' or item.product.template_suffix == 'personalized' %}
+                {% liquid
+                  capture bundle_flat_index
+                    render 'artwork-flat-index', product: bundle
+                  endcapture
+                  assign bundle_flat_index = bundle_flat_index | plus: 0
+                  assign bundle_ratio = bundle.images[bundle_flat_index].aspect_ratio
+                %}
+                {% if item.product.images[item_flat_index].aspect_ratio < 1 %}
+                  {% assign item_largest_size = item.variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0 %}
+                {% else %}
+                  {% assign item_largest_size = item.variant.option1 | split: 'x' | first | plus: 0 %}
+                {% endif %}
+                {% for variant in bundle.variants %}
+                  {% if bundle_ratio < 1 %}
+                    {% assign bundle_largest_size = variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0 %}
+                  {% else %}
+                    {% assign bundle_largest_size = variant.option1 | split: 'x' | first | plus: 0 %}
+                  {% endif %}
+                  {% if bundle_largest_size == item_largest_size and variant.option2 == item.variant.option2 and variant.option3 == item.variant.option3 %}
+                    {% for qty_index in (1..item.quantity) %}
+                      {% assign bundle_variant_tracker = bundle_variant_tracker | append: variant.id | append: ';;' %}
+                    {% endfor %}
+                    {% break %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endunless %}
+          {% endfor %}
+
+          {% comment %}
+            Bundle général (kit d'accrochage) : on compte TOUJOURS le nombre de tableaux,
+            même si le kit est déjà au panier, pour pouvoir reproposer le complément manquant
+            (suggestion persistante). Le retrait de l'ancien filtre « unless item_product_ids
+            contains bundle.id » est volontaire.
+          {% endcomment %}
+          {% for bundle in item.product.metafields.bundle.products.value %}
+            {% assign bundle_variant_id = bundle.first_available_variant.id %}
+            {% if bundle_variant_id != blank %}
+              {% for qty_index in (1..item.quantity) %}
+                {% assign general_bundle_variant_tracker = general_bundle_variant_tracker | append: bundle_variant_id | append: ';;' %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+
+        {% for item in cart.items %}
+          {% liquid
+            capture item_artwork_kind
+              render 'artwork-kind', product: item.product, suffix: item.product.template_suffix
+            endcapture
+            if item_artwork_kind == 'toile' or item.product.template_suffix == 'personalized'
+              # L'œuvre à plat, vignette de la ligne et source de son format (voir la 1re passe).
+              capture item_flat_index
+                render 'artwork-flat-index', product: item.product
+              endcapture
+              assign item_flat_index = item_flat_index | plus: 0
+              assign item_image = item.product.images[item_flat_index] | default: item.product.featured_image
+              if item_image.aspect_ratio < 1
+                assign item_largest_size = item.variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0
+              else
+                assign item_largest_size = item.variant.option1 | split: 'x' | first | plus: 0
+              endif
+            else
+              assign item_image = item.variant.image | default: item.product.featured_image
+            endif
+            assign bundle_string = ''
+
+            for bundle in item.product.metafields.bundle.paintings.value
+              if item_product_ids contains bundle.id
+                continue
+              endif
+              assign bundle_discounts = ''
+              for discount in item.discounts
+                assign bundle_discounts = bundle_discounts | append: discount.title | append: '££'
+              endfor
+
+              capture bundle_flat_index
+                render 'artwork-flat-index', product: bundle
+              endcapture
+              assign bundle_flat_index = bundle_flat_index | plus: 0
+              assign bundle_ratio = bundle.images[bundle_flat_index].aspect_ratio
+              assign bundle_image = bundle.images[bundle_flat_index].src | image_url: width: 80 | default: bundle.featured_image.src | image_url: width: 80
+              assign matching_variants_title = null
+              assign matching_variants_id = null
+
+              for variant in bundle.variants
+                if item_artwork_kind == 'toile' or item.product.template_suffix == 'personalized'
+                  if bundle_ratio < 1
+                    assign bundle_largest_size = variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0
+                  else
+                    assign bundle_largest_size = variant.option1 | split: 'x' | first | plus: 0
+                  endif
+                  if bundle_largest_size == item_largest_size
+                    assign option_1_match = true
+                  else
+                    assign option_1_match = false
+                  endif
+                else
+                  if variant.option1 == item.variant.option1
+                    assign option_1_match = true
+                  endif
+                endif
+
+                if option_1_match and variant.option2 == item.variant.option2 and variant.option3 == item.variant.option3
+                  assign matching_variants_title = variant.title | remove_last: '/ Null' | lstrip
+                  assign matching_variants_id = variant.id
+                  break
+                endif
+              endfor
+
+              if matching_variants_title == null
+                continue
+              endif
+
+              for property in item.properties
+                assign first_character_in_key = property.first | slice: 0
+                if first_character_in_key == '_'
+                  for item in cart.items
+                    assign property_last = property.last | plus: 0
+                    if item.id == property_last
+                      assign all_bundle_complement_string = all_bundle_complement_string | append: item.product.title | append: ';;'
+                      if item.product.has_only_default_variant
+                        assign bundle_complement_image = item.product.featured_image.src | image_url: width: 80
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: bundle_complement_image | append: ';;'
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: '' | append: ';;'
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: item.product.first_available_variant.id | append: ';;'
+                      else
+                        assign bundle_complement_image = item.variant.featured_image.src | image_url: width: 80
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: bundle_complement_image | append: ';;'
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: item.variant.title | append: ';;'
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: item.variant.id | append: ';;'
+                      endif
+                      assign all_bundle_complement_string = all_bundle_complement_string | append: item.price | append: ';;'
+                      assign all_bundle_complement_string = all_bundle_complement_string | append: item.original_price | append: ';;'
+                      for discount in item.discounts
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: discount.title | append: '££'
+                      endfor
+                      if forloop.parentloop.last
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: '%%%%'
+                      else
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: '$$$$'
+                      endif
+                    endif
+                  endfor
+                endif
+              endfor
+
+              unless all_bundle_string contains matching_variants_id
+                assign bundle_quantity = 0
+                assign matching_variants_id_str = matching_variants_id | append: ''
+                assign tracker_array = bundle_variant_tracker | split: ';;'
+                for tracked_id in tracker_array
+                  if tracked_id == matching_variants_id_str
+                    assign bundle_quantity = bundle_quantity | plus: 1
+                  endif
+                endfor
+
+                assign bundle_string = bundle.title | append: ';;' | append: bundle.url | append: ';;' | append: bundle_image | append: ';;' | append: matching_variants_title | append: ';;' | append: item.price | append: ';;' | append: item.original_price | append: ';;' | append: matching_variants_id | append: ';;' | append: bundle_quantity | append: ';;' | append: bundle_discounts
+
+                if bundle_string != blank
+                  assign all_bundle_string = all_bundle_string | append: bundle_string | append: '%%%%'
+                endif
+              endunless
+            endfor
+
+            for bundle in item.product.metafields.bundle.products.value
+              assign bundle_discounts = ''
+              for discount in item.discounts
+                assign bundle_discounts = bundle_discounts | append: discount.title | append: '££'
+              endfor
+
+              assign bundle_image = bundle.featured_image.src | image_url: width: 80
+              assign bundle_variant_id = null
+              assign bundle_variant_title = ''
+
+              if bundle.has_only_default_variant
+                assign bundle_variant_id = bundle.first_available_variant.id
+              else
+                assign bundle_variant_id = bundle.first_available_variant.id
+                assign bundle_variant_title = bundle.first_available_variant.title
+              endif
+
+              if bundle_variant_id == null
+                continue
+              endif
+
+              for property in item.properties
+                assign first_character_in_key = property.first | slice: 0
+                if first_character_in_key == '_'
+                  for item in cart.items
+                    assign property_last = property.last | plus: 0
+                    if item.id == property_last
+                      assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.product.title | append: ';;'
+                      if item.product.has_only_default_variant
+                        assign bundle_complement_image = item.product.featured_image.src | image_url: width: 80
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: bundle_complement_image | append: ';;'
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: '' | append: ';;'
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.product.first_available_variant.id | append: ';;'
+                      else
+                        assign bundle_complement_image = item.variant.featured_image.src | image_url: width: 80
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: bundle_complement_image | append: ';;'
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.variant.title | append: ';;'
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.variant.id | append: ';;'
+                      endif
+                      assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.price | append: ';;'
+                      assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.original_price | append: ';;'
+                      for discount in item.discounts
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: discount.title | append: '££'
+                      endfor
+                      if forloop.parentloop.last
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: '%%%%'
+                      else
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: '$$$$'
+                      endif
+                    endif
+                  endfor
+                endif
+              endfor
+
+              unless all_general_bundle_string contains bundle_variant_id
+                assign general_bundle_quantity = 0
+                assign bundle_variant_id_str = bundle_variant_id | append: ''
+                assign general_tracker_array = general_bundle_variant_tracker | split: ';;'
+                for tracked_id in general_tracker_array
+                  if tracked_id == bundle_variant_id_str
+                    assign general_bundle_quantity = general_bundle_quantity | plus: 1
+                  endif
+                endfor
+
+                # Suggestion opt-in : on ne propose QUE les kits manquants
+                # (nombre de tableaux - kits déjà présents dans le panier).
+                assign kit_qty_in_cart = 0
+                for cart_item in cart.items
+                  if cart_item.product.id == bundle.id
+                    assign kit_qty_in_cart = kit_qty_in_cart | plus: cart_item.quantity
+                  endif
+                endfor
+                assign general_bundle_quantity = general_bundle_quantity | minus: kit_qty_in_cart
+
+                if general_bundle_quantity > 0
+                  assign general_bundle_string = bundle.title | append: ';;' | append: bundle.url | append: ';;' | append: bundle_image | append: ';;' | append: bundle_variant_title | append: ';;' | append: bundle.price | append: ';;' | append: bundle.compare_at_price | append: ';;' | append: bundle_variant_id | append: ';;' | append: general_bundle_quantity | append: ';;' | append: bundle_discounts
+
+                  assign all_general_bundle_string = all_general_bundle_string | append: general_bundle_string | append: '%%%%'
+                endif
+              endunless
+            endfor
+          %}
+
+          {%- liquid
+            # Vignette PERSONNALISÉE : si la ligne porte l'aperçu masqué (_preview, URL externe proxifiée),
+            # on l'affiche à la place de l'image produit générique. Vide pour les produits non personnalisés
+            # -> comportement inchangé. Repli (onerror) sur l'image produit si l'aperçu ne charge pas.
+            assign custom_preview_url = ''
+            for property in item.properties
+              if property.first == '_preview' and property.last != blank
+                assign custom_preview_url = property.last
+              endif
+            endfor
+          -%}
+          <cart-item
+            data-index="{{ item.index | plus: 1 }}"
+            data-section-id="{{ section.id }}"
+            data-quantity="{{ item.quantity }}"
+            data-id="{{ item.id }}">
+            <li class="bg-white py-3 px-2 grid grid-cols-[auto_1fr_auto] gap-x-4{% unless forloop.last %} border-b-[1.5px] border-dotted border-main{% endunless %}">
+              <div class="relative row-span-2 w-20 max-h-28">
+                <a
+                  href="{{ item.url }}"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  class="absolute inset-0 rounded-lg overflow-hidden">
+                  {%- comment -%}
+                    Toile ou poster : l'œuvre telle que commandée, en objet, entière dans la case (snippet
+                    cart-item-artwork). Toute autre ligne, et toute ligne à aperçu personnalisé : l'image d'avant.
+                  {%- endcomment -%}
+                  {%- capture line_artwork -%}{% render 'cart-item-artwork', item: item, context: 'tiroir' %}{%- endcapture -%}
+                  {%- if line_artwork != blank -%}{{ line_artwork }}{%- else %}
+                  <img
+                    class="w-full h-full object-cover"
+                    {%- if custom_preview_url != blank %}
+                    src="{{ custom_preview_url | escape }}"
+                    alt="{{ item.product.title | escape }}"
+                    onerror="this.onerror=null;this.src='{{ item_image | image_url: width: 160 }}'"
+                    {%- else %}
+                    src="{{ item_image | image_url: width: 160 }}"
+                    alt="{{ item_image.alt | escape }}"
+                    {%- endif %}
+                    loading="lazy"
+                    width="160"
+                    height="auto">
+                  {%- endif %}
+                </a>
+                {% if item.quantity > 1 %}
+                  <span class="absolute flex justify-center items-center w-6 h-6 top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full bg-white text-main border-main border-1 font-bold text-sm">x{{ item.quantity }}</span>
+                {% endif %}
+              </div>
+              <div>
+                <h3 class="text-sm mb-1 line-clamp-2">
+                  <a href="{{ item.url }}" tabindex="-1">{{ item.product.title | escape }}</a>
+                </h3>
+                {%- if item.product.has_only_default_variant == false -%}
+                  <p class="text-xs">
+                    {% assign option_value = '' %}
+                    {%- for option in item.options_with_values -%}
+                      {% if option.value != "Null" %}
+                        {% assign option_value = option_value | append: option.value | append: '/' %}
+                      {% endif %}
+                    {%- endfor -%}
+                    {{ option_value | replace_last: '/', '' }}
+                  </p>
+                {%- endif -%}
+                {% liquid
+                  assign properties_string = ''
+                  for property in item.properties
+                    assign first_character_in_key = property.first | slice: 0
+                    unless first_character_in_key == '_'
+                      assign properties_string = properties_string | append: property.last | append: '/'
+                    endunless
+                  endfor
+                %}
+                {% if properties_string != blank %}
+                  <p class="text-xs break-words">
+                    <span class="font-bold">{{ 'sections.tw_cart_drawer.info' | t }} :
+                    </span>
+                    {{ properties_string | replace_last: '/', '' | escape }}
+                  </p>
+                {% endif %}
+                <ul role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                  {%- for discount in item.discounts -%}
+                    <li class="text-xs inline-flex items-center gap-1 bg-buy-button rounded py-1 px-2 mr-1 mt-2">
+                      {%- render 'tw-icon-discount' -%}
+                      {{ discount.title }}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+                {%- comment -%}
+                  Ligne « kit d'accrochage » (accessoire) : stepper +/- pour ajuster la quantité
+                  directement dans le tiroir (le reste des lignes n'a qu'un bouton « retirer »).
+                {%- endcomment -%}
+                {%- if item.product.type == 'Fixation' -%}
+                  <div class="mt-2 inline-flex items-center h-8 border border-main rounded-md">
+                    <button
+                      name="minus"
+                      type="button"
+                      class="flex w-8 h-full justify-center items-center outline-none focus-visible:outline focus-visible:outline-orange-500"
+                      aria-label="{{ 'sections.tw_cart_drawer.minus' | t: article: item.product.title }}"
+                      tabindex="-1">
+                      <span class="pointer-events-none">{% render 'tw-icon-minus' %}</span>
+                    </button>
+                    <span class="w-8 text-center text-sm font-bold" aria-hidden="true">{{ item.quantity }}</span>
+                    <button
+                      name="plus"
+                      type="button"
+                      class="flex w-8 h-full justify-center items-center outline-none focus-visible:outline focus-visible:outline-orange-500"
+                      aria-label="{{ 'sections.tw_cart_drawer.plus' | t: article: item.product.title }}"
+                      tabindex="-1">
+                      <span class="pointer-events-none">{% render 'tw-icon-plus' %}</span>
+                    </button>
+                  </div>
+                {%- endif -%}
+              </div>
+              <div class="flex flex-col justify-between gap-4">
+                <div>
+                  <div class="text-sm font-bold">
+                    {%- if item.original_line_price != item.final_line_price -%}
+                      <span class="block text-red-600">
+                        <s>
+                          {{ item.original_line_price | money }}
+                        </s>
+                      </span>
+                    {%- endif -%}
+                    <span class="block">
+                      {{ item.final_line_price | money }}
+                    </span>
+                  </div>
+                  <span class="hidden">
+                    {% render 'tw-icon-loading' %}
+                  </span>
+                </div>
+                <div class="text-right" headers="CartDrawer-ColumnQuantity">
+                  <cart-remove-button>
+                    <button
+                      class="w-8 h-8 inline-flex justify-center items-center rounded-md border border-transparent hover:border-main transition-all duration-100"
+                      aria-label="{{ 'sections.tw_cart_drawer.remove' | t: article: item.product.title }}"
+                      tabindex="-1">
+                      {% render 'tw-icon-remove' %}
+                    </button>
+                  </cart-remove-button>
+                  <div
+                    id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}"
+                    role="alert"
+                    class="hidden">
+                    <small></small>
+                    <svg
+                      aria-hidden="true"
+                      focusable="false"
+                      role="presentation"
+                      viewBox="0 0 13 13"
+                      width="20">
+                      <circle
+                        cx="6.5"
+                        cy="6.50049"
+                        r="5.5"
+                        stroke="white"
+                        stroke-width="2" />
+                      <circle
+                        cx="6.5"
+                        cy="6.5"
+                        r="5.5"
+                        fill="#EB001B"
+                        stroke="#EB001B"
+                        stroke-width="0.7" />
+                      <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white" />
+                      <path
+                        d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z"
+                        fill="white"
+                        stroke="#EB001B"
+                        stroke-width="0.7">
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </cart-item>
+        {% endfor %}
+      </ul>
+    </form>
+
+    {% if all_general_bundle_string != blank %}
+      <div class="px-2 py-4">
+        <h2 class="text-sm font-bold heading">
+          {{ 'sections.tw_cart_drawer.general_bundle_title' | t }}
+        </h2>
+
+        {% assign all_general_bundle_string = all_general_bundle_string | split: '%%%%' %}
+        {% assign all_general_bundle_complement_string = all_general_bundle_complement_string | split: '%%%%' %}
+
+        {% if all_general_bundle_string.size > 1 %}
+          <snap-carrousel>
+            <ul class="flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar pb-3">
+              {% render 'cart-bundle'
+                , all_bundle_string: all_general_bundle_string
+                , all_bundle_complement_string: all_general_bundle_complement_string %}
+            </ul>
+          </snap-carrousel>
+          <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+        {% else %}
+          <ul>
+            {% render 'cart-bundle'
+              , all_bundle_string: all_general_bundle_string
+              , all_bundle_complement_string: all_general_bundle_complement_string %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if all_bundle_string != blank %}
+      <div class="px-2 py-4">
+        <h2 class="text-sm font-bold heading">
+          {{ section.settings.bundle_title }}
+        </h2>
+
+        {% assign all_bundle_string = all_bundle_string | split: '%%%%' %}
+        {% assign all_bundle_complement_string = all_bundle_complement_string | split: '%%%%' %}
+
+        {% if all_bundle_string.size > 1 %}
+          <snap-carrousel>
+            <ul class="flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar pb-3">
+              {% render 'cart-painting-bundle'
+                , all_bundle_string: all_bundle_string
+                , all_bundle_complement_string: all_bundle_complement_string %}
+            </ul>
+          </snap-carrousel>
+          <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+        {% else %}
+          <ul>
+            {% render 'cart-painting-bundle'
+              , all_bundle_string: all_bundle_string
+              , all_bundle_complement_string: all_bundle_complement_string %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="sticky bottom-0 left-0 right-0 py-3 bg-secondary">
+      <div class="gap-3 px-4 text-lg">
+        <button
+          type="submit"
+          id="CartDrawer-Checkout"
+          name="checkout"
+          form="CartDrawer-Form"
+          class="relative glass-anim flex w-full items-center justify-center gap-3 bg-buy-button text-main border-main transition-colors duration-500 rounded-lg py-4 font-bold border-neu shadow-neu-lg hover:shadow-neu-md mb-4 outline-none focus-visible:outline focus-visible:outline-orange-500"
+          tabindex="-1">
+          {% render 'icon-padlock' %}
+          <span class="pt-1">{{ 'sections.tw_cart_drawer.checkout' | t | upcase }}</span>
+        </button>
+      </div>
+      <div class="px-7 flex justify-center items-center gap-2">
+        {% render 'icon-pay-mastercard' %}
+        {% render 'icon-pay-visa' %}
+        {% render 'icon-pay-paypal' %}
+        {% render 'icon-pay-amex' %}
+        {% render 'icon-pay-klarna' %}
+      </div>
+    </div>
+  {%- endif -%}
+</cart-drawer>
+
+{% schema %}
+  {
+    "name": "t:sections.cart-drawer.name",
+    "class": "cart-drawer translate-x-full",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "url",
+        "id": "keep_shopping_url",
+        "label": "t:sections.cart-drawer.settings.keep_shopping_url.label"
+      },
+      {
+        "type": "text",
+        "id": "bundle_title",
+        "label": "t:sections.cart-drawer.settings.bundle_title.label",
+        "default": "They go so well together"
+      }
+    ]
+  }
+{% endschema %}

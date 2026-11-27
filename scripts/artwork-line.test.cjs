@@ -44,10 +44,12 @@ test('une seule lecture : le panier et la carte de « Mes j’aime » passent pa
   assert.match(card, /render 'artwork-line', product: product, variant: variant, context: 'carte', lazy: lazy_load/)
   assert.doesNotMatch(cart, /artwork-object|artwork-frame|artwork-flat-index|artwork-kind/)
   assert.doesNotMatch(card, /artwork-frame/)
-  // La lecture du cadre n'a que trois appelants : ce snippet, et pour les photos studio, la page qui les rend et
+  // La lecture du cadre n'a que quatre appelants : ce snippet ; pour les photos studio, la page qui les rend et
   // les données Google de la fiche qui les citent, qui lisent le cadre de chaque valeur de l'option cadre comme
-  // une ligne le lit (scripts/photo-studio.test.cjs).
-  const callers = ['artwork-line.liquid', '../templates/product.photo-studio.liquid', '../sections/main-product.liquid']
+  // une ligne le lit (scripts/photo-studio.test.cjs) ; et le kit d'accrochage du panier des tuiles, qui n'est
+  // proposé que pour un poster encadré (ticket 14, scripts/panier.test.cjs) : il lit le cadre de la ligne comme sa
+  // vignette le lit, sans refaire ce travail.
+  const callers = ['artwork-line.liquid', 'panier-complements.liquid', '../templates/product.photo-studio.liquid', '../sections/main-product.liquid']
   const others = fs.readdirSync(path.join(ROOT, 'snippets'))
     .concat(fs.readdirSync(path.join(ROOT, 'sections')).map((f) => `../sections/${f}`))
     .concat(fs.readdirSync(path.join(ROOT, 'templates')).filter((f) => f.endsWith('.liquid')).map((f) => `../templates/${f}`))

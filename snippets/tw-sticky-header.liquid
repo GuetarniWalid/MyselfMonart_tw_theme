@@ -15,10 +15,14 @@
   (snippets/menu-ordinateur.liquid), la recherche et le cœur ; les rayons ouvrent ce même menu du téléphone, habillé en
   panneau (input.css, « Le menu d'ordinateur »), et le voile adoucit la page derrière lui. Le vieux menu d'ordinateur
   (ses faux liens, ses photos) n'y est plus rendu.
+  La page panier de test (ticket 14, /cart?view=refonte : templates/cart.refonte.json) a le même en-tête.
 {%- endcomment -%}
 {%- liquid
   assign nouvel_entete = false
   if template.name == 'collection' and template.suffix contains 'refonte'
+    assign nouvel_entete = true
+  endif
+  if template.name == 'cart' and template.suffix contains 'refonte'
     assign nouvel_entete = true
   endif
 -%}

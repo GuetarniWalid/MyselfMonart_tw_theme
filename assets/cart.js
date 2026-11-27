@@ -23,6 +23,7 @@ class CartItem extends HTMLElement {
           line: this.index,
           quantity,
           sections: `${this.sectionId},${this.subtotalSectionId}`,
+          sections_url: window.location.pathname + window.location.search,
         }),
       });
       const json = await response.json();

@@ -1,3 +1,9 @@
+// L'adresse de la page, recherche comprise : Shopify y rend les sections que demande l'API du panier (sections_url),
+// dans la langue et le marché de la page.
+function adresseDeLaPage() {
+  return window.location.pathname + window.location.search;
+}
+
 // Le bouton du panier se voit-il ? Ni caché (display, visibility, inert), ni transparent.
 function cartButtonShown(button) {
   if (button.closest('[inert]')) return false;
@@ -9,6 +15,11 @@ function cartButtonShown(button) {
 }
 
 class CartDrawer extends HTMLElement {
+  // Le panier des tuiles (plus bas) : l'entrée d'historique posée à son ouverture au téléphone, que le bouton retour
+  // retire en le fermant.
+  static ETAT_TIROIR = 'panierOuvert';
+  static TELEPHONE = window.matchMedia('(max-width: 767px)');
+
   constructor() {
     super();
     this.cartDrawer = this.parentElement;
@@ -23,9 +34,15 @@ class CartDrawer extends HTMLElement {
     this.body = document.body;
     this.minusButton = document.querySelector('[name="minus"]');
     this.plusButton = document.querySelector('[name="plus"]');
+    // Le panier des tuiles (snippets/panier-tiroir.liquid, vue de test) : ses gestes, plus bas (« Le panier des tuiles »).
+    this.tuiles = this.dataset.vue === 'tuiles';
   }
 
   connectedCallback() {
+    if (this.tuiles) {
+      this.brancherTuiles();
+      return;
+    }
     this.addEventListener('keydown', (e) =>
       trapFocus(e, this.firstFocusableElement, this.lastFocusableElement),
     );
@@ -51,6 +68,10 @@ class CartDrawer extends HTMLElement {
   }
 
   open = () => {
+    if (this.tuiles) {
+      this.ouvrirTuiles();
+      return;
+    }
     this.scopeFocusElements();
     this.overlay.classList.remove('hidden');
     this.cartDrawer.classList.replace('translate-x-full', 'translate-x-0');
@@ -59,6 +80,10 @@ class CartDrawer extends HTMLElement {
   };
 
   close = () => {
+    if (this.tuiles) {
+      this.fermerTuiles();
+      return;
+    }
     document.dispatchEvent(new CustomEvent('CartDrawerClose'));
     this.focusableElementList.forEach((elem) =>
       elem.setAttribute('tabindex', '-1'),
@@ -102,6 +127,100 @@ class CartDrawer extends HTMLElement {
     const locale = getLocale();
     klarnaPlacement.setAttribute('data-locale', locale);
   }
+
+  /* ---- Le panier des tuiles (ticket 14 de .scratch/collection-design, vue de test) ----
+     Le même tiroir, venu de la droite, avec ses gestes à lui. Son contenu (<panier-contenu>, assets/panier.js) se rend de
+     nouveau quand le panier change ; ce <cart-drawer> reste, avec ses écouteurs.
+     - À l'ouverture, le titre prend le clavier ; Tab et Maj+Tab restent dans le tiroir, la liste des arrêts lue à
+       chaque touche (trapFocus de assets/tw-global.js) : elle suit le contenu rendu de nouveau.
+     - Échap le ferme ; le voile aussi. Au téléphone, l'ouverture pose une entrée d'historique : le bouton retour le
+       ferme, et la croix la retire en le fermant.
+     - Fermé, il est caché (input.css, « Le panier ») : rien de lui ne prend le clavier, sans toucher aux tabindex.
+     - Le focus revient au bouton du panier s'il se voit (removeTrapFocus). */
+  brancherTuiles() {
+    this.addEventListener('keydown', this.clavierTuiles);
+    this.addEventListener('click', (e) => {
+      if (e.target.closest('.close')) this.close();
+    });
+    this.setKlarnaPlacement();
+    if (CartDrawer.tuilesBranchees) return;
+    CartDrawer.tuilesBranchees = true;
+    const courant = () => document.querySelector('cart-drawer[data-vue="tuiles"]');
+    document.addEventListener('openCartDrawer', () => courant()?.open());
+    document.addEventListener('overlayClick', () => {
+      const tiroir = courant();
+      if (tiroir?.estOuvert()) tiroir.close();
+    });
+    // Échap ferme aussi le tiroir quand le focus n'est pas dedans (un toucher sur la page derrière le voile).
+    document.addEventListener('keydown', (e) => {
+      const tiroir = courant();
+      if (e.key === 'Escape' && tiroir?.estOuvert() && !tiroir.contains(e.target)) tiroir.close();
+    });
+    window.addEventListener('popstate', () => {
+      const tiroir = courant();
+      if (tiroir?.estOuvert() && !(window.history.state && window.history.state[CartDrawer.ETAT_TIROIR])) tiroir.fermerTuiles({ parLeRetour: true });
+    });
+  }
+
+  estOuvert() {
+    return !!this.cartDrawer && this.cartDrawer.classList.contains('translate-x-0');
+  }
+
+  titre() {
+    return this.querySelector('#panier-titre');
+  }
+
+  ouvrirTuiles() {
+    if (this.estOuvert()) return;
+    this.overlay?.classList.remove('hidden');
+    this.overlay?.classList.add('panier-voile');
+    this.cartDrawer.classList.replace('translate-x-full', 'translate-x-0');
+    this.body.classList.add('overflow-hidden');
+    this.setAttribute('aria-expanded', 'true');
+    if (CartDrawer.TELEPHONE.matches) {
+      window.history.pushState({ ...(window.history.state || {}), [CartDrawer.ETAT_TIROIR]: true }, '');
+      CartDrawer.historique = true;
+    }
+    this.titre()?.focus({ preventScroll: true });
+  }
+
+  fermerTuiles({ parLeRetour = false } = {}) {
+    if (!this.estOuvert()) return;
+    document.dispatchEvent(new CustomEvent('CartDrawerClose'));
+    this.overlay?.classList.add('hidden');
+    this.overlay?.classList.remove('panier-voile');
+    this.cartDrawer.classList.replace('translate-x-0', 'translate-x-full');
+    this.body.classList.remove('overflow-hidden');
+    this.setAttribute('aria-expanded', 'false');
+    if (CartDrawer.historique) {
+      CartDrawer.historique = false;
+      if (!parLeRetour && window.history.state && window.history.state[CartDrawer.ETAT_TIROIR]) window.history.back();
+    }
+    if (this.cartButton && cartButtonShown(this.cartButton)) removeTrapFocus(this.cartButton);
+    else if (this.contains(document.activeElement)) document.activeElement.blur();
+  }
+
+  clavierTuiles = (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      this.close();
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    const arrets = [...this.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]')]
+      .filter((el) => el.tabIndex >= 0 && el.getClientRects().length > 0);
+    if (!arrets.length) return;
+    const premier = arrets[0];
+    const dernier = arrets[arrets.length - 1];
+    const actif = document.activeElement;
+    // Le focus sur le titre (ou hors du tiroir) : Tab va au premier arrêt, Maj+Tab au dernier.
+    if (!this.contains(actif) || actif === this || actif === this.titre()) {
+      e.preventDefault();
+      (e.shiftKey ? dernier : premier).focus();
+      return;
+    }
+    trapFocus(e, premier, dernier);
+  };
 }
 customElements.define('cart-drawer', CartDrawer);
 
@@ -191,6 +310,7 @@ class CartItem extends HTMLElement {
         line: this.index,
         quantity,
         sections: `${this.cartDrawerSectionId}`,
+        sections_url: adresseDeLaPage(),
       }),
     });
     const json = await response.json();
@@ -230,6 +350,7 @@ class CartItem extends HTMLElement {
       body: JSON.stringify({
         updates,
         sections: `${this.cartDrawerSectionId}`,
+        sections_url: adresseDeLaPage(),
       }),
     });
     const json = await response.json();
@@ -326,7 +447,7 @@ class QuickAddToCart extends HTMLElement {
 
   async makeOrder(itemIds, quantity) {
     const response = await fetch(
-      '/cart/add.js?sections=tw-cart-drawer',
+      `/cart/add.js?sections=tw-cart-drawer&sections_url=${encodeURIComponent(adresseDeLaPage())}`,
       {
         method: 'POST',
         headers: {

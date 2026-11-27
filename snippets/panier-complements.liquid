@@ -1,0 +1,289 @@
+{%- comment -%}
+  panier-complements — le kit d'accrochage et les lots, dans le panier des tuiles (ticket 14) : le tiroir et la page.
+
+  Le calcul est celui du tiroir d'aujourd'hui (sections/tw-cart-drawer.liquid, ses deux passages), à une règle près,
+  choisie par Walid le 27/11/2026 : le kit n'est proposé que pour les toiles et les posters encadrés, jamais pour un
+  poster sans cadre (le kit se fixe sur un châssis ou sur un cadre). Le cadre se lit comme la vignette le lit
+  (snippets/artwork-frame.liquid : la 1re valeur de l'option des cadres est « sans cadre », dans la langue de la page),
+  sans jamais comparer un texte traduit à un mot écrit ici. Le reste ne change pas :
+  - le kit (métachamp bundle.products) : autant de kits que d'œuvres, moins ceux déjà au panier ; une fois ajouté, il
+    devient une ligne du panier, rangée après les œuvres ;
+  - les lots (métachamp bundle.paintings) : le tableau assorti, à la taille et aux options de la toile du panier.
+
+  La tuile menthe du kit : « Pour les accrocher dès réception », « Kit d'accrochage, 6,00 € par œuvre », et le bouton
+  « Ajouter les 2 kits manquants · 12,00 € » : le prix exact de ce qu'il ajoute. Aucune étiquette de remise.
+  Les boutons portent ce que le script ajoute (assets/panier.js) : data-articles, les variantes (la première porte les
+  autres en propriétés _variantId_, comme aujourd'hui), data-quantite, leur nombre.
+
+  Accepts:
+    - vue: {String} 'tiroir' ou 'page'
+{%- endcomment -%}
+{%- liquid
+  assign pk_ids = ''
+  for pk_ligne in cart.items
+    assign pk_ids = pk_ids | append: pk_ligne.product.id | append: ';;'
+  endfor
+  assign pk_ids = pk_ids | remove_last: ';;'
+
+  # 1er passage : ce que chaque ligne appelle (les tableaux des lots, les kits).
+  assign pk_suivi_lots = ''
+  assign pk_suivi_kits = ''
+  for item in cart.items
+    capture pk_sorte
+      render 'artwork-kind', product: item.product, suffix: item.product.template_suffix
+    endcapture
+    capture pk_plat
+      render 'artwork-flat-index', product: item.product
+    endcapture
+    assign pk_plat = pk_plat | plus: 0
+    for bundle in item.product.metafields.bundle.paintings.value
+      if pk_ids contains bundle.id
+        continue
+      endif
+      if pk_sorte == 'toile' or item.product.template_suffix == 'personalized'
+        capture pk_plat_lot
+          render 'artwork-flat-index', product: bundle
+        endcapture
+        assign pk_plat_lot = pk_plat_lot | plus: 0
+        assign pk_format_lot = bundle.images[pk_plat_lot].aspect_ratio
+        if item.product.images[pk_plat].aspect_ratio < 1
+          assign pk_taille = item.variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0
+        else
+          assign pk_taille = item.variant.option1 | split: 'x' | first | plus: 0
+        endif
+        for variant in bundle.variants
+          if pk_format_lot < 1
+            assign pk_taille_lot = variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0
+          else
+            assign pk_taille_lot = variant.option1 | split: 'x' | first | plus: 0
+          endif
+          if pk_taille_lot == pk_taille and variant.option2 == item.variant.option2 and variant.option3 == item.variant.option3
+            for pk_fois in (1..item.quantity)
+              assign pk_suivi_lots = pk_suivi_lots | append: variant.id | append: ';;'
+            endfor
+            break
+          endif
+        endfor
+      endif
+    endfor
+
+    # Le kit : pour une toile ou un poster encadré, jamais pour un poster sans cadre.
+    if pk_sorte == 'poster'
+      capture pk_cadre
+        render 'artwork-frame', product: item.product, variant: item.variant, kind: pk_sorte
+      endcapture
+      if pk_cadre == 'sans'
+        continue
+      endif
+    endif
+    for bundle in item.product.metafields.bundle.products.value
+      assign pk_variante = bundle.first_available_variant.id
+      if pk_variante != blank
+        for pk_fois in (1..item.quantity)
+          assign pk_suivi_kits = pk_suivi_kits | append: pk_variante | append: ';;'
+        endfor
+      endif
+    endfor
+  endfor
+
+  # 2e passage : une proposition par kit et par tableau, et ce qui s'ajoute avec elle (les compléments).
+  assign pk_lots = ''
+  assign pk_lots_complements = ''
+  assign pk_kits = ''
+  assign pk_kits_complements = ''
+  for item in cart.items
+    capture pk_sorte
+      render 'artwork-kind', product: item.product, suffix: item.product.template_suffix
+    endcapture
+    capture pk_plat
+      render 'artwork-flat-index', product: item.product
+    endcapture
+    assign pk_plat = pk_plat | plus: 0
+    assign pk_image_ligne = item.product.images[pk_plat] | default: item.product.featured_image
+    if pk_image_ligne.aspect_ratio < 1
+      assign pk_taille = item.variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0
+    else
+      assign pk_taille = item.variant.option1 | split: 'x' | first | plus: 0
+    endif
+
+    for bundle in item.product.metafields.bundle.paintings.value
+      if pk_ids contains bundle.id
+        continue
+      endif
+      capture pk_plat_lot
+        render 'artwork-flat-index', product: bundle
+      endcapture
+      assign pk_plat_lot = pk_plat_lot | plus: 0
+      assign pk_format_lot = bundle.images[pk_plat_lot].aspect_ratio
+      assign pk_image_lot = bundle.images[pk_plat_lot] | default: bundle.featured_image
+      assign pk_titre_variante = null
+      assign pk_id_variante = null
+      assign pk_option_1 = false
+      for variant in bundle.variants
+        if pk_sorte == 'toile' or item.product.template_suffix == 'personalized'
+          if pk_format_lot < 1
+            assign pk_taille_lot = variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0
+          else
+            assign pk_taille_lot = variant.option1 | split: 'x' | first | plus: 0
+          endif
+          if pk_taille_lot == pk_taille
+            assign pk_option_1 = true
+          else
+            assign pk_option_1 = false
+          endif
+        elsif variant.option1 == item.variant.option1
+          assign pk_option_1 = true
+        endif
+        if pk_option_1 and variant.option2 == item.variant.option2 and variant.option3 == item.variant.option3
+          assign pk_titre_variante = variant.title | remove_last: '/ Null' | lstrip
+          assign pk_id_variante = variant.id
+          break
+        endif
+      endfor
+      if pk_titre_variante == null
+        continue
+      endif
+
+      assign pk_complements = ''
+      for property in item.properties
+        assign pk_debut = property.first | slice: 0
+        if pk_debut != '_'
+          continue
+        endif
+        assign pk_lie = property.last | plus: 0
+        for pk_autre in cart.items
+          if pk_autre.id == pk_lie
+            assign pk_complements = pk_complements | append: pk_autre.variant.id | append: ':' | append: pk_autre.price | append: ':' | append: pk_autre.original_price | append: ','
+          endif
+        endfor
+      endfor
+
+      unless pk_lots contains pk_id_variante
+        assign pk_nombre = 0
+        assign pk_cherche = pk_id_variante | append: ''
+        assign pk_suivis = pk_suivi_lots | split: ';;'
+        for pk_suivi in pk_suivis
+          if pk_suivi == pk_cherche
+            assign pk_nombre = pk_nombre | plus: 1
+          endif
+        endfor
+        assign pk_image_url = pk_image_lot | image_url: width: 160
+        assign pk_lots = pk_lots | append: bundle.title | append: '¤' | append: bundle.url | append: '¤' | append: pk_image_url | append: '¤' | append: pk_titre_variante | append: '¤' | append: item.price | append: '¤' | append: item.original_price | append: '¤' | append: pk_id_variante | append: '¤' | append: pk_nombre | append: '%%%%'
+        assign pk_lots_complements = pk_lots_complements | append: pk_complements | append: '%%%%'
+      endunless
+    endfor
+
+    for bundle in item.product.metafields.bundle.products.value
+      assign pk_variante = bundle.first_available_variant.id
+      if pk_variante == blank
+        continue
+      endif
+      assign pk_complements = ''
+      for property in item.properties
+        assign pk_debut = property.first | slice: 0
+        if pk_debut != '_'
+          continue
+        endif
+        assign pk_lie = property.last | plus: 0
+        for pk_autre in cart.items
+          if pk_autre.id == pk_lie
+            assign pk_complements = pk_complements | append: pk_autre.variant.id | append: ':' | append: pk_autre.price | append: ':' | append: pk_autre.original_price | append: ','
+          endif
+        endfor
+      endfor
+      unless pk_kits contains pk_variante
+        assign pk_nombre = 0
+        assign pk_cherche = pk_variante | append: ''
+        assign pk_suivis = pk_suivi_kits | split: ';;'
+        for pk_suivi in pk_suivis
+          if pk_suivi == pk_cherche
+            assign pk_nombre = pk_nombre | plus: 1
+          endif
+        endfor
+        # Seulement les kits qui manquent : ceux du panier se retirent.
+        for pk_autre in cart.items
+          if pk_autre.product.id == bundle.id
+            assign pk_nombre = pk_nombre | minus: pk_autre.quantity
+          endif
+        endfor
+        if pk_nombre > 0
+          assign pk_image_url = bundle.featured_image | image_url: width: 112
+          assign pk_kits = pk_kits | append: bundle.title | append: '¤' | append: bundle.url | append: '¤' | append: pk_image_url | append: '¤' | append: '' | append: '¤' | append: bundle.price | append: '¤' | append: bundle.price | append: '¤' | append: pk_variante | append: '¤' | append: pk_nombre | append: '%%%%'
+          assign pk_kits_complements = pk_kits_complements | append: pk_complements | append: '%%%%'
+        endif
+      endunless
+    endfor
+  endfor
+  assign pk_kits = pk_kits | split: '%%%%'
+  assign pk_kits_complements = pk_kits_complements | split: '%%%%'
+  assign pk_lots = pk_lots | split: '%%%%'
+  assign pk_lots_complements = pk_lots_complements | split: '%%%%'
+-%}
+{%- for pk_kit in pk_kits -%}
+  {%- liquid
+    assign pk_champs = pk_kit | split: '¤'
+    assign pk_nombre = pk_champs[7] | plus: 0
+    assign pk_unite = pk_champs[4] | plus: 0
+    assign pk_articles = pk_champs[6]
+    assign pk_complements = pk_kits_complements[forloop.index0] | split: ','
+    for pk_complement in pk_complements
+      assign pk_morceaux = pk_complement | split: ':'
+      if pk_morceaux[0] == blank
+        continue
+      endif
+      assign pk_articles = pk_articles | append: ',' | append: pk_morceaux[0]
+      assign pk_unite = pk_unite | plus: pk_morceaux[1]
+    endfor
+    assign pk_total = pk_unite | times: pk_nombre
+    assign pk_prix_unite = pk_champs[4] | plus: 0 | money
+    assign pk_prix_total = pk_total | money
+  -%}
+<section class="panier-kit" aria-labelledby="panier-kit-{{ forloop.index }}">
+  <div class="panier-kit-haut">
+    <span class="panier-kit-image"><img src="{{ pk_champs[2] }}" alt="" width="56" height="56" loading="lazy"></span>
+    <div class="panier-kit-texte">
+      <h3 id="panier-kit-{{ forloop.index }}" class="panier-kit-titre">{{ 'sections.mma.panier.kit_titre' | t: count: pk_nombre }}</h3>
+      <p class="panier-kit-detail">{{ 'sections.mma.panier.kit_detail' | t: prix: pk_prix_unite }}</p>
+    </div>
+  </div>
+  <button type="button" class="panier-trait" data-panier="kits" data-articles="{{ pk_articles }}" data-quantite="{{ pk_nombre }}" data-focus="kits">{{ 'cart_drawer.add_missing_fixation' | t: count: pk_nombre }} · {{ pk_prix_total }}</button>
+</section>
+{%- endfor -%}
+{%- if pk_lots.size > 0 %}
+<section class="panier-lots" aria-labelledby="panier-lots-titre">
+  <h3 id="panier-lots-titre" class="panier-lots-titre">{{ 'sections.mma.panier.lots_titre' | t }}</h3>
+  <ul class="panier-lots-liste" role="list">
+    {%- for pk_lot in pk_lots -%}
+      {%- liquid
+        assign pk_champs = pk_lot | split: '¤'
+        assign pk_nombre = pk_champs[7] | plus: 0 | at_least: 1
+        assign pk_prix = pk_champs[4] | plus: 0
+        assign pk_barre = pk_champs[5] | plus: 0
+        assign pk_articles = pk_champs[6]
+        assign pk_complements = pk_lots_complements[forloop.index0] | split: ','
+        for pk_complement in pk_complements
+          assign pk_morceaux = pk_complement | split: ':'
+          if pk_morceaux[0] == blank
+            continue
+          endif
+          assign pk_articles = pk_articles | append: ',' | append: pk_morceaux[0]
+          assign pk_prix = pk_prix | plus: pk_morceaux[1]
+          assign pk_barre = pk_barre | plus: pk_morceaux[2]
+        endfor
+      -%}
+    <li class="panier-lot">
+      <span class="panier-lot-image"><img src="{{ pk_champs[2] }}" alt="" width="64" height="80" loading="lazy"></span>
+      <div class="panier-lot-texte">
+        <p class="panier-nom"><a href="{{ pk_champs[1] }}">{{ pk_champs[0] | escape }}</a></p>
+        {%- if pk_champs[3] != blank %}<p class="panier-options">{{ pk_champs[3] | replace: ' / ', ' · ' | escape }}</p>{% endif %}
+        <p class="panier-prix">
+          {%- if pk_barre > pk_prix -%}<span class="sr-only">{{ 'products.product.price.regular_price' | t }}</span><s>{{ pk_barre | money }}</s><span class="sr-only">{{ 'products.product.price.sale_price' | t }}</span>{%- endif -%}
+          <b>{{ pk_prix | money }}</b>
+        </p>
+      </div>
+      <button type="button" class="panier-trait" data-panier="lot" data-articles="{{ pk_articles }}" data-quantite="{{ pk_nombre }}" data-nom="{{ pk_champs[0] | escape }}">{{ 'cart_drawer.quick_add_to_cart' | t }}</button>
+    </li>
+    {%- endfor %}
+  </ul>
+</section>
+{%- endif %}

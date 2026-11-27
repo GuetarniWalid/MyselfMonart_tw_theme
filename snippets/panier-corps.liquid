@@ -1,0 +1,56 @@
+{%- comment -%}
+  panier-corps — ce que montrent le tiroir et la page du panier des tuiles (ticket 14), dans cet ordre :
+  - le bandeau pêche de la promotion, s'il y a une remise : son nom, tel que Shopify le donne, et « Vous économisez X ».
+    Sur les lignes, seulement l'ancien prix, barré, en petit ; aucune étiquette de remise, ni sur le kit, qui n'en a pas ;
+  - une tuile par ligne (snippets/panier-ligne.liquid) : les œuvres, puis les accessoires (le kit d'accrochage, type
+    « Fixation » comme pour le pas de quantité d'aujourd'hui), quel que soit l'ordre de Shopify (le dernier ajouté en
+    tête) ;
+  - le kit d'accrochage et les lots (snippets/panier-complements.liquid) ;
+  - « Continuer les achats » : dans le tiroir, un bouton qui le ferme ; sur la page, un lien vers les tableaux (le
+    script en fait la dernière collection vue).
+
+  Accepts:
+    - vue: {String} 'tiroir' ou 'page'
+{%- endcomment -%}
+{%- liquid
+  assign pc_remises = ''
+  for remise in cart.discount_applications
+    if remise.title == blank
+      continue
+    endif
+    if pc_remises != ''
+      if pc_remises contains remise.title
+        continue
+      endif
+      assign pc_remises = pc_remises | append: ' · '
+    endif
+    assign pc_remises = pc_remises | append: remise.title
+  endfor
+  assign pc_eco = cart.total_discount | default: 0
+-%}
+{%- if pc_eco > 0 %}
+<div class="panier-promo">
+  {%- if pc_remises != '' %}<p class="panier-promo-nom">{{ pc_remises | escape }}</p>{% endif %}
+  <p class="panier-promo-eco">{% assign pc_montant = pc_eco | money %}{{ 'sections.mma.panier.economie' | t: montant: pc_montant }}</p>
+</div>
+{%- endif %}
+<ul class="panier-liste" role="list" data-panier-liste>
+  {%- for item in cart.items -%}
+    {%- unless item.product.type == 'Fixation' %}
+  {% render 'panier-ligne', item: item, vue: vue %}
+    {%- endunless -%}
+  {%- endfor -%}
+  {%- for item in cart.items -%}
+    {%- if item.product.type == 'Fixation' %}
+  {% render 'panier-ligne', item: item, vue: vue %}
+    {%- endif -%}
+  {%- endfor %}
+</ul>
+{% render 'panier-complements', vue: vue %}
+<div class="panier-continuer">
+  {%- if vue == 'page' %}
+  <a class="panier-lien" href="{{ routes.all_products_collection_url }}" data-panier="continuer">{{ 'cart_drawer.keep_shopping' | t }}</a>
+  {%- else %}
+  <button type="button" class="panier-lien" data-panier="continuer" data-focus="continuer">{{ 'cart_drawer.keep_shopping' | t }}</button>
+  {%- endif %}
+</div>

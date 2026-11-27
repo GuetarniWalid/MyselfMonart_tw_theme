@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "panier": {
+      "type": "panier-page",
+      "settings": {}
+    }
+  },
+  "order": [
+    "panier"
+  ],
+  "layout": "cart"
+}

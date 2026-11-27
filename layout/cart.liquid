@@ -1,8 +1,21 @@
-<!DOCTYPE html>
-<html lang="{{ request.locale.iso_code }}">
+<!DOCTYPE html>{% comment %}
+  La page panier « B · Les tuiles » (ticket 14 de .scratch/collection-design), en construction : son modèle de test,
+  templates/cart.refonte.json (/cart?view=refonte), n'a que sa section, sections/panier-page.liquid, qui écrit
+  data-panier-page. Ce gabarit le lit dans la page rendue, comme layout/collection.liquid lit la marque de la nouvelle
+  page collection : <html> porte alors data-refonte-page, et <head> charge la feuille de la nouvelle page collection
+  (assets/collection-refonte.css : le bandeau pêche, le pied de page menthe, Albert Sans dans la page) et sa police.
+  Les deux sections d'aujourd'hui (page-cart-items, page-cart-subtotal) ne sont plus rendues : la section de la page les
+  remplace. Le repère est la section, jamais le nom du modèle : la bascule sera un échange de modèle.
+  Toute autre page panier rend exactement le même HTML qu'avant (scripts/panier.test.cjs) : chaque condition tient sur
+  sa ligne, sans contrôle des blancs (Shopify ne les retire pas comme liquidjs).
+{% endcomment %}{% assign panier_page = false %}{% if content_for_layout contains ' data-panier-page>' %}{% assign panier_page = true %}{% endif %}
+<html lang="{{ request.locale.iso_code }}"{% if panier_page %} data-refonte-page{% endif %}>
   <head>
-    {% render 'head-base' %}
-    {{ content_for_header }}
+    {% render 'head-base' %}{% if panier_page %}
+    {{ 'collection-refonte.css' | asset_url | stylesheet_tag: preload: true }}{% endif %}
+    {{ content_for_header }}{% if panier_page %}
+    {% render 'collection-refonte-police' %}{% if template.suffix contains 'refonte' %}
+    {% render 'collection-refonte-essai' %}{% endif %}{% endif %}
   </head>
 
   <body class="w-screen overflow-x-hidden text-main bg-secondary transition-colors duration-500 z-10 scrollbar relative min-h-screen">
@@ -15,9 +28,9 @@
 
     <div id="wrapper-overlay" class="relative">
       <main id="MainContent" role="main">
-        {% section 'page-cart-items' %}
+        {% unless panier_page %}{% section 'page-cart-items' %}
         {% section 'page-cart-subtotal' %}
-        {{ content_for_layout }}
+        {% endunless %}{{ content_for_layout }}
       </main>
       {% section 'tw-footer' %}
       <div id="overlay-content" class="absolute z-30 inset-0 bg-[rgba(0,46,93,0)] shadow-[shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]] backdrop-blur-[2px] hidden"></div>

@@ -210,14 +210,16 @@ test('la police de la page : les déclarations de la scène 3D, à l’identique
   assert.deepEqual(own, faces('snippets/oeuvre-3d-stage.liquid'))
 })
 
-test('la police de la page : seul le gabarit des pages collection la rend', () => {
+test('la police de la page : seuls le gabarit des pages collection et celui de la page panier de test la rendent', () => {
   const callers = []
   for (const dir of ['layout', 'sections', 'snippets', 'templates']) {
     for (const name of fs.readdirSync(path.join(ROOT, dir)).filter((n) => n.endsWith('.liquid'))) {
       if (/render\s+'collection-refonte-police'/.test(read(`${dir}/${name}`))) callers.push(`${dir}/${name}`)
     }
   }
-  assert.deepEqual(callers, [LAYOUT])
+  // La page panier de test (ticket 14, /cart?view=refonte) prend la feuille et la police de la nouvelle page collection,
+  // quand sa section y est (scripts/panier.test.cjs).
+  assert.deepEqual(callers, ['layout/cart.liquid', LAYOUT])
 })
 
 /* ---------- La feuille de la page ---------- */

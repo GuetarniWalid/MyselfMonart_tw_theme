@@ -1018,6 +1018,29 @@
           "lire_la_suite": "Lire la suite",
           "reduire": "Réduire"
         }
+      },
+      "panier": {
+        "total": "Total",
+        "livraison": "Livraison offerte, sous 7 jours ouvrés",
+        "economie": "Vous économisez {{ montant }}",
+        "recapitulatif": "Récapitulatif",
+        "retours": "14 jours pour changer d’avis",
+        "kit_titre": {
+          "one": "Pour l’accrocher dès réception",
+          "other": "Pour les accrocher dès réception"
+        },
+        "kit_detail": "Kit d’accrochage, {{ prix }} par œuvre",
+        "lots_titre": "Ils vont si bien ensemble",
+        "retire": "« {{ article }} » a été retiré du panier.",
+        "annuler": "Annuler",
+        "annonce_quantite": "{{ article }} : quantité {{ quantite }}. Total {{ total }}.",
+        "annonce_retire": "« {{ article }} » a été retiré du panier. Total {{ total }}.",
+        "annonce_revenu": "« {{ article }} » est revenu dans le panier. Total {{ total }}.",
+        "annonce_ajoute": "« {{ article }} » a été ajouté au panier. Total {{ total }}.",
+        "annonce_kits": {
+          "one": "Kit d’accrochage ajouté. Total {{ total }}.",
+          "other": "{{ count }} kits d’accrochage ajoutés. Total {{ total }}."
+        }
       }
     },
     "promo_popup": {

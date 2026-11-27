@@ -631,6 +631,29 @@
           "lire_la_suite": "Leer más",
           "reduire": "Ver menos"
         }
+      },
+      "panier": {
+        "total": "Total",
+        "livraison": "Envío gratis, en 7 días laborables",
+        "economie": "Ahorras {{ montant }}",
+        "recapitulatif": "Resumen",
+        "retours": "14 días para cambiar de opinión",
+        "kit_titre": {
+          "one": "Para colgarlo nada más recibirlo",
+          "other": "Para colgarlos nada más recibirlos"
+        },
+        "kit_detail": "Kit para colgar, {{ prix }} por obra",
+        "lots_titre": "Combinan de maravilla",
+        "retire": "«{{ article }}» se ha quitado del carrito.",
+        "annuler": "Deshacer",
+        "annonce_quantite": "{{ article }}: cantidad {{ quantite }}. Total {{ total }}.",
+        "annonce_retire": "«{{ article }}» se ha quitado del carrito. Total {{ total }}.",
+        "annonce_revenu": "«{{ article }}» ha vuelto al carrito. Total {{ total }}.",
+        "annonce_ajoute": "«{{ article }}» se ha añadido al carrito. Total {{ total }}.",
+        "annonce_kits": {
+          "one": "Kit para colgar añadido. Total {{ total }}.",
+          "other": "{{ count }} kits para colgar añadidos. Total {{ total }}."
+        }
       }
     },
     "my_likes": {

@@ -634,6 +634,29 @@
           "lire_la_suite": "Verder lezen",
           "reduire": "Minder tonen"
         }
+      },
+      "panier": {
+        "total": "Totaal",
+        "livraison": "Gratis levering, binnen 7 werkdagen",
+        "economie": "Je bespaart {{ montant }}",
+        "recapitulatif": "Overzicht",
+        "retours": "14 dagen bedenktijd",
+        "kit_titre": {
+          "one": "Om het meteen op te hangen",
+          "other": "Om ze meteen op te hangen"
+        },
+        "kit_detail": "Ophangset, {{ prix }} per werk",
+        "lots_titre": "Ze passen zo mooi bij elkaar",
+        "retire": "‘{{ article }}’ is uit je winkelmandje verwijderd.",
+        "annuler": "Ongedaan maken",
+        "annonce_quantite": "{{ article }}: aantal {{ quantite }}. Totaal {{ total }}.",
+        "annonce_retire": "‘{{ article }}’ is uit je winkelmandje verwijderd. Totaal {{ total }}.",
+        "annonce_revenu": "‘{{ article }}’ staat weer in je winkelmandje. Totaal {{ total }}.",
+        "annonce_ajoute": "‘{{ article }}’ is aan je winkelmandje toegevoegd. Totaal {{ total }}.",
+        "annonce_kits": {
+          "one": "Ophangset toegevoegd. Totaal {{ total }}.",
+          "other": "{{ count }} ophangsets toegevoegd. Totaal {{ total }}."
+        }
       }
     },
     "my_likes": {

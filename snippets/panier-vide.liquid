@@ -1,0 +1,14 @@
+{%- comment -%}
+  panier-vide — le panier vide du tiroir et de la page (ticket 14) : les tuiles du menu (« Tous les Tableaux »,
+  « Best-seller ») et « Suivre ma commande » en pêche.
+
+  Le cocon (seo/cocon/README.md) : Google visite le site panier vide et lit ce tiroir sur chaque page. Il n'y ajoute
+  aucun lien. Les tuiles ne sont pas ici : assets/panier.js recopie celles du menu de la page (snippets/menu-telephone.liquid,
+  le rayon de la page), en boutons, sans adresse ; un toucher suit le lien du menu qui porte le même nom. Sans menu, la
+  liste reste vide et ne se voit pas (input.css cache un élément vide). « Suivre ma commande » est le lien de toujours
+  (snippets/tw-order-tracking-link.liquid), le seul du tiroir vide, comme aujourd'hui.
+{%- endcomment -%}
+<div class="panier-vide">
+  <ul class="panier-tuiles" data-panier-tuiles></ul>
+  {% render 'tw-order-tracking-link', class: 'panier-suivre', show_icon: true, icon_width: 20 %}
+</div>

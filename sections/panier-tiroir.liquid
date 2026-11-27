@@ -1,0 +1,10 @@
+{%- comment -%}
+  panier-tiroir — le tiroir du panier des tuiles (ticket 14), seul : la section que assets/panier.js demande à Shopify
+  quand le panier change (l'API du panier, paramètre sections). Aucun gabarit ni modèle ne la rend : la page a déjà son
+  tiroir (sections/tw-cart-drawer.liquid, qui rend le même snippet dans la vue de test).
+  Pourquoi une section à part : l'API du panier rend les sections dans le modèle par défaut de la page et ignore
+  ?view=refonte, même dans sections_url (relevé en ligne le 27/11/2026). Demandé sous son nom, tw-cart-drawer y
+  reviendrait au tiroir d'aujourd'hui ; celle-ci rend toujours le tiroir des tuiles. Sans réglage ni bloc.
+  Tests : scripts/panier.test.cjs.
+{%- endcomment -%}
+{% render 'panier-tiroir' %}

@@ -3498,7 +3498,7 @@
 
       try {
         // Même contrat que MainProductBlocks.buyFetch (assets/main-product.js).
-        const response = await fetch('/cart/add.js?sections=tw-cart-drawer,tw-header-painting', {
+        const response = await fetch(`/cart/add.js?sections=tw-cart-drawer,tw-header-painting&sections_url=${encodeURIComponent(window.location.pathname + window.location.search)}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -3550,7 +3550,7 @@
       if (feedback) feedback.hidden = true;
 
       try {
-        const response = await fetch('/cart/add.js?sections=tw-cart-drawer,tw-header-painting', {
+        const response = await fetch(`/cart/add.js?sections=tw-cart-drawer,tw-header-painting&sections_url=${encodeURIComponent(window.location.pathname + window.location.search)}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

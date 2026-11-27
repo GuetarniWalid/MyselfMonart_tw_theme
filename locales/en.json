@@ -873,6 +873,29 @@
           "lire_la_suite": "Read more",
           "reduire": "Show less"
         }
+      },
+      "panier": {
+        "total": "Total",
+        "livraison": "Free delivery, within 7 working days",
+        "economie": "You save {{ montant }}",
+        "recapitulatif": "Order summary",
+        "retours": "14 days to change your mind",
+        "kit_titre": {
+          "one": "To hang it as soon as it arrives",
+          "other": "To hang them as soon as they arrive"
+        },
+        "kit_detail": "Hanging kit, {{ prix }} per artwork",
+        "lots_titre": "They go so well together",
+        "retire": "“{{ article }}” was removed from your cart.",
+        "annuler": "Undo",
+        "annonce_quantite": "{{ article }}: quantity {{ quantite }}. Total {{ total }}.",
+        "annonce_retire": "“{{ article }}” was removed from your cart. Total {{ total }}.",
+        "annonce_revenu": "“{{ article }}” is back in your cart. Total {{ total }}.",
+        "annonce_ajoute": "“{{ article }}” was added to your cart. Total {{ total }}.",
+        "annonce_kits": {
+          "one": "Hanging kit added. Total {{ total }}.",
+          "other": "{{ count }} hanging kits added. Total {{ total }}."
+        }
       }
     },
     "testimonials_carousel": {

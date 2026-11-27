@@ -1,0 +1,96 @@
+{%- comment -%}
+  panier-page — la page panier « B · Les tuiles » (ticket 14 de .scratch/collection-design, choix de Walid du
+  27/11/2026). Pour l'instant dans un modèle de test seulement : templates/cart.refonte.json, /cart?view=refonte. La page
+  panier d'aujourd'hui (sections/page-cart-items.liquid, page-cart-subtotal.liquid) ne change pas.
+
+  La marque de la page : layout/cart.liquid cherche « data-panier-page> » dans la page rendue. Il pose alors
+  data-refonte-page sur <html> et charge la feuille et la police de la nouvelle page collection : l'en-tête (nouvel_entete,
+  snippets/tw-sticky-header.liquid), le bandeau pêche, le pied de page menthe, Albert Sans. Il ne rend plus les deux
+  sections d'aujourd'hui.
+
+  - Le titre : « Votre panier », en maigre puis le dernier mot en gras, comme « Tableaux Nature » ; dessous, le nombre
+    d'articles. C'est le seul h1 de la page.
+  - À gauche : le bandeau de la promotion, les tuiles, le kit, « Continuer les achats » (snippets/panier-corps.liquid).
+  - À droite, crème, et qui reste à l'écran sur ordinateur : le récapitulatif (sous-total et réduction s'il y a une
+    remise, total), le bouton noir « Paiement sécurisé », Klarna, les logos, puis trois assurances.
+  - Au téléphone : une barre noire « Paiement sécurisé · total » collée en bas, jusqu'à ce que le bouton du
+    récapitulatif soit à l'écran (assets/panier.js). Elle double ce bouton à la souris et au doigt ; le clavier et les
+    lecteurs d'écran ont celui du récapitulatif, qui s'atteint au clavier (celui d'aujourd'hui porte tabindex="-1").
+  - Panier vide : « Votre panier est vide », les tuiles du menu, « Suivre ma commande » (snippets/panier-vide.liquid).
+  Quand le panier change, assets/panier.js demande à Shopify cette section par son nom (panier-page), avec l'adresse
+  de la page : sans réglage, elle se rend de même hors de son modèle.
+  Styles : input.css, « Le panier ». Tests : scripts/panier.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  assign pp_vide = true
+  if cart.item_count > 0
+    assign pp_vide = false
+  endif
+  assign pp_mots = 'sections.tw_cart_drawer.title' | t | split: ' '
+  assign pp_cle_total = 'sections.tw_cart_drawer.subtotal'
+  if cart.taxes_included
+    assign pp_cle_total = 'sections.mma.panier.total'
+  endif
+  assign pp_eco = cart.total_discount | default: 0
+  capture pp_coche
+    render 'icon-checkmark'
+  endcapture
+-%}
+<div hidden data-panier-page></div>
+<panier-contenu class="panier panier-page" data-vue="page" data-section="panier-page" data-nombre="{{ cart.item_count }}">
+  <div class="panier-page-dedans">
+    {%- if pp_vide %}
+    <h1 class="panier-page-titre">{{ 'sections.tw_cart_drawer.empty_message' | t }}</h1>
+    {% render 'panier-vide' %}
+    {%- else %}
+    <h1 class="panier-page-titre">{% for pp_mot in pp_mots %}{% if forloop.last %}<b>{{ pp_mot | escape }}</b>{% else %}{{ pp_mot | escape }} {% endif %}{% endfor %}</h1>
+    <p class="panier-page-nombre">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</p>
+    <div class="panier-page-grille">
+      <div class="panier-page-lignes">
+        <h2 class="sr-only">{{ 'sections.page_cart_items.headings.articles' | t }}</h2>
+        {% render 'panier-corps', vue: 'page' %}
+      </div>
+      <aside class="panier-recap" aria-labelledby="panier-recap-titre">
+        <h2 id="panier-recap-titre" class="panier-recap-titre">{{ 'sections.mma.panier.recapitulatif' | t }}</h2>
+        {%- if pp_eco > 0 %}
+        <div class="panier-recap-lignes">
+          <p class="panier-recap-ligne"><span>{{ 'sections.tw_cart_drawer.subtotal' | t }}</span><span>{{ cart.original_total_price | money }}</span></p>
+          <p class="panier-recap-ligne"><span>{{ 'customer.order.discount' | t }}</span><span>−{{ pp_eco | money }}</span></p>
+        </div>
+        {%- endif %}
+        <p class="panier-total panier-recap-total"><span>{{ pp_cle_total | t }}</span><b data-panier-total>{{ cart.total_price | money }}</b></p>
+        <form action="{{ routes.cart_url }}" method="post" id="panier-page-form" class="panier-form">
+          <button type="submit" name="checkout" class="panier-payer" data-focus="payer" data-panier-bouton>{% render 'icon-padlock' %}<span>{{ 'sections.tw_cart_drawer.checkout' | t }}</span></button>
+        </form>
+        <div class="panier-klarna">
+          <klarna-placement id="cart-drawer-klarna-placement" data-key="credit-promotion-badge" data-locale="" data-purchase-amount="{{ cart.total_price }}"></klarna-placement>
+        </div>
+        {% render 'panier-logos' %}
+        <hr class="panier-recap-trait">
+        <ul class="panier-assurances" role="list">
+          <li><span class="panier-coche" aria-hidden="true">{{ pp_coche }}</span><span>{{ 'sections.mma.panier.livraison' | t }}</span></li>
+          <li><span class="panier-coche" aria-hidden="true">{{ pp_coche }}</span><span>{{ 'sections.mma.panier.retours' | t }}</span></li>
+          <li><span class="panier-coche" aria-hidden="true">{{ pp_coche }}</span><span>{{ 'sections.mma.galerie.questions.help_text' | t }}</span></li>
+        </ul>
+      </aside>
+    </div>
+    {%- endif %}
+  </div>
+  {%- unless pp_vide %}
+  <div class="panier-barre" aria-hidden="true"><button type="submit" form="panier-page-form" name="checkout" class="panier-payer" tabindex="-1">{% render 'icon-padlock' %}<span>{{ 'sections.tw_cart_drawer.checkout' | t }} · {{ cart.total_price | money }}</span></button></div>
+  {%- endunless %}
+  {% render 'panier-textes' %}
+</panier-contenu>
+<p class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-panier-annonce data-allow-empty></p>
+<script src="{{ 'panier.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Panier (page)",
+  "tag": "section",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["cart"]
+  }
+}
+{% endschema %}

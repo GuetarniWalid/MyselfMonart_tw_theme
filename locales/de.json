@@ -632,6 +632,29 @@
           "lire_la_suite": "Weiterlesen",
           "reduire": "Weniger anzeigen"
         }
+      },
+      "panier": {
+        "total": "Gesamt",
+        "livraison": "Kostenlose Lieferung, innerhalb von 7 Werktagen",
+        "economie": "Sie sparen {{ montant }}",
+        "recapitulatif": "Übersicht",
+        "retours": "14 Tage Rückgaberecht",
+        "kit_titre": {
+          "one": "Gleich nach Erhalt aufhängen",
+          "other": "Gleich nach Erhalt aufhängen"
+        },
+        "kit_detail": "Aufhängeset, {{ prix }} pro Werk",
+        "lots_titre": "Sie passen so gut zusammen",
+        "retire": "„{{ article }}“ wurde aus dem Warenkorb entfernt.",
+        "annuler": "Rückgängig",
+        "annonce_quantite": "{{ article }}: Menge {{ quantite }}. Gesamt {{ total }}.",
+        "annonce_retire": "„{{ article }}“ wurde aus dem Warenkorb entfernt. Gesamt {{ total }}.",
+        "annonce_revenu": "„{{ article }}“ ist wieder im Warenkorb. Gesamt {{ total }}.",
+        "annonce_ajoute": "„{{ article }}“ wurde in den Warenkorb gelegt. Gesamt {{ total }}.",
+        "annonce_kits": {
+          "one": "Aufhängeset hinzugefügt. Gesamt {{ total }}.",
+          "other": "{{ count }} Aufhängesets hinzugefügt. Gesamt {{ total }}."
+        }
       }
     },
     "collections_grid": {

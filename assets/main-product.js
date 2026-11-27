@@ -539,8 +539,9 @@ class MainProductBlocks extends CollapsibleTab {
   async buyFetch(button, productProperties) {
     const variantId = button.dataset.variantId;
     const headerId = this.getHeaderId(button);
+    // L'adresse de la page, recherche comprise (sections_url) : Shopify y rend le tiroir, dans sa langue.
     const response = await fetch(
-      `/cart/add.js?sections=tw-cart-drawer,${headerId}`,
+      `/cart/add.js?sections=tw-cart-drawer,${headerId}&sections_url=${encodeURIComponent(window.location.pathname + window.location.search)}`,
       {
         method: 'POST',
         headers: {

@@ -2593,6 +2593,389 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
 }
 /* ---- Fin du menu d'ordinateur ---- */
 
+/* ---- Le panier (snippets/panier-tiroir.liquid, sections/panier-page.liquid, .panier) ----
+   Le panier « B · Les tuiles », choix de Walid du 27/11/2026 (ticket 14 de .scratch/collection-design ; la maquette :
+   .scratch/collection-design/panier/prototype, version B). Pour l'instant dans la vue de test seulement : le tiroir des
+   nouvelles pages collection en essai, et la page panier d'essai. Le tiroir est sur toutes les pages : ses styles sont
+   ici, dans la feuille commune, et ceux de la page avec eux (les mêmes morceaux).
+   Les couleurs du menu du téléphone : le bandeau pêche de la promotion, les œuvres sur des tuiles crème, le kit sur une
+   tuile menthe, le bouton noir pleine largeur. Albert Sans. Les couleurs sont posées une fois, ici, comme pour le menu
+   (les mêmes valeurs que la feuille de la nouvelle page collection). Aucun mouvement avec « mouvements réduits ».
+   Le tiroir vient de la droite : tout l'écran au téléphone ; dès 768 px, 440 px de large, les coins arrondis à gauche.
+   Sa section (.cart-drawer, plus bas dans cette feuille) garde sa place et ses classes ; elle prend ici le dessin des
+   tuiles quand elle porte <cart-drawer data-vue="tuiles">. Fermée, elle est cachée (visibility) : rien d'elle ne prend
+   le clavier. Scripts : assets/cart-drawer.js (les gestes du tiroir), assets/panier.js (le contenu). */
+:root .cart-drawer:has(> [data-vue="tuiles"]),
+:root .panier {
+  --encre: rgb(var(--color-main-rgb));
+  --encre-70: rgba(var(--color-main-rgb), 0.72);
+  --encre-55: rgba(var(--color-main-rgb), 0.6);
+  --encre-38: rgba(var(--color-main-rgb), 0.38);
+  --encre-22: rgba(var(--color-main-rgb), 0.22);
+  --encre-16: rgba(var(--color-main-rgb), 0.16);
+  --encre-12: rgba(var(--color-main-rgb), 0.12);
+  --encre-06: rgba(var(--color-main-rgb), 0.06);
+  --encre-appui: #3a2a1d;
+  --blanc: #ffffff;
+  --blanc-0: rgba(255, 255, 255, 0);
+  --blanc-94: rgba(255, 255, 255, 0.94);
+  --creme: #f7f2ea;
+  --peche: #ffcaa8;
+  --menthe: #b9e9d0;
+  --ciel: #a5d3f7;
+  --rose: #ffb6d2;
+  --soleil: #ffdd6e;
+  --lilas: #d9c9ff;
+  --bleu: #86bdf5;
+  --gris: #d6d2ce;
+  --orange: #ffb05c;
+  --rouge: #ff6f61;
+  --violet: #bba0ff;
+  --beige: #ebdcc4;
+  --vert: #94d6a2;
+  --sans: "Albert Sans", Roboto, sans-serif;
+}
+
+/* Le tiroir : sa section, venue de la droite. */
+:root .cart-drawer:has(> [data-vue="tuiles"]) {
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--blanc);
+}
+:root .cart-drawer.translate-x-full:has(> [data-vue="tuiles"]) { visibility: hidden; }
+@media (min-width: 768px) {
+  :root .cart-drawer:has(> [data-vue="tuiles"]) {
+    width: 440px;
+    border-radius: 24px 0 0 24px;
+    box-shadow: -20px 0 60px var(--encre-22);
+  }
+}
+cart-drawer[data-vue="tuiles"] { display: block; height: 100%; }
+cart-drawer[data-vue="tuiles"]:focus { outline: none; }
+/* Le voile sur la page, derrière le tiroir ouvert (#overlay-content, assets/cart-drawer.js). */
+#overlay-content.panier-voile {
+  background-color: rgba(var(--color-main-rgb), 0.38);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.panier {
+  display: block;
+  color: var(--encre);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+.panier :is(a, button):focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+.panier[data-vue="tiroir"] { display: flex; flex-direction: column; height: 100%; background-color: var(--blanc); }
+.panier[aria-busy="true"] { cursor: progress; }
+.panier[aria-busy="true"] :is(.panier-liste, .panier-kit, .panier-lots, [data-panier-total]) { opacity: 0.55; }
+
+/* La tête : « Votre panier », le nombre d'articles, le rond pour fermer. */
+.panier-tete {
+  flex: none;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 14px 12px 20px;
+  border-bottom: 1px solid var(--encre-12);
+}
+.panier-titre { margin: 0; font: 700 20px/1.1 var(--sans); letter-spacing: -0.02em; }
+.panier-titre:focus { outline: none; }
+.panier-nombre { margin: 4px 0 0; font: 400 13px/1.3 var(--sans); color: var(--encre-55); }
+.panier .panier-fermer {
+  flex: none; display: grid; place-items: center;
+  width: 44px; height: 44px; padding: 0;
+  border: 1.5px solid var(--encre); border-radius: 50%;
+  background-color: var(--blanc); color: var(--encre);
+  cursor: pointer;
+}
+.panier .panier-fermer svg { width: 14px; height: 14px; }
+
+/* Le corps, qui défile ; le pied reste à l'écran. */
+.panier-corps {
+  flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  padding: 4px 0 8px;
+}
+
+/* Le bandeau pêche de la promotion : son nom, ce qu'elle fait économiser. */
+.panier-promo {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: 12px 16px 4px; padding: 12px 14px;
+  border-radius: 18px; background-color: var(--peche);
+}
+.panier-promo-nom { margin: 0; font: 600 13px/1.3 var(--sans); }
+.panier-promo-eco { margin: 0; font: 700 15px/1.2 var(--sans); white-space: nowrap; text-align: right; }
+
+/* Une tuile crème par ligne : la vignette en objet sur le mur blanc, le nom, les options, − et +, le prix. */
+.panier-liste { margin: 0; padding: 0; list-style: none; }
+.panier-ligne {
+  display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px;
+  margin: 8px 16px; padding: 10px;
+  border-radius: 20px; background-color: var(--creme);
+}
+.panier-vignette {
+  position: relative; display: block; overflow: hidden;
+  width: 84px; height: 104px;
+  border-radius: 12px; background-color: var(--blanc);
+}
+.panier-ligne .oeuvre-card { --wall-panier: var(--blanc); }
+.panier-ligne .oeuvre-card[data-context] .oeuvre-card-stage { border-radius: 12px; }
+/* Toute autre ligne (le kit, un aperçu personnalisé…) : son image entière, sur le blanc. */
+.panier-vignette-image { display: block; width: 100%; height: 100%; object-fit: contain; }
+.panier-info { display: flex; flex-direction: column; min-width: 0; }
+.panier-nom {
+  margin: 0; font: 600 15px/1.26 var(--sans); letter-spacing: -0.01em;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere;
+}
+.panier-nom a { color: inherit; text-decoration: none; }
+@media (hover: hover) { .panier-nom a:hover { text-decoration: underline; text-underline-offset: 2px; } }
+.panier-options { margin: 3px 0 0; font: 400 13px/1.3 var(--sans); color: var(--encre-70); }
+.panier-bas { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 10px; }
+/* − et + : une pilule, deux ronds de 38 px, 44 px sous le doigt. À 1, « − » est la corbeille. */
+.panier-pas {
+  display: inline-flex; align-items: center; height: 38px;
+  border-radius: 999px; background-color: var(--blanc); box-shadow: inset 0 0 0 1.5px var(--encre-16);
+}
+.panier .panier-pas-bouton {
+  position: relative; display: grid; place-items: center;
+  width: 38px; height: 38px; padding: 0;
+  border: 0; border-radius: 999px; background: none; color: var(--encre);
+  cursor: pointer; touch-action: manipulation;
+}
+.panier .panier-pas-bouton::after { content: ""; position: absolute; inset: -3px; }
+.panier .panier-pas-bouton svg { width: 14px; height: 14px; }
+.panier-corbeille svg { width: 15px; height: 16px; }
+@media (hover: hover) { .panier .panier-pas-bouton:hover { background-color: var(--encre-06); } }
+.panier-pas-nombre { min-width: 18px; text-align: center; font: 600 15px/1 var(--sans); font-variant-numeric: tabular-nums; }
+/* Le prix ; avec une remise, l'ancien prix au-dessus, barré, en petit. */
+.panier-prix {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 1px;
+  margin: 0; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.panier-prix s { font: 400 13px/1.2 var(--sans); color: var(--encre-55); }
+.panier-prix b { font: 700 15.5px/1.2 var(--sans); }
+
+/* « … a été retiré du panier. Annuler » (assets/panier.js) */
+.panier-annule {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin: 8px 16px; padding: 6px 8px 6px 14px;
+  border-radius: 14px; background-color: var(--creme);
+  font: 400 14px/1.35 var(--sans); list-style: none;
+}
+.panier .panier-annule-bouton {
+  flex: none; min-height: 44px; padding: 0 10px;
+  border: 0; border-radius: 10px; background: none; color: var(--encre);
+  font: 700 14px/1 var(--sans); text-decoration: underline; text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* La tuile menthe du kit d'accrochage, et les lots. */
+.panier-kit { margin: 8px 16px; padding: 14px; border-radius: 20px; background-color: var(--menthe); }
+.panier-kit-haut { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: center; margin-bottom: 12px; }
+.panier-kit-image { display: block; overflow: hidden; width: 56px; height: 56px; border-radius: 12px; background-color: var(--blanc); }
+.panier-kit-image img, .panier-lot-image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.panier-kit-titre, .panier-lots-titre { margin: 0; font: 600 14.5px/1.25 var(--sans); }
+.panier-kit-detail { margin: 3px 0 0; font: 400 13px/1.3 var(--sans); color: var(--encre-70); }
+.panier .panier-trait {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; min-height: 44px; padding: 6px 16px;
+  border: 0; border-radius: 999px; background-color: var(--blanc); box-shadow: inset 0 0 0 1.5px var(--encre);
+  color: var(--encre); font: 600 14px/1.25 var(--sans); text-align: center; text-wrap: balance;
+  cursor: pointer;
+}
+@media (hover: hover) { .panier .panier-trait:hover { background-color: var(--creme); } }
+.panier-lots { margin: 12px 16px 4px; }
+.panier-lots-titre { margin-bottom: 8px; }
+.panier-lots-liste { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.panier-lot {
+  display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; align-items: center;
+  padding: 10px; border-radius: 20px; background-color: var(--creme);
+}
+.panier-lot-image { display: block; overflow: hidden; width: 64px; height: 80px; border-radius: 10px; background-color: var(--blanc); }
+.panier-lot .panier-prix { align-items: flex-start; margin-top: 4px; }
+.panier-lot .panier-trait { grid-column: 1 / -1; }
+
+/* « Continuer les achats » */
+.panier-continuer { display: flex; justify-content: center; padding: 6px 0 4px; }
+.panier .panier-lien {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px;
+  border: 0; border-radius: 10px; background: none; color: var(--encre);
+  font: 600 14px/1.2 var(--sans); text-decoration: underline; text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* Le pied, toujours visible : le total, Klarna, le bouton noir, la livraison, les logos. */
+.panier-pied {
+  flex: none; display: grid; gap: 10px;
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--encre-12); background-color: var(--blanc);
+}
+.panier-total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0; }
+.panier-total span { font: 600 15px/1 var(--sans); }
+.panier-total b { font: 700 21px/1 var(--sans); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* Klarna : le vrai <klarna-placement> d'aujourd'hui, qui écrit lui-même son texte ; autour, la place du panier, plus
+   serrée que la sienne (sa boîte, osm-container : sans marge, ni fond, en 13 px). */
+.panier-klarna { display: grid; justify-items: center; min-width: 0; }
+.panier #cart-drawer-klarna-placement::part(osm-container) { margin: 0; padding: 2px 0; background-color: transparent; font-size: 13px; line-height: 18px; }
+.panier-form { margin: 0; }
+.panier .panier-payer {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  width: 100%; min-height: 52px; padding: 0 22px;
+  border: 0; border-radius: 999px; background-color: var(--encre); color: var(--blanc);
+  font: 600 16px/1.1 var(--sans); cursor: pointer; touch-action: manipulation;
+}
+.panier .panier-payer svg { flex: none; width: 14px; height: 17px; }
+@media (hover: hover) { .panier .panier-payer:hover { background-color: var(--encre-appui); } }
+.panier .panier-payer:active { background-color: var(--encre-appui); }
+.panier .panier-payer:focus-visible { outline-offset: 3px; }
+.panier-livraison { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0; font: 500 13px/1.3 var(--sans); text-align: center; }
+.panier-livraison svg { flex: none; width: 17px; height: 17px; }
+.panier-logos { display: flex; justify-content: center; align-items: center; gap: 8px; color: var(--encre-55); }
+.panier .panier-logos svg { width: auto; height: 18px; }
+
+/* Le panier vide : les tuiles du menu (snippets/collection-embleme.liquid, taille « tuile »), recopiées en boutons par
+   assets/panier.js, et « Suivre ma commande » en pêche. Les règles commencent par :root .panier-tuiles : elles
+   l'emportent sur celles des emblèmes de la feuille de la nouvelle page collection. */
+.panier-vide { display: grid; gap: 14px; padding: 18px 20px 22px; }
+.panier-tuiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+:root .panier-tuiles .c-emb[data-taille="tuile"] {
+  --d: 46px;
+  position: relative;
+  display: grid; grid-template-columns: var(--d) minmax(0, 1fr); column-gap: 10px; row-gap: 3px;
+  align-content: center; justify-items: start;
+  max-width: none; min-height: 76px; padding: 8px 8px 8px 12px;
+  border-radius: 20px; background-color: var(--creme); color: var(--encre);
+  text-align: left; list-style: none;
+}
+:root .panier-tuiles [data-fond="ciel"] { --fond: var(--ciel); }
+:root .panier-tuiles [data-fond="soleil"] { --fond: var(--soleil); }
+:root .panier-tuiles [data-fond="menthe"] { --fond: var(--menthe); }
+:root .panier-tuiles [data-fond="rose"] { --fond: var(--rose); }
+:root .panier-tuiles [data-fond="lilas"] { --fond: var(--lilas); }
+:root .panier-tuiles [data-fond="peche"] { --fond: var(--peche); }
+:root .panier-tuiles [data-fond="bleu"] { --fond: var(--bleu); }
+:root .panier-tuiles [data-fond="gris"] { --fond: var(--gris); }
+:root .panier-tuiles [data-fond="orange"] { --fond: var(--orange); }
+:root .panier-tuiles [data-fond="rouge"] { --fond: var(--rouge); }
+:root .panier-tuiles [data-fond="violet"] { --fond: var(--violet); }
+:root .panier-tuiles [data-fond="beige"] { --fond: var(--beige); }
+:root .panier-tuiles [data-fond="vert"] { --fond: var(--vert); }
+:root .panier-tuiles .c-emb .c-emb-cadre {
+  position: relative; display: block; grid-row: 1 / 3; align-self: center;
+  width: var(--d); height: var(--d);
+}
+:root .panier-tuiles .c-emb .c-emb-rond {
+  position: absolute; left: 0; bottom: 0; width: var(--d); height: var(--d);
+  border-radius: 50%; background-color: var(--fond, var(--soleil));
+}
+:root .panier-tuiles .c-emb .c-emb-cadre img {
+  position: absolute; left: 50%; bottom: 0;
+  width: calc(var(--d) * 2); height: auto; max-width: none;
+  translate: -50% 0; pointer-events: none;
+}
+:root .panier-tuiles .c-emb .c-emb-initiale {
+  position: absolute; left: 0; bottom: 0; width: var(--d); height: var(--d);
+  display: grid; place-items: center; font: 700 19px/1 var(--sans);
+}
+:root .panier-tuiles .c-emb .c-emb-tout { display: block; width: 100%; height: 100%; }
+.panier-tuiles .c-emb-tout rect:nth-child(1) { fill: var(--ciel); }
+.panier-tuiles .c-emb-tout rect:nth-child(2) { fill: var(--soleil); }
+.panier-tuiles .c-emb-tout rect:nth-child(3) { fill: var(--rose); }
+.panier-tuiles .c-emb-tout rect:nth-child(4) { fill: var(--menthe); }
+:root .panier-tuiles .c-emb .c-emb-lien {
+  display: flex; flex-flow: column nowrap; align-items: flex-start; align-self: end;
+  margin: 0; padding: 0; max-width: 100%;
+  border: 0; background: none; color: inherit; font: inherit; text-align: left;
+  cursor: pointer;
+}
+:root .panier-tuiles .c-emb .c-emb-lien::after { content: ""; position: absolute; inset: 0; border-radius: 20px; }
+:root .panier-tuiles .c-emb .c-emb-lien:focus-visible { outline: none; }
+:root .panier-tuiles .c-emb .c-emb-lien:focus-visible::after { outline: 2px solid var(--encre); outline-offset: -2px; }
+:root .panier-tuiles .c-emb .c-emb-mot {
+  margin: 0; font: 600 9.5px/1.15 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--encre-70);
+}
+:root .panier-tuiles .c-emb .c-emb-nom {
+  margin: 2px 0 0; font: 700 15px/1.1 var(--sans); letter-spacing: -0.02em; overflow-wrap: normal;
+}
+:root .panier-tuiles .c-emb .c-emb-nom::first-letter { text-transform: uppercase; }
+:root .panier-tuiles .c-emb .c-emb-reste {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+:root .panier-tuiles .c-emb .c-emb-nb {
+  grid-column: 2; align-self: start; margin: 0;
+  font: 500 11.5px/1 var(--sans); color: var(--encre-55); font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+:root .panier .panier-suivre {
+  justify-content: center; min-height: 48px; padding: 0 20px;
+  border-radius: 999px; background-color: var(--peche); color: var(--encre);
+  font: 600 15px/1 var(--sans); text-decoration: none;
+}
+.panier-suivre svg { width: 20px; height: 20px; }
+@media (max-width: 359px) {
+  .panier-tuiles { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* La page : « Votre panier », les tuiles à gauche, le récapitulatif crème à droite ; au téléphone, une colonne et la
+   barre noire collée en bas. Seuil « ordinateur » : 900 px, celui de la nouvelle page collection. */
+.panier-page-dedans { max-width: 1336px; margin: 0 auto; padding: 0 20px 112px; }
+.panier-page-titre { margin: 26px 0 0; font: 300 34px/1.05 var(--sans); letter-spacing: -0.025em; }
+.panier-page-titre b { font-weight: 700; }
+.panier-page-nombre { margin: 6px 0 0; font: 400 14px/1.3 var(--sans); color: var(--encre-55); }
+.panier-page-grille { display: grid; gap: 22px; margin-top: 18px; }
+.panier-page .panier-ligne { grid-template-columns: 110px minmax(0, 1fr); margin: 8px 0; }
+.panier-page .panier-vignette { width: 110px; height: 136px; }
+.panier-page :is(.panier-promo, .panier-kit, .panier-annule, .panier-lots) { margin-left: 0; margin-right: 0; }
+.panier-page .panier-continuer { justify-content: flex-start; margin-top: 4px; }
+.panier-page .panier-vide { max-width: 520px; padding: 20px 0 0; }
+.panier-recap {
+  align-self: start; display: grid; gap: 16px;
+  padding: 22px 20px; border-radius: 24px; background-color: var(--creme);
+}
+.panier-recap-titre { margin: 0; font: 700 18px/1.2 var(--sans); }
+.panier-recap-lignes { display: grid; gap: 10px; }
+.panier-recap-ligne { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 0; font: 400 15px/1.3 var(--sans); }
+.panier-recap-ligne span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.panier-recap-total { padding-top: 14px; border-top: 1px solid var(--encre-12); }
+.panier-recap-total span { font: 700 17px/1.2 var(--sans); }
+.panier-recap-total b { font: 700 24px/1.1 var(--sans); }
+.panier-recap-trait { width: 100%; height: 0; margin: 0; border: 0; border-top: 1px solid var(--encre-12); }
+.panier-assurances { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+.panier-assurances li { display: flex; align-items: flex-start; gap: 10px; font: 400 13.5px/1.35 var(--sans); color: var(--encre-70); }
+.panier-coche { flex: none; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background-color: var(--menthe); color: var(--encre); }
+.panier-coche svg { width: 11px; height: 11px; }
+/* La barre du téléphone, tant que le bouton du récapitulatif n'est pas à l'écran (assets/panier.js). */
+.panier-barre {
+  position: fixed; z-index: 30; left: 0; right: 0; bottom: 0;
+  padding: 10px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(var(--blanc-0), var(--blanc-94) 28%);
+}
+.panier-barre[data-cachee] { visibility: hidden; opacity: 0; }
+@media (min-width: 900px) {
+  .panier-page-dedans { padding: 0 48px 48px; }
+  .panier-page-titre { margin-top: 34px; font-size: 46px; }
+  .panier-page-grille { grid-template-columns: minmax(0, 1fr) 384px; gap: 56px; margin-top: 22px; }
+  .panier-recap { position: sticky; top: calc(var(--tete-h, 90px) + 24px); padding: 24px; }
+  .panier-page .panier-kit { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 18px; padding: 14px 14px 14px 16px; }
+  .panier-page .panier-kit-haut { margin-bottom: 0; }
+  .panier-page .panier-kit .panier-trait { width: auto; padding: 6px 22px; }
+  .panier-barre { display: none; }
+}
+
+/* Les mouvements, seulement sans « mouvements réduits » : le tiroir glisse de la droite (0,3 s), le voile arrive,
+   les boutons changent de fond, la barre du téléphone s'efface. */
+@keyframes panier-voile-vient { from { opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  :root .cart-drawer:has(> [data-vue="tuiles"]) { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.3s; }
+  :root .cart-drawer.translate-x-0:has(> [data-vue="tuiles"]) { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s; }
+  #overlay-content.panier-voile { animation: panier-voile-vient 0.24s ease; }
+  .panier .panier-payer, .panier .panier-trait, .panier .panier-pas-bouton, .panier .panier-fermer { transition: background-color 0.15s ease, box-shadow 0.15s ease; }
+  .panier-barre { transition: opacity 0.2s ease, visibility 0s linear 0s; }
+  .panier-barre[data-cachee] { transition: opacity 0.2s ease, visibility 0s linear 0.2s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root .cart-drawer:has(> [data-vue="tuiles"]) { transition: none; }
+}
+/* ---- Fin du panier ---- */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

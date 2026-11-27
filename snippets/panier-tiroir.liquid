@@ -1,0 +1,72 @@
+{%- comment -%}
+  panier-tiroir — le tiroir du panier « B · Les tuiles » (ticket 14 de .scratch/collection-design, choix de Walid du
+  27/11/2026). Pour l'instant dans la vue de test de la nouvelle page collection seulement : sections/tw-cart-drawer.liquid
+  le rend sur les modèles collection.refonte… (?view=refonte), et garde ailleurs le tiroir d'aujourd'hui, à l'octet près.
+
+  Il vient de la droite, comme aujourd'hui : tout l'écran au téléphone, 440 px de large dès 768 px, les coins arrondis à
+  gauche. Dedans, de haut en bas :
+  - la tête : « Votre panier », le nombre d'articles, le rond pour fermer ;
+  - le corps, qui défile (snippets/panier-corps.liquid) : le bandeau pêche de la promotion, une tuile crème par œuvre, la
+    tuile menthe du kit d'accrochage, « Continuer les achats », qui ferme le tiroir ;
+  - le pied, toujours visible : le total, Klarna, le bouton noir « Paiement sécurisé », la livraison, les logos.
+  Panier vide : « Votre panier est vide », les tuiles du menu et « Suivre ma commande » (snippets/panier-vide.liquid).
+
+  <cart-drawer> (assets/cart-drawer.js) reste le tiroir : data-vue="tuiles" lui donne ses gestes (le titre prend le
+  clavier, qui reste dedans, Échap et le retour du téléphone le ferment). <panier-contenu> (assets/panier.js) fait le
+  reste : quantités, « Annuler », kit, annonces. Quand le panier change, Shopify rend de nouveau ce tiroir par la section
+  sections/panier-tiroir.liquid, demandée par son nom : l'API du panier ignore ?view=refonte (relevé le 27/11/2026),
+  et la section du tiroir y reviendrait au tiroir d'aujourd'hui.
+
+  Fermé, il est caché (visibility, input.css « Le panier ») : rien de lui ne prend le clavier.
+  Styles : input.css, « Le panier » (.panier). Tests : scripts/panier.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  assign pt_vide = true
+  if cart.item_count > 0
+    assign pt_vide = false
+  endif
+  assign pt_cle_total = 'sections.tw_cart_drawer.subtotal'
+  if cart.taxes_included
+    assign pt_cle_total = 'sections.mma.panier.total'
+  endif
+-%}
+<cart-drawer role="dialog" aria-modal="true" aria-labelledby="panier-titre" aria-expanded="false" tabindex="-1" data-vue="tuiles">
+  <panier-contenu class="panier" data-vue="tiroir" data-section="panier-tiroir" data-nombre="{{ cart.item_count }}">
+    <div class="panier-tete">
+      <div class="panier-tete-texte">
+        {%- if pt_vide %}
+        <p id="panier-titre" class="panier-titre" tabindex="-1" data-focus="titre">{{ 'sections.tw_cart_drawer.empty_message' | t }}</p>
+        {%- else %}
+        <h2 id="panier-titre" class="panier-titre" tabindex="-1" data-focus="titre">{{ 'sections.tw_cart_drawer.title' | t }}</h2>
+        <p class="panier-nombre">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</p>
+        {%- endif %}
+      </div>
+      <button type="button" class="close panier-fermer" aria-label="{{ 'sections.tw_cart_drawer.close' | t }}" data-focus="fermer">
+        <svg viewBox="0 0 18 17" fill="none" aria-hidden="true" focusable="false"><path d="M.865 15.978a.5.5 0 00.707.707l7.433-7.431 7.579 7.282a.501.501 0 00.846-.37.5.5 0 00-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 10-.707-.708L8.991 7.853 1.413.573a.5.5 0 10-.693.72l7.563 7.268-7.418 7.417z" fill="currentColor" stroke="currentColor" stroke-width="1.1"/></svg>
+      </button>
+    </div>
+    <div class="panier-corps" data-panier-defile>
+      {%- if pt_vide %}
+      {% render 'panier-vide' %}
+      {%- else %}
+      {% render 'panier-corps', vue: 'tiroir' %}
+      {%- endif %}
+    </div>
+    {%- unless pt_vide %}
+    <div class="panier-pied">
+      <p class="panier-total"><span>{{ pt_cle_total | t }}</span><b data-panier-total>{{ cart.total_price | money }}</b></p>
+      <div class="panier-klarna">
+        <klarna-placement id="cart-drawer-klarna-placement" data-key="credit-promotion-badge" data-locale="" data-purchase-amount="{{ cart.total_price }}"></klarna-placement>
+      </div>
+      <form action="{{ routes.cart_url }}" method="post" id="CartDrawer-Form" class="panier-form">
+        <button type="submit" name="checkout" id="CartDrawer-Checkout" class="panier-payer" data-focus="payer">{% render 'icon-padlock' %}<span>{{ 'sections.tw_cart_drawer.checkout' | t }}</span></button>
+      </form>
+      <p class="panier-livraison">{% render 'icon-package', width: 18 %}<span>{{ 'sections.mma.panier.livraison' | t }}</span></p>
+      {% render 'panier-logos' %}
+    </div>
+    {%- endunless %}
+    {% render 'panier-textes' %}
+  </panier-contenu>
+  <p class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-panier-annonce data-allow-empty></p>
+</cart-drawer>
+<script src="{{ 'panier.js' | asset_url }}" defer="defer"></script>
