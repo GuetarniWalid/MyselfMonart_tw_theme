@@ -1,7 +1,9 @@
 {%- comment -%}
   panier-ligne — une ligne du panier des tuiles (ticket 14), dans le tiroir et sur la page : une tuile crème.
-  - La vignette « en objet » d'aujourd'hui (snippets/cart-item-artwork.liquid, validée le 17/11/2026), sur le mur blanc ;
-    toute autre ligne (kit, aperçu personnalisé, tapisserie…) garde son image, comme aujourd'hui.
+  - La vignette « en objet » d'aujourd'hui (snippets/cart-item-artwork.liquid, validée le 17/11/2026), sur le crème de
+    la tuile : un fond uni, sans bords blancs (demande de Walid du 27/11/2026) ; toute autre ligne (kit, aperçu
+    personnalisé, tapisserie…) garde son image, comme aujourd'hui. La photo d'un produit (le kit, sur fond blanc) se
+    fond dans le crème (panier-vignette-photo, input.css) ; un aperçu personnalisé garde ses couleurs.
   - Le nom (un lien vers la fiche) et les options ; les mots que le client a écrits (propriétés sans « _ »).
   - − et + : à 1, le − devient la corbeille. assets/panier.js les fait marcher ; il retrouve la ligne par sa clé
     (data-cle, la clé de Shopify, la même quand la ligne revient par « Annuler »).
@@ -67,7 +69,7 @@
     {%- elsif pl_apercu != blank -%}
       <img class="panier-vignette-image" src="{{ pl_apercu | escape }}" onerror="this.onerror=null;this.src='{{ item.image | image_url: width: pl_largeur }}'" alt="" width="{{ pl_largeur }}" height="{{ pl_largeur }}" loading="lazy">
     {%- else -%}
-      <img class="panier-vignette-image" src="{{ item.image | image_url: width: pl_largeur }}" alt="" width="{{ pl_largeur }}" height="{{ pl_largeur }}" loading="lazy">
+      <img class="panier-vignette-image panier-vignette-photo" src="{{ item.image | image_url: width: pl_largeur }}" alt="" width="{{ pl_largeur }}" height="{{ pl_largeur }}" loading="lazy">
     {%- endif -%}
   </a>
   <div class="panier-info">

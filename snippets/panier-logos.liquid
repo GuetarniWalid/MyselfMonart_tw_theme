@@ -1,8 +1,10 @@
-{%- comment -%} Les logos de paiement d'aujourd'hui, dans leur ordre (panier des tuiles, ticket 14 : tiroir et page). {%- endcomment -%}
+{%- comment -%}
+  Les moyens de paiement de la boutique, en couleur, comme le pied de page (sections/tw-footer.liquid : les mêmes,
+  dans le même ordre). Demande de Walid du 27/11/2026, au lieu des cinq logos gris d'aujourd'hui. Panier des tuiles,
+  ticket 14 : le tiroir et la page.
+{%- endcomment -%}
 <div class="panier-logos" aria-hidden="true">
-  {% render 'icon-pay-mastercard' %}
-  {% render 'icon-pay-visa' %}
-  {% render 'icon-pay-paypal' %}
-  {% render 'icon-pay-amex' %}
-  {% render 'icon-pay-klarna' %}
+  {%- for type in shop.enabled_payment_types -%}
+    {{ type | payment_type_svg_tag }}
+  {%- endfor -%}
 </div>

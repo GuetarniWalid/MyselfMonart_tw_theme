@@ -2638,8 +2638,9 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
   --sans: "Albert Sans", Roboto, sans-serif;
 }
 
-/* Le tiroir : sa section, venue de la droite. */
+/* Le tiroir : sa section, venue de la droite, au-dessus de son voile (plus bas). */
 :root .cart-drawer:has(> [data-vue="tuiles"]) {
+  z-index: 60;
   width: 100%;
   overflow: hidden;
   background-color: var(--blanc);
@@ -2654,8 +2655,13 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
 }
 cart-drawer[data-vue="tuiles"] { display: block; height: 100%; }
 cart-drawer[data-vue="tuiles"]:focus { outline: none; }
-/* Le voile sur la page, derrière le tiroir ouvert (#overlay-content, assets/cart-drawer.js). */
-#overlay-content.panier-voile {
+/* Le voile sur la page, derrière le tiroir ouvert (#overlay-content, assets/cart-drawer.js). Il couvre toute la fenêtre,
+   le bandeau d'annonce (z-index 50) et l'en-tête (40) compris : le bandeau « Black Friday » restait vif au-dessus et
+   tirait l'œil hors du panier (demande de Walid du 27/11/2026). Le tiroir (60) passe au-dessus de lui. */
+:root #overlay-content.panier-voile {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
   background-color: var(--encre-38);
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
@@ -2714,15 +2720,19 @@ cart-drawer[data-vue="tuiles"]:focus { outline: none; }
   margin: 8px 16px; padding: 10px;
   border-radius: 20px; background-color: var(--creme);
 }
+/* La vignette se pose sur le crème de la tuile : un fond uni, sans bords blancs autour de l'œuvre (demande de Walid du
+   27/11/2026 ; le prototype mettait un mur blanc). */
 .panier-vignette {
   position: relative; display: block; overflow: hidden;
   width: 84px; height: 104px;
-  border-radius: 12px; background-color: var(--blanc);
+  border-radius: 12px; background-color: var(--creme);
 }
-.panier-ligne .oeuvre-card { --wall-panier: var(--blanc); }
+.panier-ligne .oeuvre-card { --wall-panier: var(--creme); }
 .panier-ligne .oeuvre-card[data-context] .oeuvre-card-stage { border-radius: 12px; }
-/* Toute autre ligne (le kit, un aperçu personnalisé…) : son image entière, sur le blanc. */
+/* Toute autre ligne (le kit, un aperçu personnalisé…) : son image entière. La photo d'un produit (le kit, sur fond
+   blanc) se fond dans le crème ; un aperçu personnalisé garde ses couleurs. */
 .panier-vignette-image { display: block; width: 100%; height: 100%; object-fit: contain; }
+.panier-vignette-photo { mix-blend-mode: multiply; }
 .panier-info { display: flex; flex-direction: column; min-width: 0; }
 .panier-nom {
   margin: 0; font: 600 15px/1.26 var(--sans); letter-spacing: -0.01em;
@@ -2831,8 +2841,10 @@ cart-drawer[data-vue="tuiles"]:focus { outline: none; }
 .panier .panier-payer:focus-visible { outline-offset: 3px; }
 .panier-livraison { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0; font: 500 13px/1.3 var(--sans); text-align: center; }
 .panier-livraison svg { flex: none; width: 17px; height: 17px; }
-.panier-logos { display: flex; justify-content: center; align-items: center; gap: 8px; color: var(--encre-55); }
-.panier .panier-logos svg { width: auto; height: 18px; }
+/* Les moyens de paiement, en couleur comme au pied de page (snippets/panier-logos.liquid) : douze logos, sur une
+   rangée dès 340 px de large (15 px de haut, 4 px entre eux), sur deux en dessous. */
+.panier-logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; }
+.panier .panier-logos svg { display: block; width: auto; height: 15px; }
 
 /* Le panier vide : les tuiles du menu (snippets/collection-embleme.liquid, taille « tuile »), recopiées en boutons par
    assets/panier.js, et « Suivre ma commande » en pêche. Les règles commencent par :root .panier-tuiles : elles

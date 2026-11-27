@@ -314,9 +314,51 @@ test('« Annuler » remet une ligne sans propriétés sans en envoyer : Shopify 
   assert.match(script, /\.\.\.\(proprietes \? \{ properties: proprietes \} : \{\}\)/)
 })
 
+/* ---------- Les retours de Walid sur le panier en ligne (27/11/2026) ---------- */
+
+// Une règle de input.css, d'après son sélecteur exact : le texte entre ses accolades.
+const regle = (selecteur) => {
+  const css = read('input.css')
+  const i = css.indexOf(`${selecteur} {`)
+  assert.ok(i >= 0, `règle absente : ${selecteur}`)
+  return css.slice(i, css.indexOf('}', i))
+}
+
+test('les vignettes se posent sur le crème de la tuile : un fond uni, sans bords blancs', () => {
+  assert.match(regle('.panier-vignette'), /background-color: var\(--creme\)/)
+  assert.match(read('input.css'), /\.panier-ligne \.oeuvre-card \{ --wall-panier: var\(--creme\); \}/)
+  // La photo d'un produit (le kit, sur fond blanc) se fond dans le crème ; l'aperçu d'un personnalisé garde ses couleurs.
+  assert.match(read('input.css'), /\.panier-vignette-photo \{ mix-blend-mode: multiply; \}/)
+  const ligne = read('snippets/panier-ligne.liquid')
+  assert.match(ligne, /<img class="panier-vignette-image panier-vignette-photo" src="\{\{ item\.image/)
+  assert.match(ligne, /<img class="panier-vignette-image" src="\{\{ pl_apercu/)
+})
+
+test('le voile couvre toute la fenêtre, bandeau d’annonce et en-tête compris, et le tiroir passe au-dessus de lui', () => {
+  const voile = regle(':root #overlay-content.panier-voile')
+  assert.match(voile, /position: fixed;/)
+  assert.match(voile, /inset: 0;/)
+  const zVoile = Number(/z-index: (\d+);/.exec(voile)[1])
+  const zTiroir = Number(/z-index: (\d+);/.exec(regle(':root .cart-drawer:has(> [data-vue="tuiles"])'))[1])
+  // Le bandeau « Black Friday » (sections/tw-announcement-bar.liquid) et l'en-tête (sections/tw-header.liquid).
+  const zBandeau = Number(/\brelative z-(\d+)\b/.exec(read('sections/tw-announcement-bar.liquid'))[1])
+  const zEntete = Number(/"class": "sticky top-0 z-(\d+)/.exec(read('sections/tw-header.liquid'))[1])
+  assert.ok(zVoile > zBandeau && zVoile > zEntete, `voile ${zVoile}, bandeau ${zBandeau}, en-tête ${zEntete}`)
+  assert.ok(zTiroir > zVoile, `tiroir ${zTiroir}, voile ${zVoile}`)
+})
+
+test('les moyens de paiement sont ceux de la boutique, en couleur, comme au pied de page', () => {
+  const logos = sansCommentaires(read('snippets/panier-logos.liquid'))
+  assert.match(logos, /for type in shop\.enabled_payment_types/)
+  assert.match(logos, /\{\{ type \| payment_type_svg_tag \}\}/)
+  assert.doesNotMatch(logos, /icon-pay-/)
+  assert.match(read('sections/tw-footer.liquid'), /for type in shop\.enabled_payment_types[\s\S]{0,80}payment_type_svg_tag/)
+  assert.match(regle('.panier-logos'), /flex-wrap: wrap;/)
+})
+
 /* ---------- Les textes, dans les cinq langues ---------- */
 
-const FICHIERS_DU_PANIER = ['snippets/panier-tiroir.liquid', 'snippets/panier-corps.liquid', 'snippets/panier-ligne.liquid', 'snippets/panier-complements.liquid', 'snippets/panier-vide.liquid', 'snippets/panier-logos.liquid', 'snippets/panier-textes.liquid', 'sections/panier-page.liquid', 'sections/panier-tiroir.liquid']
+const FICHIERS_DU_PANIER =['snippets/panier-tiroir.liquid', 'snippets/panier-corps.liquid', 'snippets/panier-ligne.liquid', 'snippets/panier-complements.liquid', 'snippets/panier-vide.liquid', 'snippets/panier-logos.liquid', 'snippets/panier-textes.liquid', 'sections/panier-page.liquid', 'sections/panier-tiroir.liquid']
 const sansCommentaires = (source) => source.replace(/{%-?\s*comment\s*-?%}[\s\S]*?{%-?\s*endcomment\s*-?%}/g, '').replace(/{% schema %}[\s\S]*?{% endschema %}/, '')
 
 test('aucun texte en dur : chaque mot vient d’un fichier de langue, et chaque clé existe dans les cinq langues', () => {
